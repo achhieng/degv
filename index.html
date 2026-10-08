@@ -876,6 +876,7 @@ const DERIVED = {
   onAccentInk: () => lum(state.colors.accent || '#F2B632') > .4 ? '#16171D' : '#FFFFFF',
   deepBg: () => mix(state.colors.primary || '#888888', '#07080C', .62),
   oppDeep: () => mix(state.colors.opponent || '#888888', '#07080C', .7),
+  pop: () => lum(state.colors.primary || '#888') > .35 ? state.colors.primary : (state.colors.accent || '#F2B632'),
   onPrimary: () => lum(state.colors.primary || '#888') > .4 ? '#16171D' : '#FFFFFF',
   oppAccent: () => lum(state.colors.opponent || '#000') < .16 ? mix(state.colors.opponent, '#FFFFFF', .5) : state.colors.opponent,
 };
@@ -1269,6 +1270,129 @@ const TINTED = [
   ['{P} will fast-track *roads* and *rail* for growing suburbs','Major projects will get decisions in months, not years.'],
 ];
 const TSLOGANS = ['CUT *the* WASTE,\nGROW *the* ECONOMY','BACK *the* BASICS,\nBUILD *the* FUTURE','FIX *the* BASICS,\nBACK *the* WORKERS'];
+/* ---------- statistics posts: photo grid and clip-art icon rows ---------- */
+function statsTemplate(kind){
+  const head = o => textLayer(Object.assign({ id:'headline', name:'Headline', text:'', x:540, y:0, size:124, weight:900, color:'#FFFFFF', width:1000, shrink:true, gap:.9, track:-4,
+    hlBg:'@primary', hlColor:'#FFFFFF', hlPadX:14, hlPadY:2, emFont:'Playfair Display', emItalic:true, emWeight:700, emColor:'' }, o));
+  const label = (n, o) => textLayer(Object.assign({ id:'l'+n, name:`Stat ${n} label`, text:'', keepFont:true, font:'Playfair Display', italic:true, weight:700, size:36, color:'#FFFFFF', width:300, gap:1.02, track:-.5, emOn:false }, o));
+  const num = (n, o) => textLayer(Object.assign({ id:'n'+n, name:`Stat ${n} number`, text:'', keepFont:true, font:'Archivo', weight:900, size:74, color:'@soft', track:-2, fitW:320, emOn:false, marks:false }, o));
+  if (kind === 'photo'){
+    const L = [
+      imageLayer({ id:'background', name:'Background photo', gen:'civic', fit:'cover', x:540, y:675 }),
+      imageLayer({ id:'photo', name:'Person photo', gen:'politician', face:'leader', box:[1000,1250], x:540, y:600, scale:.78 }),
+      baseLayer({ id:'fade', type:'gradient', name:'Dark fade', start:470, length:380, strength:95, color:'#0D0E13' }),
+      textLayer({ id:'party', name:'Party name (logo)', text:'', vmid:true, x:70, y:84, align:'left', size:36, weight:900, upper:true, color:'@onPrimary', track:0, fitW:420,
+        boxOn:true, boxMode:'block', boxColor:'@primary', padX:18, padY:10 }),
+      head({ y:620, fitH:270 }),
+    ];
+    const cols = [[200, 935], [540, 935], [880, 935], [370, 1115], [710, 1115]];
+    cols.forEach(([x, y], i) => { const n = i + 1; L.push(label(n, { x, y }), num(n, { x, y:0, below:'l'+n, belowGap:6, stick:true })); });
+    L.push(textLayer({ id:'auth', name:'Authorisation', text:'', x:540, y:1312, size:15, weight:500, color:'#FFFFFF', opacity:65, width:1000, track:0 }));
+    return L;
+  }
+  const L = [
+    shapeLayer('rect', { id:'bg', name:'Background', x:540, y:675, w:1080, h:1350, fill:'@deepBg' }),
+    shapeLayer('ellipse', { id:'glow', name:'Colour glow', x:930, y:160, w:1100, h:900, fill:'@primary', opacity:45, soft:true }),
+    shapeLayer('ellipse', { id:'glow2', name:'Low glow', x:60, y:1320, w:900, h:600, fill:'@primary', opacity:22, soft:true }),
+    iconLayer({ id:'mark', name:'Big statistics symbol', icon:'barsup', x:930, y:205, size:230, color:'#FFFFFF', opacity:12 }),
+    textLayer({ id:'party', name:'Party name (logo)', text:'', vmid:true, x:70, y:84, align:'left', size:34, weight:900, upper:true, color:'@onPrimary', track:0, fitW:420,
+      boxOn:true, boxMode:'block', boxColor:'@primary', padX:18, padY:10 }),
+    head({ y:150, x:70, align:'left', size:118, width:940, fitH:255 }),
+  ];
+  for (let i = 0; i < 5; i++){
+    const n = i + 1, y = 545 + i*148;
+    if (i) L.push(shapeLayer('rect', { id:'rule'+n, name:`Divider ${n}`, x:540, y: y - 74, w:940, h:2, fill:'#FFFFFF', opacity:16 }));
+    L.push(shapeLayer('ellipse', { id:'disc'+n, name:`Symbol ${n} disc`, x:130, y, w:112, h:112, fill:'@primary' }));
+    L.push(iconLayer({ id:'ic'+n, name:`Symbol ${n}`, icon:'trenddown', x:130, y, size:64, color:'@onPrimary' }));
+    L.push(label(n, { x:216, y, vmid:true, align:'left', size:40, width:470 }));
+    L.push(num(n, { x:1010, y, vmid:true, align:'right', size:80, fitW:300 }));
+  }
+  L.push(textLayer({ id:'auth', name:'Authorisation', text:'', x:70, y:1300, align:'left', size:15, weight:500, color:'#FFFFFF', opacity:60, width:940, track:0 }));
+  return L;
+}
+function wordmark(y, o){ return [
+  textLayer(Object.assign({ id:'wm1', name:'Wordmark line 1', text:'', x:540, y, size:54, weight:900, color:'#FFFFFF', track:-1.5, fitW:600, emFont:'Mrs Saint Delafield', emItalic:false, emWeight:400, emColor:'#FFFFFF', shadow:true }, o || {})),
+  textLayer(Object.assign({ id:'wm2', name:'Wordmark line 2', text:'', x:540, y:0, size:54, weight:900, color:'@accent', track:-1.5, fitW:600, below:'wm1', belowGap:-10, stick:true, shadow:true }, o || {})),
+]; }
+function statsMoreTemplate(kind){
+  if (kind === 'plan'){
+    const L = [
+      shapeLayer('rect', { id:'bg', name:'Background', x:540, y:675, w:1080, h:1350, fill:'#F4F4F2' }),
+      textLayer({ id:'h1', name:'Headline (party colour)', text:'', x:90, y:90, align:'left', size:86, weight:900, upper:true, color:'@primaryText', track:-2.5, fitW:900, gap:.95 }),
+      textLayer({ id:'h2', name:'Headline', text:'', x:90, y:0, align:'left', size:86, weight:900, upper:true, color:'#121318', track:-2.5, width:900, shrink:true, gap:.95, below:'h1', belowGap:0, stick:true }),
+    ];
+    const bars = ['@primary', '@accent', '@deep', '@secondary'], inks = ['@onPrimary', '@onAccentInk', '#FFFFFF', '#FFFFFF'];
+    for (let i = 0; i < 4; i++){
+      const n = i + 1, y = 470 + i*205;
+      L.push(iconLayer({ id:'pi'+n, name:`Row ${n} icon`, icon:'house', x:160, y: y + 50, size:120, color: bars[i] }));
+      L.push(shapeLayer('rect', { id:'bar'+n, name:`Row ${n} bar`, x:620, y, w:720, h:56, fill: bars[i] }));
+      L.push(textLayer({ id:'ph'+n, name:`Row ${n} heading`, text:'', vmid:true, x:278, y, align:'left', size:40, weight:900, upper:true, color: inks[i], track:-1.5, fitW:680 }));
+      L.push(textLayer({ id:'pb'+n, name:`Row ${n} text`, text:'', x:270, y: y + 44, align:'left', size:31, weight:500, color:'#1C1D22', track:-.5, width:700, gap:1.18, fitH:120, emOn:false }));
+    }
+    L.push(textLayer({ id:'party', name:'Party name (logo)', text:'', vmid:true, x:990, y:1250, align:'right', size:62, weight:900, italic:true, color:'@primaryText', track:-2, fitW:420 }));
+    L.push(iconLayer({ id:'emblem', name:'Party emblem (beside name)', icon:'star', beside:'party', besideGap:10, size:30, color:'@accent' }));
+    L.push(textLayer({ id:'auth', name:'Authorisation', text:'', x:90, y:1305, align:'left', size:14, weight:500, color:'#6A6C74', width:640, track:0 }));
+    return L;
+  }
+  if (kind === 'big') return [
+    imageLayer({ id:'scene', name:'Group photo', gen:'scene2', box:[1080,900], x:540, y:1190, scale:1.08 }),
+    shapeLayer('rect', { id:'panel', name:'Colour panel', x:540, y:330, w:1080, h:660, fill:'@primary' }),
+    shapeLayer('ellipse', { id:'curve', name:'Curved edge', x:540, y:640, w:1900, h:460, fill:'@primary' }),
+    textLayer({ id:'stat', name:'Big number', text:'', keepFont:true, font:'Archivo', x:100, y:200, align:'left', size:230, weight:900, color:'@accent', track:-10, fitW:880, emOn:false, marks:false }),
+    textLayer({ id:'line', name:'Main line', text:'', x:110, y:0, align:'left', size:66, weight:900, upper:true, color:'@onPrimary', track:-1.5, fitW:880, below:'stat', belowGap:-8, stick:true }),
+    textLayer({ id:'sub', name:'Second line', text:'', x:110, y:0, align:'left', size:52, weight:400, color:'@onPrimary', track:-1.5, width:880, gap:1.1, below:'line', belowGap:8, stick:true }),
+    ...wordmark(1180),
+    textLayer({ id:'auth', name:'Authorisation', text:'', x:540, y:1318, size:14, weight:500, color:'#FFFFFF', opacity:75, width:1000, track:0, shadow:true }),
+  ];
+  // update
+  return [
+    shapeLayer('rect', { id:'bg', name:'Background', x:540, y:675, w:1080, h:1350, fill:'@primary', shade:18 }),
+    textLayer({ id:'kicker', name:'Small label', text:'', x:540, y:160, size:52, weight:300, upper:true, color:'@accent', track:26, fitW:700 }),
+    textLayer({ id:'headline', name:'Headline', text:'', x:540, y:330, size:100, weight:900, upper:true, color:'@onPrimary', width:860, shrink:true, fitH:300, gap:.95, track:-3 }),
+    shapeLayer('rect', { id:'ruleL', name:'Rule left', x:75, y:770, w:150, h:3, fill:'@accent' }),
+    shapeLayer('rect', { id:'ruleR', name:'Rule right', x:1005, y:770, w:150, h:3, fill:'@accent' }),
+    textLayer({ id:'stat', name:'Big number', text:'', keepFont:true, font:'Archivo', vmid:true, x:540, y:770, size:240, weight:900, color:'@accent', track:-10, fitW:720, emOn:false, marks:false }),
+    textLayer({ id:'sub', name:'Line under the number', text:'', x:540, y:900, size:50, weight:400, upper:true, color:'@onPrimary', width:820, gap:1.05, track:-2.5 }),
+    ...wordmark(1150, { color:'@onPrimary', emColor:'@onPrimary', shadow:false }).map(l => l.id === 'wm2' ? Object.assign(l, { color:'@accent' }) : l),
+    textLayer({ id:'auth', name:'Authorisation', text:'', x:540, y:1318, size:14, weight:500, color:'@onPrimary', opacity:70, width:1000, track:0 }),
+  ];
+}
+function candLocalTemplate(){
+  return [
+    imageLayer({ id:'background', name:'Aerial photo', gen:'aerial', fit:'cover', x:540, y:675 }),
+    shapeLayer('rect', { id:'sky', name:'Top colour', x:540, y:70, w:1080, h:140, fill:'@primary' }),
+    shapeLayer('ellipse', { id:'skyfade', name:'Colour fade', x:540, y:250, w:3000, h:900, fill:'@primary', soft:true, opacity:100 }),
+    shapeLayer('ellipse', { id:'skyfade2', name:'Colour fade 2', x:540, y:200, w:2400, h:560, fill:'@primary', soft:true, opacity:100 }),
+    baseLayer({ id:'fade', type:'gradient', name:'Bottom shade', start:900, length:420, strength:78, color:'#081226' }),
+    textLayer({ id:'lead', name:'Script lead-in', text:'', keepFont:true, font:'Mrs Saint Delafield', x:540, y:120, size:150, weight:400, color:'@accent', track:0, emOn:false, marks:false }),
+    textLayer({ id:'verb', name:'Headline line 1', text:'', x:540, y:0, size:118, weight:800, color:'@onPrimary', track:-3, fitW:980, below:'lead', belowGap:-30, stick:true, shadow:true }),
+    textLayer({ id:'place', name:'Project / place', text:'', x:540, y:0, size:118, weight:800, color:'@accent', track:-3, fitW:1000, below:'verb', belowGap:-6, stick:true, shadow:true }),
+    textLayer({ id:'vote', name:'Vote 1 box', text:'', vmid:true, x:540, y:960, size:60, weight:900, upper:true, color:'@primaryText', track:-1, hlBg:'@primary', hlColor:'#FFFFFF', hlPadX:8, hlPadY:0,
+      boxOn:true, boxMode:'block', boxColor:'#FFFFFF', padX:16, padY:6 }),
+    textLayer({ id:'first', name:'First name', text:'', x:540, y:1030, size:60, weight:500, color:'@pop', track:-1, fitW:700, shadow:true }),
+    textLayer({ id:'last', name:'Last name', text:'', x:540, y:0, size:118, weight:900, upper:true, color:'@pop', track:-3, fitW:900, below:'first', belowGap:-14, stick:true, shadow:true }),
+    textLayer({ id:'seat', name:'Party for electorate', text:'', x:540, y:0, size:30, weight:500, upper:true, color:'#FFFFFF', track:0, fitW:800, below:'last', belowGap:0, stick:true, emFont:null, emItalic:false, emWeight:900, shadow:true }),
+    textLayer({ id:'party', name:'Party name (logo)', text:'', vmid:true, x:560, y:1265, size:52, weight:900, italic:true, color:'#FFFFFF', track:-2, fitW:420, shadow:true }),
+    iconLayer({ id:'emblem', name:'Party emblem (beside name)', icon:'star', beside:'party', besideGap:10, size:26, color:'@accent' }),
+    textLayer({ id:'auth', name:'Authorisation link', text:'', x:1020, y:1288, align:'right', size:26, weight:500, upper:true, color:'#FFFFFF', track:0, fitW:420, shadow:true }),
+  ];
+}
+const PLAN_SETS = [
+  { h1:'The {PP} plan', h2:'will help with\nthe cost of living:', rows:[['Immediate relief','Halve the fuel excise, saving 25 cents on every litre.','fuel'],['Tax relief','A one-off cost of living tax offset of up to $1,200 for working households.','coins'],['Cheaper energy','Keep more local gas for local homes as part of a balanced energy mix.','bulb'],['Affordable housing','Fund the roads and pipes new suburbs need, and help first home buyers into a home of their own.','house']] },
+  { h1:'The {PP} plan', h2:'will fix\nour health system:', rows:[['Shorter waits','Fund 40,000 extra surgeries to clear the waiting list within two years.','hospital'],['More staff','Hire 1,500 nurses and paramedics for growing communities.','people'],['Cheaper care','Free GP visits for every child under 12.','heart'],['Local hospitals','Upgrade six regional hospitals with new emergency departments.','house']] },
+  { h1:'The {PP} plan', h2:'will keep\nyour family safe:', rows:[['More police','Put 1,000 extra officers on the beat in the suburbs that need them.','shield'],['Tougher bail','Stop repeat offenders from walking free while they wait for court.','gavel'],['Safer streets','Better lighting and CCTV around train stations and shopping strips.','bulb'],['Support victims','A dedicated victims’ advocate in every courthouse.','heart']] },
+];
+const BIG_SETS = [['5.7%','Fewer victims of crime','in the first half of this year.'],['12,000','More surgeries performed','since this time last year.'],['$1,200','Back in your pocket','with our cost of living tax offset.'],['8,400','New homes approved','in the last twelve months.']];
+const UPDATE_SETS = [['Update','Crime victim numbers have fallen','10.8%','Under our plan to restore safety where you live'],['Update','Hospital waiting lists have dropped','18.4%','Under our plan to fix the health system'],['Good news','Power bills have come down','$420','Under our plan for cheaper, reliable energy'],['Update','Unemployment has fallen to','3.6%','Under our plan for more local jobs']];
+const LOCAL_SETS = [["We're",'Revitalising','{E} Marina'],["We're",'Rebuilding','the {E} Jetty'],["We're",'Upgrading','the {E} Foreshore'],["We're",'Building','the {E} Bypass']];
+const REGIONS = ['Westland','the North','the Coast','Eastvale','the Regions','Southport'];
+const STAT_SETS = [
+  { head:'Crime is [*down*]\nunder {P}', big:'trenddown', items:[['Burglary down','19.9%','house'],['Car theft down','25.4%','car'],['Robberies down','22.9%','trenddown'],['Repeat offending down','14%','shield'],['Bail refusals for serious offenders up','32%','gavel']] },
+  { head:'Costs are [*down*]\nunder {P}', big:'barsdown', items:[['Power bills down','$420','bolt'],['Childcare fees down','31%','school'],['Grocery prices down','6.2%','cart'],['Rent rises capped at','3%','house'],['Public transport fares down','50%','train']] },
+  { head:'Waits are [*down*]\nunder {P}', big:'trenddown', items:[['Surgery waits down','38%','hospital'],['Emergency waits down','27%','clock'],['Ambulance response faster by','2.4 min','trenddown'],['New nurses hired','1,500','people'],['Bulk-billing clinics opened','40','heart']] },
+  { head:'Jobs are [*up*]\nunder {P}', big:'trendup', items:[['Unemployment down to','3.6%','trenddown'],['New jobs created','212,000','people'],['Apprentices up','18%','school'],['Small businesses up','9.4%','barsup'],['Real wages up','4.1%','dollar']] },
+  { head:'Homes are [*up*]\nunder {P}', big:'barsup', items:[['New homes approved','46,000','house'],['First home buyers helped','21,500','people'],['Social homes built','8,200','barsup'],['Stamp duty cut by','$31,000','dollar'],['Planning approvals faster by','40%','clock']] },
+];
 /* ---------- story ads (1080 × 1920, safe zone 250 top / 340 bottom) ---------- */
 function storyTemplate(kind){
   const T = o => textLayer(Object.assign({ track:-1 }, o));
@@ -2145,6 +2269,11 @@ const TEMPLATES = [
     build: () => candSocialTemplate('studio'), hint:'A plain party-colour studio backdrop, like a lawn sign. The party name in the corner stands in for a logo.',
     quick: [['L.party.text','Party name'],['L.first.text','First name'],['L.last.text','Last name'],['L.tagline.text','Slogan'],['L.auth.text','Authorisation',true]],
     uploads: [['upload','photo','Candidate photo'],['upload-logo','us','Logo']] },
+  { id:'candL', group:'politician', varName:'Candidate', varGroup:'cand', subName:'Local', name:'Politician Ad', fmt:'Social 4:5', sub:'Politician Ad · candidate, local project · 1080 × 1350', w:1080, h:1350, sides:1, sel:'place',
+    thumb:'<span class="thumb q45" style="background:linear-gradient(#1C4E8C 0 30%,#3A8FC0 45%,#5E7F4E 55%,#3A8FC0 70%,#8a96a8)"><i style="top:7%;left:38%;right:38%;height:4%;background:#F2B632"></i><i style="top:13%;left:18%;right:18%;height:7%;background:#fff"></i><i style="top:22%;left:10%;right:10%;height:7%;background:#F2B632"></i><i style="top:68%;left:40%;right:40%;height:5%;background:#fff"></i><i style="top:77%;left:28%;right:28%;height:7%;background:#F2B632"></i><i style="top:91%;left:42%;right:42%;height:4%;background:#fff"></i></span>',
+    build: () => candLocalTemplate(), hint:'A local project over an aerial view. Upload your own photo of the place. The [1] in the Vote box sits in a party-colour square.',
+    quick: [['L.lead.text','Script lead-in'],['L.verb.text','Headline line 1'],['L.place.text','Project / place'],['L.vote.text','Vote box'],['L.first.text','First name'],['L.last.text','Last name'],['L.seat.text','Party for electorate'],['L.auth.text','Authorisation link']],
+    uploads: [['upload','background','Aerial photo'],['upload-logo','us','Logo']] },
   { id:'candD', group:'politician', varName:'Candidate', varGroup:'cand', subName:'Digital', name:'Politician Ad', fmt:'Digital 9:16', sub:'Politician Ad · candidate · digital 1080 × 1920', w:1080, h:1920, sides:1, sel:'last',
     thumb:'<span class="thumb tall" style="background:linear-gradient(#5f86c4 0 80%,#fff 80%)"><i style="top:6%;left:22%;right:22%;height:4%;background:#fff"></i><i style="top:12%;left:12%;right:12%;height:6%;background:#fff"></i><i style="top:34%;left:22%;right:22%;height:46%;background:#33384a;border-radius:45% 45% 0 0"></i><i style="top:84%;left:8%;right:44%;height:6%;background:#2C4E9C"></i></span>',
     build: () => candidateTemplate(true),
@@ -2216,6 +2345,31 @@ const TEMPLATES = [
     thumb:'<span class="thumb q45" style="background:#fff"><i style="top:6%;left:6%;right:20%;height:9%;background:#1C3AA0"></i><i style="top:17%;left:6%;right:36%;height:9%;background:#5aaef0"></i><i style="top:28%;left:6%;right:30%;height:9%;background:#1C3AA0"></i><i style="top:46%;left:4%;right:40%;height:7%;background:#e8e9ec;border-left:2px solid #1C3AA0"></i><i style="top:56%;left:4%;right:40%;height:7%;background:#e8e9ec;border-left:2px solid #1C3AA0"></i><i style="top:66%;left:4%;right:40%;height:7%;background:#e8e9ec;border-left:2px solid #1C3AA0"></i><i style="top:50%;left:56%;right:2%;height:50%;background:#2a52c0;border-radius:45% 45% 0 0"></i></span>', build: () => recordTemplate(), hint:'Wrap words in *asterisks* to set them in the lighter party colour. Each bar holds one or two lines.',
     quick: [['L.headline.text','Headline',true],['L.item1.text','Bar 1'],['L.item2.text','Bar 2'],['L.item3.text','Bar 3'],['L.item4.text','Bar 4'],['L.item5.text','Bar 5'],['L.auth.text','Authorisation',true]],
     uploads: [['upload','photo','Person photo']] },
+  { id:'statsPhoto', group:'stats', varName:'Photo grid', name:'Statistics Post', fmt:'Social 4:5', sub:'Statistics Post · photo with five figures · 1080 × 1350', w:1080, h:1350, sides:1, sel:'headline',
+    thumb:'<span class="thumb q45" style="background:linear-gradient(#6a7080 0 40%,#0D0E13 70%)"><i style="top:44%;left:12%;right:12%;height:7%;background:#fff"></i><i style="top:52%;left:22%;right:22%;height:7%;background:#fff"></i><i style="top:68%;left:6%;right:70%;height:6%;background:#e0607a"></i><i style="top:68%;left:38%;right:38%;height:6%;background:#e0607a"></i><i style="top:68%;left:70%;right:6%;height:6%;background:#e0607a"></i><i style="top:82%;left:22%;right:54%;height:6%;background:#e0607a"></i><i style="top:82%;left:54%;right:22%;height:6%;background:#e0607a"></i></span>',
+    build: () => statsTemplate('photo'), hint:'Put a word in [*square brackets and asterisks*] for the highlighted italic style. Each figure sits under its label. Upload your own photo for the background.',
+    quick: [['L.headline.text','Headline',true],['L.l1.text','Stat 1 label'],['L.n1.text','Stat 1 figure'],['L.l2.text','Stat 2 label'],['L.n2.text','Stat 2 figure'],['L.l3.text','Stat 3 label'],['L.n3.text','Stat 3 figure'],['L.l4.text','Stat 4 label'],['L.n4.text','Stat 4 figure'],['L.l5.text','Stat 5 label'],['L.n5.text','Stat 5 figure'],['L.auth.text','Authorisation',true]],
+    uploads: [['upload','photo','Person photo'],['upload','background','Background photo'],['upload-logo','us','Logo']] },
+  { id:'statsIcons', group:'stats', varName:'Symbols', name:'Statistics Post', fmt:'Social 4:5', sub:'Statistics Post · five figures with symbols · 1080 × 1350', w:1080, h:1350, sides:1, sel:'headline',
+    thumb:'<span class="thumb q45" style="background:#2a1418"><i style="top:7%;left:8%;right:50%;height:7%;background:#fff"></i><i style="top:15%;left:8%;right:40%;height:7%;background:#fff"></i><i style="top:36%;left:8%;right:80%;height:8%;background:#D34337;border-radius:50%"></i><i style="top:47%;left:8%;right:80%;height:8%;background:#D34337;border-radius:50%"></i><i style="top:58%;left:8%;right:80%;height:8%;background:#D34337;border-radius:50%"></i><i style="top:69%;left:8%;right:80%;height:8%;background:#D34337;border-radius:50%"></i><i style="top:80%;left:8%;right:80%;height:8%;background:#D34337;border-radius:50%"></i><i style="top:38%;left:68%;right:8%;height:5%;background:#f08a96"></i><i style="top:49%;left:68%;right:8%;height:5%;background:#f08a96"></i><i style="top:60%;left:68%;right:8%;height:5%;background:#f08a96"></i><i style="top:71%;left:68%;right:8%;height:5%;background:#f08a96"></i><i style="top:82%;left:68%;right:8%;height:5%;background:#f08a96"></i></span>',
+    build: () => statsTemplate('icons'), hint:'Each row has a clip-art statistics symbol. Select a symbol to pick another from the icon list. Put a word in [*brackets and asterisks*] for the highlighted italic style.',
+    quick: [['L.headline.text','Headline',true],['L.l1.text','Stat 1 label'],['L.n1.text','Stat 1 figure'],['L.l2.text','Stat 2 label'],['L.n2.text','Stat 2 figure'],['L.l3.text','Stat 3 label'],['L.n3.text','Stat 3 figure'],['L.l4.text','Stat 4 label'],['L.n4.text','Stat 4 figure'],['L.l5.text','Stat 5 label'],['L.n5.text','Stat 5 figure'],['L.auth.text','Authorisation',true]],
+    uploads: [['upload-logo','us','Logo']] },
+  { id:'statsPlan', group:'stats', varName:'Plan list', name:'Statistics Post', fmt:'Social 4:5', sub:'Statistics Post · plan with four points · 1080 × 1350', w:1080, h:1350, sides:1, sel:'h2',
+    thumb:'<span class="thumb q45" style="background:#F4F4F2"><i style="top:7%;left:8%;right:40%;height:6%;background:#2C4E9C"></i><i style="top:14%;left:8%;right:30%;height:6%;background:#121318"></i><i style="top:35%;left:8%;right:78%;height:9%;background:#2C4E9C"></i><i style="top:35%;left:26%;right:8%;height:4%;background:#2C4E9C"></i><i style="top:51%;left:8%;right:78%;height:9%;background:#F2B632"></i><i style="top:51%;left:26%;right:8%;height:4%;background:#F2B632"></i><i style="top:66%;left:8%;right:78%;height:9%;background:#1C2A55"></i><i style="top:66%;left:26%;right:8%;height:4%;background:#1C2A55"></i><i style="top:81%;left:8%;right:78%;height:9%;background:#1E3570"></i><i style="top:81%;left:26%;right:8%;height:4%;background:#1E3570"></i></span>',
+    build: () => statsMoreTemplate('plan'), hint:'Four points, each with a symbol, a coloured heading bar and a short explanation. Select a symbol to pick another from the icon list.',
+    quick: [['L.h1.text','Headline (party colour)'],['L.h2.text','Headline',true],['L.ph1.text','Point 1 heading'],['L.pb1.text','Point 1 text',true],['L.ph2.text','Point 2 heading'],['L.pb2.text','Point 2 text',true],['L.ph3.text','Point 3 heading'],['L.pb3.text','Point 3 text',true],['L.ph4.text','Point 4 heading'],['L.pb4.text','Point 4 text',true],['L.auth.text','Authorisation',true]],
+    uploads: [['upload-logo','us','Logo']] },
+  { id:'statsBig', group:'stats', varName:'Big number', name:'Statistics Post', fmt:'Social 4:5', sub:'Statistics Post · big number over a photo · 1080 × 1350', w:1080, h:1350, sides:1, sel:'stat',
+    thumb:'<span class="thumb q45" style="background:linear-gradient(#2C4E9C 0 55%,#6a7080 55%)"><i style="top:14%;left:10%;right:45%;height:13%;background:#F2B632"></i><i style="top:31%;left:10%;right:10%;height:6%;background:#fff"></i><i style="top:40%;left:10%;right:30%;height:5%;background:#fff;opacity:.8"></i><i style="top:58%;left:18%;right:18%;height:42%;background:#3a3f50;border-radius:45% 45% 0 0"></i><i style="top:86%;left:36%;right:36%;height:5%;background:#fff"></i></span>',
+    build: () => statsMoreTemplate('big'), hint:'One big figure above a group photo. Upload your own photo to replace the placeholder group.',
+    quick: [['L.stat.text','Big number'],['L.line.text','Main line'],['L.sub.text','Second line',true],['L.wm1.text','Wordmark line 1'],['L.wm2.text','Wordmark line 2'],['L.auth.text','Authorisation',true]],
+    uploads: [['upload','scene','Group photo']] },
+  { id:'statsUpdate', group:'stats', varName:'Update', name:'Statistics Post', fmt:'Social 4:5', sub:'Statistics Post · update with one big figure · 1080 × 1350', w:1080, h:1350, sides:1, sel:'stat',
+    thumb:'<span class="thumb q45" style="background:#2C5FB8"><i style="top:12%;left:36%;right:36%;height:3%;background:#F2B632"></i><i style="top:24%;left:18%;right:18%;height:6%;background:#fff"></i><i style="top:32%;left:22%;right:22%;height:6%;background:#fff"></i><i style="top:46%;left:24%;right:24%;height:14%;background:#F2B632"></i><i style="top:52%;left:0;right:82%;height:1%;background:#F2B632"></i><i style="top:52%;left:82%;right:0;height:1%;background:#F2B632"></i><i style="top:64%;left:18%;right:18%;height:4%;background:#fff"></i><i style="top:86%;left:38%;right:38%;height:5%;background:#fff"></i></span>',
+    build: () => statsMoreTemplate('update'), hint:'A short update with one big figure between two lines.',
+    quick: [['L.kicker.text','Small label'],['L.headline.text','Headline',true],['L.stat.text','Big number'],['L.sub.text','Line under the number',true],['L.wm1.text','Wordmark line 1'],['L.wm2.text','Wordmark line 2'],['L.auth.text','Authorisation',true]],
+    uploads: [] },
   { id:'stVote', group:'story', varName:'Vote', name:'Story Ad', fmt:'Story 9:16', sub:'Story Ad · vote · 1080 × 1920', w:1080, h:1920, sides:1, sel:'headline', safe:[250,60,340,60],
     thumb:'<span class="thumb tall" style="background:#2C4E9C"><i style="top:12%;left:14%;right:14%;height:14%;background:#fff"></i><i style="top:28%;left:14%;right:14%;height:10%;background:#F2B632"></i><i style="top:58%;left:8%;right:8%;height:14%;background:#fff;border-radius:2px"></i><i style="top:76%;left:16%;right:16%;height:6%;background:#F2B632;border-radius:9px"></i></span>', build: () => storyTemplate('vote'), hint:'Polling day reminder with a mock ballot and a button. The dashed guide shows the area clear of the app’s own buttons and bars.',
     quick: [['L.kicker.text','Kicker'],['L.headline.text','Headline'],['L.pline.text','Party line'],['L.date.text','Date'],['L.bparty.text','Ballot party'],['L.bname.text','Ballot candidate'],['L.cta.text','Button text'],['L.auth.text','Authorisation',true]], uploads: [] },
@@ -2563,6 +2717,29 @@ function makeCivic(){
   const g3 = out.getContext('2d'), vg = g3.createLinearGradient(0, 0, 0, h); vg.addColorStop(0, 'rgba(255,255,255,.12)'); vg.addColorStop(1, 'rgba(255,255,255,0)'); g3.fillStyle = vg; g3.fillRect(0, 0, w, h);
   return out;
 }
+function makeAerial(){
+  const w = 1080, h = 1350, [c, g] = cutCanvas(w, h), R = (a, b) => a + Math.random()*(b - a);
+  const sea = g.createLinearGradient(0, 0, 0, h); sea.addColorStop(0, '#1C4E8C'); sea.addColorStop(.35, '#2B6FA8'); sea.addColorStop(.7, '#3A8FC0'); sea.addColorStop(1, '#2F7DB0'); g.fillStyle = sea; g.fillRect(0, 0, w, h);
+  g.fillStyle = 'rgba(20,40,70,.45)'; g.beginPath(); g.moveTo(0, 300); for (let x = 0; x <= w; x += 40) g.lineTo(x, 290 - Math.sin(x/170)*28 - Math.sin(x/53)*8); g.lineTo(w, 330); g.lineTo(0, 330); g.fill();
+  // headland
+  g.fillStyle = '#5E7F4E'; g.beginPath(); g.moveTo(0, 700); g.bezierCurveTo(200, 620, 520, 560, 760, 600); g.bezierCurveTo(960, 630, 1080, 700, 1080, 760); g.lineTo(1080, 880); g.bezierCurveTo(820, 840, 400, 900, 0, 960); g.closePath(); g.fill();
+  g.strokeStyle = '#B9A98C'; g.lineWidth = 10; g.beginPath(); g.moveTo(0, 960); g.bezierCurveTo(400, 900, 820, 840, 1080, 880); g.stroke();
+  g.fillStyle = '#7FA06A'; for (let i = 0; i < 70; i++){ g.beginPath(); g.arc(R(20, 1060), R(640, 860), R(5, 14), 0, Math.PI*2); g.fill(); }
+  g.fillStyle = '#2F5A34'; for (let i = 0; i < 120; i++){ g.beginPath(); g.arc(R(0, 1080), R(620, 880), R(4, 9), 0, Math.PI*2); g.fill(); }
+  for (let i = 0; i < 26; i++){ const x = R(30, 1000), y = R(650, 840), rw = R(40, 90), rh = rw*.45; g.fillStyle = Math.random() < .5 ? '#E8ECEF' : '#C9CFD6'; g.fillRect(x, y, rw, rh); g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(x, y + rh*.5, rw, rh*.5); }
+  // marina
+  g.fillStyle = 'rgba(120,190,225,.35)'; g.fillRect(0, 960, w, 300);
+  g.strokeStyle = '#E9E4D8'; g.lineWidth = 5;
+  for (let k = 0; k < 4; k++){ const y = 1000 + k*55; g.beginPath(); g.moveTo(180 + k*30, y); g.lineTo(1080, y - 20); g.stroke();
+    for (let x = 220 + k*30; x < 1060; x += 46){ g.lineWidth = 3; g.beginPath(); g.moveTo(x, y - 2); g.lineTo(x + 6, y + 22); g.stroke(); g.lineWidth = 5;
+      if (Math.random() < .75){ g.fillStyle = Math.random() < .8 ? '#FFFFFF' : '#F3D9A4'; g.save(); g.translate(x + 18, y + 12); g.rotate(-.2); g.beginPath(); g.ellipse(0, 0, 16, 6, 0, 0, Math.PI*2); g.fill(); g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(-6, -2, 12, 4); g.restore(); } } }
+  // foreground roofs
+  for (let i = 0; i < 9; i++){ const x = i*130 - 30 + R(-10, 10), y = 1240 + R(-20, 30), rw = R(150, 210), rh = R(80, 110);
+    g.fillStyle = '#D8DDE3'; g.fillRect(x, y, rw, rh); g.fillStyle = '#AEB6C0'; g.beginPath(); g.moveTo(x, y); g.lineTo(x + rw/2, y + rh*.45); g.lineTo(x + rw, y); g.fill(); g.fillStyle = 'rgba(30,60,40,.5)'; g.fillRect(x - 8, y + rh, rw + 16, 40); }
+  const [s1, g1] = cutCanvas(w/3, h/3); g1.drawImage(c, 0, 0, w/3, h/3); const [s2, g2] = cutCanvas(w, h); g2.imageSmoothingQuality = 'high'; g2.drawImage(s1, 0, 0, w, h);
+  g2.globalAlpha = .35; g2.drawImage(c, 0, 0); g2.globalAlpha = 1;
+  return s2;
+}
 function makeSkyline(){
   const w = 1080, h = 1350, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
   const sky = g.createLinearGradient(0, 0, 0, h*.66);
@@ -2595,7 +2772,8 @@ function makeSkyline(){
 
 /* ---------- icon set (drawn in a 100-unit box) ---------- */
 const ICONS = [['checkbox','Tick box'],['ballot','Ballot cross'],['qr','QR placeholder'],['mail','Email'],['phone','Phone'],['calendar','Calendar'],['clock','Clock'],['link','Link'],['pin','Location pin'],['cars','Two cars'],['car','Car'],['house','House'],['hospital','Hospital'],['school','Graduation cap'],['train','Train'],
-  ['leaf','Leaf'],['bolt','Energy bolt'],['dollar','Dollar coin'],['check','Tick in circle'],['arrow','Arrow in circle'],['star','Star'],['heart','Heart']];
+  ['leaf','Leaf'],['bolt','Energy bolt'],['dollar','Dollar coin'],['check','Tick in circle'],['arrow','Arrow in circle'],['star','Star'],['heart','Heart'],
+  ['trenddown','Trend down'],['trendup','Trend up'],['barsdown','Bar chart down'],['barsup','Bar chart up'],['percent','Percent'],['gavel','Court gavel'],['shield','Shield'],['cart','Shopping cart'],['people','People'],['pie','Pie chart'],['fuel','Fuel pump'],['coins','Coins'],['bulb','Light bulb']];
 const iconCache = new Map();
 function iconCanvas(name, size, color){
   const s = Math.max(8, Math.min(2400, Math.round(size))), key = name + '|' + s + '|' + color;
@@ -2671,6 +2849,44 @@ function iconCanvas(name, size, color){
     case 'link':
       g.lineWidth = 11; g.save(); g.translate(50,50); g.rotate(-Math.PI/4);
       rr(-44,-16,48,32,16); g.stroke(); rr(-4,-16,48,32,16); g.stroke(); g.restore(); break;
+    case 'fuel':
+      rr(10, 8, 52, 80, 6); g.fill(); g.fillRect(4, 86, 64, 8); cut(() => { rr(18, 16, 36, 24, 3); g.fill(); });
+      g.lineWidth = 7; g.beginPath(); g.moveTo(62, 22); g.lineTo(76, 34); g.lineTo(76, 70); g.quadraticCurveTo(76, 80, 84, 80); g.quadraticCurveTo(92, 80, 92, 70); g.lineTo(92, 32); g.lineTo(84, 22); g.stroke(); break;
+    case 'coins': {
+      const stack = (x, y, n) => { for (let i = n - 1; i >= 0; i--){ g.beginPath(); g.ellipse(x, y - i*10, 22, 9, 0, 0, Math.PI*2); g.fill(); g.fillRect(x - 22, y - i*10, 44, 7); cut(() => { g.lineWidth = 2.5; g.beginPath(); g.ellipse(x, y - i*10, 22, 9, 0, 0, Math.PI); g.stroke(); }); } };
+      stack(26, 80, 4); stack(68, 60, 5); circ(60, 76, 20); cut(() => { g.font = '900 26px Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('$', 60, 78); }); break; }
+    case 'bulb':
+      g.lineWidth = 7; g.beginPath(); g.arc(50, 40, 30, Math.PI*.78, Math.PI*.22); g.quadraticCurveTo(70, 66, 64, 72); g.lineTo(36, 72); g.quadraticCurveTo(30, 66, 29, 59); g.stroke();
+      g.beginPath(); g.moveTo(36, 80); g.lineTo(64, 80); g.moveTo(38, 88); g.lineTo(62, 88); g.stroke(); g.lineWidth = 5; g.beginPath(); g.arc(50, 40, 18, Math.PI*1.1, Math.PI*1.45); g.stroke(); break;
+    case 'trenddown': case 'trendup': {
+      const up = name === 'trendup'; g.lineWidth = 7; g.beginPath(); g.moveTo(8, 8); g.lineTo(8, 92); g.lineTo(94, 92); g.stroke();
+      g.lineWidth = 9; g.beginPath();
+      if (up){ g.moveTo(18, 76); g.lineTo(40, 54); g.lineTo(56, 66); g.lineTo(82, 30); } else { g.moveTo(18, 26); g.lineTo(40, 48); g.lineTo(56, 36); g.lineTo(82, 70); }
+      g.stroke();
+      g.beginPath(); if (up){ g.moveTo(90, 18); g.lineTo(91, 44); g.lineTo(66, 24); } else { g.moveTo(90, 82); g.lineTo(64, 78); g.lineTo(88, 56); } g.closePath(); g.fill(); break; }
+    case 'barsup': case 'barsdown': {
+      const up = name === 'barsup', hs = up ? [26, 44, 64] : [64, 44, 26];
+      hs.forEach((h, i) => { rr(14 + i*26, 92 - h, 18, h, 3); g.fill(); });
+      g.lineWidth = 7; g.beginPath(); if (up){ g.moveTo(14, 46); g.lineTo(78, 8); } else { g.moveTo(14, 8); g.lineTo(78, 46); } g.stroke();
+      g.beginPath(); if (up){ g.moveTo(90, 2); g.lineTo(84, 26); g.lineTo(68, 8); } else { g.moveTo(90, 52); g.lineTo(66, 50); g.lineTo(82, 32); } g.closePath(); g.fill(); break; }
+    case 'percent':
+      g.lineWidth = 10; g.beginPath(); g.arc(28, 28, 13, 0, Math.PI*2); g.stroke(); g.beginPath(); g.arc(72, 72, 13, 0, Math.PI*2); g.stroke();
+      g.lineWidth = 11; g.beginPath(); g.moveTo(82, 14); g.lineTo(18, 86); g.stroke(); break;
+    case 'gavel':
+      g.save(); g.translate(46, 40); g.rotate(-Math.PI/4); rr(-26, -13, 52, 26, 5); g.fill(); rr(-30, -17, 9, 34, 3); g.fill(); rr(21, -17, 9, 34, 3); g.fill(); rr(-4, 12, 8, 50, 3); g.fill(); g.restore();
+      rr(52, 80, 42, 12, 4); g.fill(); rr(58, 72, 30, 9, 3); g.fill(); break;
+    case 'shield':
+      g.beginPath(); g.moveTo(50, 4); g.lineTo(88, 18); g.lineTo(86, 52); g.quadraticCurveTo(80, 80, 50, 96); g.quadraticCurveTo(20, 80, 14, 52); g.lineTo(12, 18); g.closePath(); g.fill();
+      cut(() => { g.lineWidth = 10; g.beginPath(); g.moveTo(32, 50); g.lineTo(45, 63); g.lineTo(69, 37); g.stroke(); }); break;
+    case 'cart':
+      g.lineWidth = 8; g.beginPath(); g.moveTo(4, 14); g.lineTo(18, 14); g.lineTo(30, 66); g.lineTo(80, 66); g.lineTo(90, 30); g.lineTo(22, 30); g.stroke();
+      circ(34, 84, 8); circ(76, 84, 8); break;
+    case 'people':
+      circ(34, 30, 15); g.beginPath(); g.moveTo(8, 88); g.quadraticCurveTo(8, 52, 34, 52); g.quadraticCurveTo(60, 52, 60, 88); g.closePath(); g.fill();
+      circ(70, 26, 13); g.beginPath(); g.moveTo(54, 50); g.quadraticCurveTo(62, 46, 70, 46); g.quadraticCurveTo(94, 46, 94, 80); g.lineTo(66, 80); g.quadraticCurveTo(66, 60, 54, 50); g.closePath(); g.fill(); break;
+    case 'pie':
+      g.beginPath(); g.moveTo(44, 56); g.arc(44, 56, 40, -Math.PI/2 + 1.6, Math.PI*1.5); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(54, 46); g.arc(54, 46, 40, -Math.PI/2, -Math.PI/2 + 1.6); g.closePath(); g.fill(); break;
     case 'heart':
       g.beginPath(); g.moveTo(50,90); g.bezierCurveTo(10,62,2,40,14,22); g.bezierCurveTo(26,6,46,12,50,28); g.bezierCurveTo(54,12,74,6,86,22); g.bezierCurveTo(98,40,90,62,50,90); g.closePath(); g.fill(); break;
   }
@@ -2928,6 +3144,7 @@ function imgSrc(L){
   if (L.gen === 'scene2' || L.gen === 'subject2'){ ensureScene('duo'); return gen[L.gen]; }
   if (L.gen === 'waiting') return gen.waiting || (gen.waiting = makeWaiting());
   if (L.gen === 'civic') return gen.civic || (gen.civic = makeCivic());
+  if (L.gen === 'aerial') return gen.aerial || (gen.aerial = makeAerial());
   if (L.gen === 'skyline') return gen.skyline || (gen.skyline = makeSkyline());
   if (L.gen === 'bokeh') return gen.bokeh;
   if (COLLAGE[L.gen]) return gen.collage[L.gen] || (gen.collage[L.gen] = COLLAGE[L.gen]());
@@ -3621,7 +3838,7 @@ function ensureLogoLayer(side){
     ? { box:[340,180], x:860, y:1120 }
     : tpl.group === 'billboard'
     ? { box:[400,200], x: N ? N.x : 2160, y: N ? (N._g ? Math.round(N._g.cy) : N.y) : 640 }
-    : ['candF','candT','candE','candM','candS'].includes(tpl.id)
+    : ['candF','candT','candE','candM','candS','candL','statsPhoto','statsIcons','statsPlan','statsBig','statsUpdate'].includes(tpl.id)
     ? { box:[340,130], x: N && N._g ? Math.round(N._g.cx) : 540, y: N && N._g ? Math.round(N._g.cy) : 1250 }
     : (tpl.id === 'cand' || tpl.id === 'candD' || ['candP','candV','candG'].includes(tpl.id))
     ? { box: tpl.id === 'cand' ? [330,190] : [290,160], x: N ? N.x : 900, y: N ? N.y : 1500 }
@@ -3658,7 +3875,7 @@ function applyParty(pt, side = 'us', keepAuthName = true){
   const TG = tpl.id === 'press' ? byId(opp ? 'oppTag' : 'tag') : null; if (TG) TG.text = `${poss(pt.name)} ${opp ? 'position' : 'commitment'}:`;
   const EX = byId(opp ? 'oppExcerpt' : 'excerpt'); if (EX && oldName && oldName !== pt.name) EX.text = EX.text.split(oldName).join(pt.name);
   if (opp && oldName && oldName !== pt.name && (tpl.id === 'cause' || tpl.id === 'versus' || tpl.id === 'tornquote')){ for (const T of allLayers()) if (T.type === 'text' && T.text.includes(oldName)) T.text = T.text.split(oldName).join(pt.name); }
-  if (!opp && oldName && oldName !== pt.name && (['banner','versus','list','result','clipping','candV','candF','candT','candE','candM','candS','pledge','boldhead','plan','record','pcarousel','tintC','tintT','stVote','stMeet','flyerDL','flyerA5','spSlogan','spDemands','spClose'].includes(tpl.id) || tpl.id === 'presshead' || tpl.id === 'announce' || tpl.id === 'stat' || tpl.id === 'cand' || tpl.id === 'candD' || tpl.group === 'billboard')){ for (const T of allLayers()) if (T.type === 'text' && T.text.includes(oldName)) T.text = fixVerb(T.text.split(oldName).join(pt.name), pt.name); }
+  if (!opp && oldName && oldName !== pt.name && (['banner','versus','list','result','clipping','candV','candF','candT','candE','candM','candS','pledge','boldhead','plan','record','pcarousel','statsPhoto','statsIcons','statsPlan','statsBig','statsUpdate','candL','tintC','tintT','stVote','stMeet','flyerDL','flyerA5','spSlogan','spDemands','spClose'].includes(tpl.id) || tpl.id === 'presshead' || tpl.id === 'announce' || tpl.id === 'stat' || tpl.id === 'cand' || tpl.id === 'candD' || tpl.group === 'billboard')){ for (const T of allLayers()) if (T.type === 'text' && T.text.includes(oldName)) T.text = fixVerb(T.text.split(oldName).join(pt.name), pt.name); }
   const LD = !opp ? findAny('lead') : null; if (LD && oldName && oldName !== pt.name) LD.text = LD.text.split(oldName).join(pt.name);
   state.content[opp ? 'opp' : 'party'] = pt.name;
   for (const P of allLayers()) if (P.id === nameId) P.text = pt.name;
@@ -4057,6 +4274,17 @@ function shuffle(first, keepUs){
   if (tpl.id === 'presshead'){ const [h, b] = rand(HEADLINES), P = state.content.party; set('outlet', rand(OUTLETS)); set('headline', h.split('{P}').join(P)); set('body', b.split('{P}').join(P)); }
   if (tpl.id === 'cause'){ const [c, e, s] = rand(CAUSES); set('tag', 'The cause'); set('tag2', 'The effect'); set('cause', c.split('{O}').join(state.content.opp)); set('effect', e); set('stat', s); }
   if (tpl.id === 'announce'){ const [h, s] = rand(ANNOUNCE); set('headline', fixVerb(h.split('{P}').join(state.content.party), state.content.party)); set('subhead', s); }
+  if (tpl.id === 'statsPlan'){ const T = rand(PLAN_SETS), P = state.content.party; set('h1', T.h1.split('{PP}').join(poss(P))); set('h2', T.h2);
+    T.rows.forEach(([hd, bd, ic], i) => { set('ph' + (i+1), hd); set('pb' + (i+1), bd); const I = findAny('pi' + (i+1)); if (I) I.icon = ic; }); }
+  if (tpl.id === 'statsBig'){ const [a, b2, c] = rand(BIG_SETS); set('stat', a); set('line', b2); set('sub', c); set('wm1', 'Delivering *for*'); set('wm2', rand(REGIONS).replace(/^the /, '')); }
+  if (tpl.id === 'statsUpdate'){ const [k, h, n, sb] = rand(UPDATE_SETS); set('kicker', k); set('headline', h); set('stat', n); set('sub', sb); set('wm1', 'Delivering *for*'); set('wm2', rand(REGIONS).replace(/^the /, '')); }
+  if (tpl.id === 'candL'){ const [l, v, pl] = rand(LOCAL_SETS), E = rand(ELECTORATES), f = rand(FIRST), ln = rand(LAST);
+    set('lead', l); set('verb', v); set('place', pl.split('{E}').join(E)); set('vote', 'Vote [1]'); set('first', f); set('last', ln); set('seat', `${state.content.party} for *${E}*`); set('auth', 'example.org/auth'); }
+  if (tpl.id === 'statsPhoto' || tpl.id === 'statsIcons'){
+    const T = rand(STAT_SETS); set('headline', T.head.split('{P}').join(state.content.party));
+    T.items.forEach(([l, n, ic], i) => { set('l' + (i+1), l); set('n' + (i+1), n); const I = findAny('ic' + (i+1)); if (I) I.icon = ic; });
+    const M = findAny('mark'); if (M) M.icon = T.big;
+  }
   if (tpl.id === 'stat'){ const S = rand(STATS); set('intro', `Under ${rand(FIRST)} ${rand(LAST)} and the ${state.content.party}:`); set('stat', S[0]); set('statSub', S[1]); set('tag1', S[2]); set('tag2', S[3]); }
   if (tpl.id === 'pcarousel'){
     const [tg, cov, items] = rand(PCAROUSEL), P = state.content.party, pol = items.slice().sort(() => Math.random() - .5);
