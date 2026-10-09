@@ -506,6 +506,81 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 .bdtile:hover img,.bdtile:hover .bdsw{border-color:var(--accent)}
 .bdtile.on img,.bdtile.on .bdsw{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .bdtile.on span:last-child{color:var(--accent)}
+.resnav{display:inline-flex;align-items:center;gap:6px;font-weight:700}
+.resnav.lit{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 45%,transparent);color:var(--accent)}
+.rnav{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+.rnav button{flex:1 1 auto;min-width:0;border:1px solid var(--line);background:var(--panel-2);border-radius:999px;padding:5px 9px;font:inherit;font-size:12px;font-weight:600;color:var(--fg);cursor:pointer}
+.rnav button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.rsec{display:flex;flex-direction:column;gap:9px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rsec h3{margin:0;font-size:13px;font-weight:700}
+.rsec input[type=text],.rsec input[type=date],.rsec select{width:100%;min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rsec .grid2{gap:8px}
+.rrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rrow select{flex:1 1 120px;width:auto}
+.cands{display:flex;flex-direction:column;gap:8px}
+.cand{border:1px solid var(--line);border-radius:var(--r);padding:8px;display:flex;flex-direction:column;gap:6px;background:var(--panel-2)}
+.crow1{display:grid;grid-template-columns:10px minmax(0,1.3fr) minmax(0,1fr) auto;gap:6px;align-items:center}
+.crow2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.crow2 .ctl-head{font-size:11px}
+.crow3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.crow3 select{width:auto;flex:0 0 auto}
+.crow3 small{color:var(--muted);font-size:11.5px;margin-left:auto}
+.csw{display:inline-block;width:10px;height:28px;border-radius:3px;flex:none}
+.listrow .crow1{grid-template-columns:10px minmax(0,1fr) auto}
+.crow3 .ps{display:flex;align-items:center;gap:6px;margin:0}.crow3 .ps input{width:64px}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg2 button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2);color:var(--fg);cursor:pointer;font:inherit}
+.seg2 button b{font-size:13px}.seg2 button small{font-size:11px;color:var(--muted);line-height:1.3}
+.seg2 button.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.seg2 button:hover:not(.on){border-color:var(--muted)}
+.cbtns{display:flex;gap:2px}
+.cbtns .ib{width:26px;height:26px;font-size:13px}
+.ib.arm{color:var(--danger);font-weight:800}
+.prow{display:grid;grid-template-columns:34px 62px minmax(0,1fr);gap:6px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line)}
+.prow > select{grid-column:2 / span 2}
+.prow .cbtns{grid-column:1 / span 1;grid-row:2}
+.prow .p2{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between}
+.prow input[type=color],.rsec input[type=color]{width:34px;height:30px;padding:0 2px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}
+.prow .abbr{text-transform:uppercase;font-weight:700}
+.srows{display:flex;flex-direction:column;gap:5px}
+.srow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr)) 26px;gap:5px;align-items:center}
+.srow.sh{font-size:11px;font-weight:700;color:var(--muted)}
+.srow input{padding-left:6px;padding-right:4px}
+.stot{display:flex;flex-direction:column;gap:4px;font-size:12.5px}
+.stot div{display:flex;align-items:center;gap:7px}
+.stot .csw{height:14px}
+.stot small{color:var(--muted)}
+.rkinds{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rkind{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--fg)}
+.rkind b{display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--panel-2);font-size:11px;flex:none}
+.rkind.on{border-color:var(--accent);background:var(--accent-soft)}
+.rkind.on b{background:var(--accent);color:var(--accent-fg)}
+.rsaved{display:flex;flex-direction:column;gap:6px}
+.rsv{display:flex;gap:6px;align-items:center}
+.rsv span{flex:1;min-width:0;display:flex;flex-direction:column}
+.rsv small{color:var(--muted);font-size:11.5px}
+.rexport{padding:14px 0 4px;display:flex}
+.rexport .btn{flex:1;justify-content:center}
+.linkbtn{border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+.rbnote{margin:0 0 4px}
+.blocs-r{display:flex;flex-direction:column;gap:10px}
+.bloc{border:1px solid var(--line);border-radius:var(--r);padding:8px;display:flex;flex-direction:column;gap:7px;background:var(--panel-2)}
+.brow{display:grid;grid-template-columns:34px minmax(0,1fr) 80px 26px;gap:6px;align-items:center}
+.brow .abbr{text-transform:uppercase;font-weight:700}
+.bmem{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 9px 3px 7px;font-size:12px;font-weight:700;cursor:pointer;background:var(--panel)}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--pc)}
+.chip.on{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc)}
+.chip:not(.on){opacity:.6}
+.bsum{color:var(--muted);font-size:11.5px}
+.natrows{display:flex;flex-direction:column;gap:5px}
+.natrow{display:grid;grid-template-columns:minmax(0,1fr) 90px 90px;gap:6px;align-items:center}
+.natrow > span{display:flex;align-items:center;gap:7px;font-weight:700;font-size:12.5px}
+.natrow .csw{height:14px}
+.natrow.sh{font-size:11px;font-weight:700;color:var(--muted)}
+.roff{display:flex;flex-direction:column;gap:10px;padding:8px 0}
 </style>
 
 <div class="app" id="app">
@@ -522,6 +597,7 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
       <span class="tx"><b id="sw-fam">Politician Ad</b><span id="tpl-sub">Leader</span></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>
     </button>
+    <button class="btn resnav" data-act="res-open" title="Election Results: results boards, two-party preferred, seat trackers and election night graphics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" id="resnav-lbl">Election Results</span></button>
     <div class="spacer"></div>
     <div class="hbtns">
       <button class="btn" data-act="new-poster" title="Start a new poster from a template" aria-label="New poster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9 14h6"/></svg><span class="lbl">New poster</span></button>
@@ -541,6 +617,11 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
         <button role="tab" id="tab-content" data-act="ltab" data-v="content" class="on" aria-selected="true">Content</button>
         <button role="tab" id="tab-party" data-act="ltab" data-v="party" aria-selected="false">Party</button>
         <button role="tab" id="tab-files" data-act="ltab" data-v="files" aria-selected="false">My files</button>
+        <button role="tab" id="tab-results" data-act="ltab" data-v="results" aria-selected="false" hidden>Results</button>
+      </div>
+      <div class="pane" data-pane="results" role="tabpanel" aria-labelledby="tab-results" hidden>
+        <div id="rpane-off" class="roff"><p class="hint">Election Results makes results boards, two-party preferred graphics, count progress and seat trackers from data you enter.</p><button class="btn primary" data-act="res-open">Open Election Results</button></div>
+        <div id="rpane-on" hidden><div class="rnav" id="rnav" role="toolbar" aria-label="Election Results sections"><button data-v="data">Results</button><button data-v="parties">Parties</button><button data-v="blocs">Blocs</button><button data-v="seats">Seats</button><button data-v="style">Style</button><button data-v="brand">Branding</button><button data-v="tpls">Templates</button></div><div id="rpanel"></div></div>
       </div>
 
       <div class="pane" data-pane="layouts" role="tabpanel" aria-labelledby="tab-layouts" hidden>
@@ -824,6 +905,7 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 <input type="file" id="projfile" accept=".json,application/json" hidden>
 <input type="file" id="myfile-input" accept="image/*,.svg" multiple hidden>
 <input type="file" id="kitfile" accept=".json,application/json" hidden>
+<input type="file" id="csvfile" accept=".csv,text/csv,text/plain" hidden>
 <input type="file" id="fontfile" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" hidden>
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden>
@@ -4250,6 +4332,13 @@ function shapePath(g, L){
   else if (L.kind === 'ellipse'){ g.moveTo(Math.abs(w/2), 0); g.ellipse(0, 0, Math.abs(w/2), Math.abs(h/2), 0, 0, Math.PI*2); }
   else if (L.kind === 'paper'){ g.rect(-L.w/2, -L.h/2, L.w, L.h); }
   else if (L.kind === 'trace'){ tracePath(g, L); }
+  else if (L.kind === 'arc'){   // pie or ring segment; a semicircle sits on the bottom edge of its box
+    const semi = L.semi !== false, rx = Math.abs(w)/2, ry = semi ? Math.abs(h) : Math.abs(h)/2, cy = semi ? h/2 : 0, ir = clamp(L.ir || 0, 0, .98);
+    const a0 = (L.a0 ?? 180)*D2R, a1 = (L.a1 ?? 360)*D2R;
+    if (Math.abs(a1 - a0) < 1e-4){ return; }
+    g.moveTo(rx*Math.cos(a0), cy + ry*Math.sin(a0)); g.ellipse(0, cy, rx, ry, 0, a0, a1, false);
+    if (ir > 0){ g.lineTo(rx*ir*Math.cos(a1), cy + ry*ir*Math.sin(a1)); g.ellipse(0, cy, rx*ir, ry*ir, 0, a1, a0, true); } else g.lineTo(0, cy);
+    g.closePath(); }
   else if (L.kind === 'arch'){ const c = Math.max(1, Math.min(h, h*(L.curve ?? .4))); g.moveTo(-w/2, h/2); g.lineTo(-w/2, -h/2 + c); g.ellipse(0, -h/2 + c, w/2, c, 0, Math.PI, Math.PI*2); g.lineTo(w/2, h/2); g.closePath(); }
   else { (L.pts || []).forEach(([u,v], i) => i ? g.lineTo(u*w, v*h) : g.moveTo(u*w, v*h)); if (L.closed) g.closePath(); }
 }
@@ -4338,6 +4427,13 @@ const DRAW = {
       if (L.shade > 0 && /^#/.test(fc)){ const gr = g.createLinearGradient(-w/2, 0, w/2, 0); gr.addColorStop(0, mix(fc, '#FFFFFF', L.shade/400)); gr.addColorStop(1, mix(fc, '#000000', L.shade/300)); g.fillStyle = gr; }
       else g.fillStyle = fc;
       g.fill(L.kind === 'trace' ? 'evenodd' : 'nonzero');
+      if (L.tex === 'hatch'){   // diagonal line texture, clipped to the shape (stays vector in SVG)
+        g.save(); g.beginPath(); shapePath(g, L); g.clip(L.kind === 'trace' ? 'evenodd' : 'nonzero');
+        g.strokeStyle = '#000000'; g.globalAlpha *= clamp(L.texOp ?? 25, 0, 100)/100; g.lineWidth = Math.max(1, Math.min(Math.abs(w), Math.abs(h))*.012 + 1.5);
+        const gap = Math.max(6, g.lineWidth*4.2), aw = Math.abs(w), ah = Math.abs(h); g.beginPath();
+        for (let x = -aw/2 - ah; x < aw/2 + ah; x += gap){ g.moveTo(x, ah/2); g.lineTo(x + ah, -ah/2); }
+        g.stroke(); g.restore();
+      }
     }
     if (!isContainer(L)) strokeShapePath(g, L);
     return { b:{ x:L.x-w/2, y:L.y-h/2, w, h }, cx:L.x, cy:L.y, rot:L.rot };
@@ -4492,6 +4588,7 @@ function syncInputs(){
   });
 }
 function onValueChange(path, obj, key){
+  if (obj && obj.rb && obj.bind && key === 'text' && typeof rBindEdit === 'function'){ rBindEdit(obj); }
   if (path === 'state.font'){
     for (const L of allLayers()) if (L.type === 'text' && !L.keepFont){ L.font = state.font; L.weight = clampWeight(L.font, L.weight); }
     renderInspector();
@@ -4642,8 +4739,10 @@ function renderInspector(){
           <p class="hint">Double-click the photo to move it inside the shape. To change the photo but keep the shape, use Swap in from My files.</p></div>`
         : (!openPoly && canHoldImage(L) ? `<button class="btn" data-act="shape-upload" data-id="${L.id}">Put a photo in this shape</button>` : '')}
         ${L.kind === 'trace' ? '<p class="note">Traced from an image. It’s a true vector: give it any fill or outline and resize it with no blur. SVG export keeps it as vector paths.</p>' : ''}
-        ${!openPoly && L.kind !== 'paper' && L.kind !== 'trace' ? `<div class="ctl"><span class="ctl-head">Shape</span>${shapeGrid('set-shape', L.preset, `data-id="${L.id}"`)}</div>` : ''}
+        ${L.kind === 'arc' ? `<div class="grid2">${r(P('a0'),'Start angle',-360,360)}${r(P('a1'),'End angle',-360,360)}</div>${r(P('ir'),'Inner hole',0,.95,.01)}` : ''}
+        ${!openPoly && L.kind !== 'paper' && L.kind !== 'trace' && L.kind !== 'arc' ? `<div class="ctl"><span class="ctl-head">Shape</span>${shapeGrid('set-shape', L.preset, `data-id="${L.id}"`)}</div>` : ''}
         ${openPoly ? '' : `${ck(P('fillOn'), cont ? 'Fill behind the photo' : 'Fill')}${L.fillOn ? colorCtl(P('fill'),'Fill colour') : ''}`}
+        ${!openPoly && L.fillOn && !cont ? `<div class="grid2"><label class="check"><input type="checkbox" data-texck="${L.id}" ${L.tex === 'hatch' ? 'checked' : ''}> Line texture</label>${L.tex === 'hatch' ? r(P('texOp'),'Texture strength',0,100) : '<span></span>'}</div>` : ''}
         ${outline}
         ${L.kind === 'rect' ? r(P('radius'),'Corner radius',0,600) : ''}${L.kind === 'arch' ? r(P('curve'),'Arch curve',.05,1,.01) : ''}${L.kind === 'ellipse' ? ck(P('soft'),'Soft glow edges') : ''}${L.kind === 'paper' ? `${r(P('tear'),'Tear depth',4,140)}${r(P('seed'),'Tear pattern',1,60)}${r(P('grain'),'Paper grain',0,3,.1)}${ck(P('pshadow'),'Drop shadow')}` : ''}${!openPoly ? r(P('shade'),'Shading',0,100) : ''}
         ${L.kind === 'poly' ? ck(P('closed'),'Closed shape') : ''}
@@ -4677,7 +4776,7 @@ function renderInspector(){
     <button class="btn" data-act="back" title="Send to back">To back</button>
     <button class="btn" data-act="lock" data-id="${L.id}">${L.locked?'Unlock':'Lock'}</button>
     <button class="btn danger" data-act="delete" title="Delete (Del)" style="grid-column:span 2">Delete layer</button></div>`;
-  el.innerHTML = head + body + r(P('opacity'),'Opacity',0,100) + actions;
+  el.innerHTML = head + (L.rb ? `<p class="note rbnote">Drawn from the election results. Change the data in the <button class="linkbtn" data-act="ltab" data-v="results">Results tab</button>. Moves and style changes you make here are kept when the data changes.</p>` : '') + body + r(P('opacity'),'Opacity',0,100) + actions;
   el.querySelectorAll('details.grp').forEach(d => d.addEventListener('toggle', () => { if (d.dataset.grp === 'logocol') return; d.open ? openGroups.add(d.dataset.grp) : openGroups.delete(d.dataset.grp); }));
   syncInputs();
 }
@@ -4728,11 +4827,12 @@ function removeSelected(){
 
 /* ---------- history ---------- */
 const hist = { past: [], future: [], last: null, t: 0 };
-function snap(){ return JSON.stringify({ guides: state.guidelines, font:state.font, content:state.content, colors:state.colors, layers:state.layers.map(cloneLayer), pages: state.pages ? state.pages.map(pg => pg.map(cloneLayer)) : null, page: state.page || 0 }); }
+function snap(){ return JSON.stringify({ election: state.election || null, guides: state.guidelines, font:state.font, content:state.content, colors:state.colors, layers:state.layers.map(cloneLayer), pages: state.pages ? state.pages.map(pg => pg.map(cloneLayer)) : null, page: state.page || 0 }); }
 function commit(){ if (thumbing) return; clearTimeout(hist.t); refreshCurrentThumb(); scheduleProjectSave(); const s = snap(); if (s === hist.last) return; if (hist.last) hist.past.push(hist.last); if (hist.past.length > 80) hist.past.shift(); hist.future = []; hist.last = s; updUndo(); }
 function commitSoon(){ clearTimeout(hist.t); hist.t = setTimeout(commit, 350); }
 function restore(s){
   const o = JSON.parse(s); state.font = o.font; state.content = o.content; state.colors = o.colors; state.guidelines = o.guides || []; hist.last = s; renderGuidesList();
+  if (o.election) state.election = o.election; if (tpl.rkind){ renderResultsPanel(); }
   if (o.pages){ state.pages = o.pages; state.page = Math.min(o.page || 0, o.pages.length - 1); state.layers = state.pages[state.page]; } else { state.pages = null; state.layers = o.layers; }
   applyPageSize(); renderPages();
   if (!byId(state.selected)) state.selected = null;
@@ -5124,6 +5224,7 @@ function updateCpLogo(name){
   $('#cp-logo-clear').hidden = !cpLogoSrc;
 }
 function shuffle(first, keepUs){
+  if (tpl && tpl.rkind){ if (!first){ randomResults(); rebuildResults(); renderResultsPanel(); commit(); toast('New fictional results for this electorate.'); } return; }
   const us = (keepUs && PARTIES.find(p => p.name === state.content.party)) || rand(partyPool());
   const set = (id, v) => { const L = findAny(id); if (L) L.text = v; };
   set('name', `${rand(FIRST)} ${rand(LAST)}`);
@@ -5300,6 +5401,11 @@ function resetLayout(){
 }
 /* ---------- template browsing: family layouts (left) + full gallery ---------- */
 const famOf = t => t.group || t.id;
+/* Election Results graphics: one template per kind (layers come from the election data) */
+for (const [k, nm] of [['cand','Candidate results'],['tpp','Bloc comparison'],['count','Count progress'],['seats','Seat ticker'],['change','Seat change'],['proj','Projected result'],['decl','Declared result'],['primary','Primary vote breakdown'],['detail','Detailed electorate result'],['summary','Election summary'],['blocvote','Bloc vote with leaders'],['blocseats','Bloc seats with leaders'],['alloc','District seat allocation']]) TEMPLATES.push({ id: 'res_' + k, rkind: k, group: 'results', name: 'Election Results', varName: nm, fmt: '16:9 broadcast',
+  sub: `Election Results · ${nm}`, w: 1920, h: 1080, sides: 1, sel: null, custom: true, quick: [], uploads: [], hint: '',
+  thumb: `<span class="thumb wide" style="background:#ECEEF2"><i style="top:0;left:0;right:0;height:17%;background:#fff"></i><i style="top:30%;left:6%;right:${k === 'tpp' ? 60 : 8}%;height:12%;background:#D8262E"></i><i style="top:46%;left:6%;right:${k === 'tpp' ? 60 : 30}%;height:12%;background:#1E4FA8"></i><i style="top:62%;left:6%;right:${k === 'tpp' ? 60 : 55}%;height:12%;background:#4FA82A"></i></span>`,
+  build: () => buildResultsLayers(k) });
 const FAMILIES = (() => { const out = [], seen = new Set(); for (const t of TEMPLATES){ const f = famOf(t); if (!seen.has(f)){ seen.add(f); out.push({ id:f, name:t.name, items:TEMPLATES.filter(y => famOf(y) === f) }); } } return out; })();
 const varTitle = t => t.varName || (t.subName ? t.subName : t.fmt);
 const varSub = t => [t.subName && t.varName ? t.subName : null, t.fmt].filter(Boolean).join(', ');
@@ -5427,7 +5533,17 @@ function renderQuick(){
     ? `<button class="btn" data-act="upload" data-target="${target}">${label}</button>` : `<button class="btn" data-act="upload-logo" data-side="${target}">${label}</button>`).join('');
   renderBackdrops();
 }
+function resultsChrome(){
+  const on = !!(tpl && tpl.rkind), tr = $('#tab-results'); if (!tr) return;
+  tr.hidden = !on; $('#tab-content').hidden = on; $('#tab-party').hidden = on;
+  const nb = document.querySelector('.resnav'); if (nb){ nb.classList.toggle('lit', on); $('#resnav-lbl').textContent = on ? 'Back to posters' : 'Election Results'; nb.title = on ? 'Back to posters and ads' : 'Election Results: results boards, two-party preferred, seat trackers and election night graphics'; }
+  const curTab = (document.querySelector('.tabs [data-act=ltab].on') || {}).dataset; const v = curTab && curTab.v;
+  if (on && (v === 'content' || v === 'party')) setLeftTab('results');
+  if (!on && v === 'results') setLeftTab('content');
+  renderResultsPanel();
+}
 function updateTplChrome(){
+  resultsChrome();
   $('#sw-fam').textContent = tpl.name;
   $('#tpl-sub').textContent = [tpl.varName, tpl.subName, tpl.fmt].filter(Boolean).join(' · ');
   $('#tpl-size').textContent = state.pages ? (tpl.fixedPages ? `${tpl.pageNames[state.page]} · ${W} × ${H} px` : `${state.pages.length} slides · ${W} × ${H} px`) : `${W} × ${H} px`;
@@ -5499,6 +5615,7 @@ function switchTemplate(id, fresh){
     for (const L of allLayers()) if (L.type === 'text' && L.id !== 'auth' && !L.keepFont){ L.font = state.font; L.weight = clampWeight(L.font, L.weight); }
     shuffle(true, true);
   }
+  if (tpl.rkind) rebuildResults({ quiet: true });
   updateTplChrome(); renderTemplates(); renderQuick(); renderParties(); renderPages(); renderLayers(); renderInspector(); render(); syncInputs();
   hist.past = []; hist.future = []; hist.last = null; commit(); updUndo();
 }
@@ -6797,7 +6914,7 @@ async function loadMyFiles(){
 let project = { id: newId('p'), name: '', named: false, created: Date.now() };
 let projReady = false, projDirty = false, projT = 0, projSaving = false, projSuppress = false;
 const projects = new Map();   // id -> summary { id, name, tplId, updated, thumb }
-function autoProjectName(){ return [state.content.party, tpl.varName || tpl.name, tpl.subName].filter(Boolean).join(' ').slice(0, 70); }
+function autoProjectName(){ if (tpl && tpl.rkind && state.election) return [state.election.name, state.election.year, tpl.varName].filter(Boolean).join(' ').slice(0, 70); return [state.content.party, tpl.varName || tpl.name, tpl.subName].filter(Boolean).join(' ').slice(0, 70); }
 function setProjStatus(t){ const s = $('#proj-status'); if (s) s.textContent = t; }
 function syncProjName(){ const i = $('#proj-name'); if (!i || document.activeElement === i) return; i.value = project.named ? project.name : autoProjectName(); }
 function scheduleProjectSave(){
@@ -6848,7 +6965,7 @@ async function openProject(id){
   busy(null);
   tpl = T; if (T.custom && rec.size){ T.w = rec.size[0]; T.h = rec.size[1]; T.sub = rec.sub || T.sub; }
   W = tpl.w; H = tpl.h; sizeCanvas(); if (tpl.group) lastVariant[tpl.group] = tpl.id; if (tpl.varGroup) lastSub[tpl.varGroup] = tpl.id;
-  const o = rec.data; state.font = o.font; state.content = o.content; state.colors = o.colors; state.guidelines = o.guides || []; selIds = [];
+  const o = rec.data; state.font = o.font; state.content = o.content; state.colors = o.colors; state.guidelines = o.guides || []; selIds = []; if (o.election) state.election = o.election;
   if (o.pages){ state.pages = o.pages; state.page = Math.min(o.page || 0, o.pages.length - 1); state.layers = state.pages[state.page]; } else { state.pages = null; state.page = 0; state.layers = o.layers; }
   applyPageSize(); state.selected = null; setTool('select'); setWand(null);
   if (!FONT_LIST.some(x => x.f === state.font)) state.font = 'Montserrat';
@@ -7817,12 +7934,1176 @@ async function runExport(){
   prog(''); exporting = false; goBtn.disabled = false; closeExport();
 }
 
-window.__degv = { assets, state, get tpl(){ return tpl; }, get project(){ return project; }, aabb, setSelection, alignSel, distributeSel, view, get selIds(){ return selIds; }, render, byId, imageReport, IMG, X, traceLogo, detectRegions, marchingSquares, picCache, applyEnh, pictureFor, SvgCtx, get canvasK(){ return canvasK; }, openExport, runExport, decodeImageBlob, makeSource };
+
+/* =====================================================================
+   Election Results: data model, calculations and validation
+   Election data lives in state.election, separate from the graphics.
+   Every number on a results graphic is derived from it on each rebuild.
+   ===================================================================== */
+const rid = p => p + Math.random().toString(36).slice(2, 8);
+const rnum = v => (v === '' || v == null || !isFinite(+v)) ? null : +v;
+const EL_STATUS = [['counting','Counting'],['leading','Leading'],['projected','Projected winner'],['projres','Projected result'],['declared','Declared elected'],['final','Final result']];
+const EL_METRIC = [['booths','Booths counted (19/52)'],['boothsPct','% of booths counted'],['votesPct','% of votes counted'],['units','Reporting units (49/63)']];
+const CAND_STATUS = [['','—'],['leading','Leading'],['elected','Elected'],['excluded','Excluded']];
+function partyFromTemplate(name, abbr, hex, order){ return { id: rid('p'), abbr, name, color: hex, color2: '', text: '', order }; }
+/* DEGV's template parties, as used across the poster templates */
+const TPL_ABBR = { 'Left':'LFT', 'Social Democrats':'SD', 'Environmentalists':'ENV', 'Liberals':'LIB', 'Christian Democrats':'CD', 'Conservatives':'CON', 'Nationalists':'NAT' };
+function templateParties(){ return PARTIES.filter(p => TPL_ABBR[p.name]).map((p, i) => partyFromTemplate(p.name, TPL_ABBR[p.name], p.hex, i + 1)).concat([partyFromTemplate('Others', 'OTH', '#A3A8B0', 98), partyFromTemplate('Independent', 'IND', '#6E7179', 99)]); }
+/* every election carries all the template parties; Left and Right blocs are preset, Others and Independents sit outside both */
+const BLOC_LEFT = ['Left', 'Social Democrats', 'Environmentalists'], BLOC_RIGHT = ['Liberals', 'Christian Democrats', 'Conservatives', 'Nationalists'];
+function upgradeElection3(E){
+  if (!E || E.v >= 3) return E;
+  const byName = n => E.parties.find(p => p.name.toLowerCase() === n.toLowerCase() || p.abbr === TPL_ABBR[n]);
+  PARTIES.forEach((t, i) => { if (TPL_ABBR[t.name] && !byName(t.name)) E.parties.push(partyFromTemplate(t.name, TPL_ABBR[t.name], t.hex, i + 1)); });
+  if (!E.parties.some(p => p.abbr === 'OTH')) E.parties.push(partyFromTemplate('Others', 'OTH', '#A3A8B0', 98));
+  if (!E.parties.some(p => p.abbr === 'IND')) E.parties.push(partyFromTemplate('Independent', 'IND', '#6E7179', 99));
+  const order = n => { const i = PARTIES.findIndex(t => t.name === n.name); return i >= 0 ? i : n.abbr === 'OTH' ? 98 : n.abbr === 'IND' ? 99 : 50 + (n.order || 0); };
+  E.parties.sort((a, b) => order(a) - order(b)); E.parties.forEach((p, i) => p.order = i + 1);
+  const ids = names => names.map(byName).filter(Boolean).map(p => p.id), L = ids(BLOC_LEFT), Rt = ids(BLOC_RIGHT), outside = E.parties.filter(p => p.abbr === 'OTH' || p.abbr === 'IND').map(p => p.id), fixed = new Set([...L, ...Rt, ...outside]);
+  if (!E.blocs || E.blocs.length < 2) E.blocs = defaultBlocs(E.parties);
+  E.blocs.forEach(b => b.parties = b.parties.filter(id => !fixed.has(id)));
+  E.blocs[0].parties = L.concat(E.blocs[0].parties); E.blocs[1].parties = Rt.concat(E.blocs[1].parties);
+  E.blocs.forEach(b => { if (b.leaderParty && !b.parties.includes(b.leaderParty)) b.leaderParty = b.parties[0] || ''; });
+  for (const el of E.electorates){ const hasVotes = el.candidates.some(k => rnum(k.votes) != null);
+    for (const t of PARTIES){ const P = byName(t.name); if (!P || el.candidates.some(k => k.party === P.id)) continue;
+      el.candidates.push({ id: rid('c'), name: `${rand(FIRST)} ${rand(LAST)}`, party: P.id, mp: false, votes: hasVotes ? 0 : null, pct: hasVotes ? null : 0, prevPct: null, swing: null, status: '' }); } }
+  E.v = 3; return E;
+}
+function defaultBlocs(P){
+  const ids = names => P.filter(p => names.includes(p.name)).map(p => p.id);
+  const sd = P.find(p => p.name === 'Social Democrats'), con = P.find(p => p.name === 'Conservatives');
+  return [
+    { id: rid('b'), name: 'Left Bloc', short: 'LEFT', color: sd ? sd.color : '#D34337', parties: ids(['Left', 'Social Democrats', 'Environmentalists']), leader: 'Priya Lindqvist', leaderParty: sd ? sd.id : '' },
+    { id: rid('b'), name: 'Right Bloc', short: 'RIGHT', color: con ? con.color : '#2C4E9C', parties: ids(['Conservatives', 'Christian Democrats', 'Liberals', 'Nationalists']), leader: 'Marcus Whitfield', leaderParty: con ? con.id : '' },
+  ];
+}
+function sampleElection(){
+  const P = templateParties(), id = a => P.find(p => p.abbr === a).id;
+  const c = (name, a, votes, prevPct, extra = {}) => Object.assign({ id: rid('c'), name, party: id(a), mp: false, votes, pct: null, prevPct, swing: null, status: '' }, extra);
+  const north = { id: rid('e'), name: 'Northgate', region: 'Eastern State', countType: 'bloc', metric: 'booths', unitLabel: 'booths',
+    boothsCounted: 19, boothsTotal: 52, votesCounted: 30120, votesExpected: 108300, enrolled: 121400, informal: 1210, denom: 'formal', denomCustom: null,
+    status: 'projected', statusText: '', winner: '', prevParty: id('CON'), updated: '21:14',
+    candidates: [ c('Leilani Fonoti', 'SD', 11826, 33.1), c('Hamish Whitfield', 'CON', 10345, 38.6, { mp: true }), c('Rosa Delaney', 'ENV', 3874, 11.2), c('Callum Barrett', 'LIB', 1521, 6.0), c('Tom Haddad', 'LFT', 1130, 4.1), c('Grace Mackenzie', 'CD', 892, 3.2), c('Daniel Nguyen', 'NAT', 1214, 3.8), c('Ines Kallis', 'IND', 1344, 0), c('Other candidates', 'OTH', 418, 0) ],
+    tpp: { a: id('SD'), b: id('CON'), aVotes: null, bVotes: null, aPct: 53.3, prevAPct: 50.4, swing: null } };
+  const river = { id: rid('e'), name: 'Riverbend', region: 'Western State', countType: 'bloc', metric: 'votesPct', unitLabel: 'primaries',
+    boothsCounted: 49, boothsTotal: 63, votesCounted: 31800, votesExpected: 103900, enrolled: 118000, informal: 0, denom: 'formal', denomCustom: null,
+    status: 'counting', statusText: '', winner: '', prevParty: id('SD'), updated: '21:14',
+    candidates: [ c('Mandy Okafor', 'ENV', 10780, 29.6), c('Justine Raman', 'SD', 8618, 31.2, { mp: true }), c('Kimberly Tran', 'NAT', 5947, 21.0), c('Ian Petrakis', 'LIB', 1622, 6.4),
+      c('Vivian Castellano', 'CD', 1463, 4.9), c('Amira Haddad', 'LFT', 1684, 4.8), c('Samuel Whitfield', 'CON', 2410, 2.1), c('Richard Moretti', 'IND', 1272, 0), c('Other candidates', 'OTH', 306, 0) ],
+    tpp: { a: id('ENV'), b: id('SD'), aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null } };
+  const seatRows = [[ 'SD', 100, 6, 0, 104 ], [ 'LFT', 24, 0, 0, 27 ], [ 'ENV', 44, 0, 1, 40 ], [ 'CON', 64, 4, 0, 70 ], [ 'CD', 19, 0, 0, 22 ], [ 'LIB', 16, 0, 0, 20 ], [ 'NAT', 71, 0, 0, 64 ]]
+    .map(([a, d, pj, l, prev]) => ({ party: id(a), declared: d, projected: pj, leading: l, prev, gains: null, losses: null }));
+  const national = {}; [['LFT', 7.8, 8.0], ['SD', 30.1, 28.3], ['ENV', 13.4, 12.6], ['CON', 23.6, 25.9], ['CD', 8.9, 9.6], ['LIB', 6.1, 6.9], ['NAT', 8.2, 7.2], ['OTH', 1.1, 0.8], ['IND', 0.8, 0.7]].forEach(([a, v, pv]) => national[id(a)] = { pct: v, prevPct: pv });
+  const blocs = defaultBlocs(P);
+  return { v: 3, name: 'General Election', year: 2026, region: 'Commonwealth of Example', type: 'Parliament', status: 'counting', date: '', updated: '21:14',
+    parties: P, electorates: [north, river], current: north.id, system: 'fptp', list: { method: 'dhondt', threshold: 4, scope: 'national' }, tppOn: false, blocs, blocA: blocs[0].id, blocB: blocs[1].id, national,
+    seats: { total: 349, majority: 175, source: 'both', rows: seatRows },
+    branding: { programme: 'ELECTION', programme2: 'NIGHT 2026', source: 'PROJECTION', org: 'RESULTS DESK', title: 'Election night', watermark: '', bg: 'light', accent: '#14284B', font: 'Archivo', logo: false },
+    fmt: { dp: 1, plus: true, word: true, pp: false, comma: false, swingPlace: 'banner' },
+    style: {} };
+}
+/* elections made by the first version: move to template parties and add blocs */
+function migrateElection(E){
+  if (!E || E.v >= 2) return E;
+  const OLD = { SOC: 'Social Democrats', CON: 'Conservatives', ENV: 'Environmentalists', NAT: 'Nationalists', LBR: 'Liberals', CDP: 'Christian Democrats' };
+  const sampleSet = E.parties.every(p => OLD[p.abbr] || p.abbr === 'IND');
+  if (sampleSet) for (const p of E.parties){ const nm = OLD[p.abbr]; if (!nm) continue; const t = PARTIES.find(x => x.name === nm); p.name = nm; p.abbr = TPL_ABBR[nm]; if (t) p.color = t.hex; }
+  E.blocs = E.blocs || defaultBlocs(E.parties); E.blocA = E.blocA || E.blocs[0].id; E.blocB = E.blocB || (E.blocs[1] || E.blocs[0]).id;
+  E.tppOn = E.electorates.some(e => e.countType === 'tpp');
+  E.national = E.national || {}; E.fmt = Object.assign({ comma: false }, E.fmt); E.v = 2;
+  return E;
+}
+function ensureElection(){ if (!state.election || !Array.isArray(state.election.electorates)) state.election = sampleElection(); else migrateElection(state.election);
+  const E = upgradeElection3(state.election); if (!E.system) E.system = 'fptp'; if (!E.list) E.list = { method: 'dhondt', threshold: 4, scope: 'national' }; return E; }
+/* proportional seats: share a district's seats between party lists */
+const LIST_METHODS = [['dhondt','D’Hondt'],['sainte','Sainte-Laguë'],['sainte14','Modified Sainte-Laguë (first divisor 1.4)'],['hare','Largest remainder (Hare quota)']];
+const listMethodName = m => (LIST_METHODS.find(x => x[0] === m) || LIST_METHODS[0])[1].replace(/ \(.*\)$/, '');
+function listAlloc(rows, seats, method){
+  const out = new Map(rows.map(r => [r.pid, 0])); seats = Math.floor(seats || 0);
+  const tot = rows.reduce((t, r) => t + r.v, 0); if (!(seats > 0) || !(tot > 0)) return out;
+  if (method === 'hare'){
+    const q = tot/seats; let used = 0;
+    const rem = rows.map(r => { const n = Math.floor(r.v/q); out.set(r.pid, n); used += n; return { pid: r.pid, rem: r.v/q - n, v: r.v }; }).sort((a, b) => b.rem - a.rem || b.v - a.v);
+    for (let i = 0; used < seats && rem.length; i = (i + 1) % rem.length, used++) out.set(rem[i].pid, out.get(rem[i].pid) + 1);
+    return out;
+  }
+  const div = n => method === 'dhondt' ? n + 1 : n === 0 ? (method === 'sainte14' ? 1.4 : 1) : 2*n + 1;
+  for (let n = 0; n < seats; n++){ let best = null, bq = -1; for (const r of rows){ const q = r.v/div(out.get(r.pid)); if (q > bq + 1e-12){ bq = q; best = r; } } if (!best) break; out.set(best.pid, out.get(best.pid) + 1); }
+  return out;
+}
+const curEl = () => { const E = ensureElection(); return E.electorates.find(e => e.id === E.current) || E.electorates[0]; };
+const partyOf = (E, id) => E.parties.find(p => p.id === id) || { id: '', abbr: '?', name: 'No party', color: '#7A7F8A', text: '' };
+const pText = p => p.text || (lum(p.color) > .62 ? '#111418' : '#FFFFFF');
+const pDark = p => p.color2 || (lum(p.color) > .62 ? mix(p.color, '#000000', .18) : mix(p.color, '#000000', .38));
+const decC = t => (state.election && state.election.fmt && state.election.fmt.comma) ? String(t).replace(/(\d)\.(\d)/g, '$1,$2') : String(t);
+function fmtNum(v, dp){ return v == null ? '–' : decC(v.toFixed(dp)); }
+function fmtSwing(v, F, opts = {}){
+  if (v == null) return '';
+  const dp = F.dp ?? 1, s = decC(Math.abs(v).toFixed(dp)), sign = v > 0 ? (F.plus !== false ? '+' : '') : v < 0 ? '−' : '';
+  return `${opts.noSign ? '' : sign}${s}${F.pp ? ' pp' : '%'}${F.word && opts.word !== false ? ' SWING' : ''}`;
+}
+/* everything derived for one electorate */
+function elCalc(el, E){
+  E = E || ensureElection();
+  const warn = [], info = [];
+  const isList = E.system === 'list';
+  const cands = el.candidates.map((c, i) => Object.assign({}, c, { i, P: partyOf(E, c.party) }, isList ? { name: partyOf(E, c.party).name, cname: c.name, mp: false, status: '' } : {}));
+  const withVotes = cands.filter(c => rnum(c.votes) != null), formal = withVotes.reduce((t, c) => t + rnum(c.votes), 0);
+  if (withVotes.length && withVotes.length < cands.length) warn.push(`${cands.length - withVotes.length} candidate${cands.length - withVotes.length > 1 ? 's have' : ' has'} no vote total, so their share comes from the % column.`);
+  let denom = null, denomLabel = 'formal votes (sum of candidate votes)';
+  if (el.denom === 'counted'){ denom = rnum(el.votesCounted); denomLabel = 'total votes counted (incl. informal)'; if (denom != null && formal > denom) warn.push('Candidate votes add up to more than the total votes counted.'); }
+  else if (el.denom === 'custom'){ denom = rnum(el.denomCustom); denomLabel = 'a custom total'; if (denom != null && formal > denom) warn.push('Candidate votes add up to more than the custom total.'); }
+  else denom = formal || null;
+  if (withVotes.length && !(denom > 0)) warn.push('There is no valid total to divide by, so percentages can’t be calculated from votes.');
+  for (const c of cands){
+    const v = rnum(c.votes), mp = rnum(c.pct);
+    c.pctCalc = v != null && denom > 0 ? v/denom*100 : null;
+    c.pctUse = c.pctCalc != null ? c.pctCalc : mp; c.pctSrc = c.pctCalc != null ? 'votes' : mp != null ? 'manual' : 'none';
+    const prev = rnum(c.prevPct), ms = rnum(c.swing);
+    c.swingUse = prev != null && c.pctUse != null ? c.pctUse - prev : ms; c.swingSrc = prev != null && c.pctUse != null ? 'calc' : ms != null ? 'manual' : 'none';
+    if (!isList && !String(c.name || '').trim()) warn.push(`Candidate ${c.i + 1} has no name.`);
+    if (!c.party || !E.parties.some(p => p.id === c.party)) warn.push(isList ? `Row ${c.i + 1} has no party.` : `${c.name || 'Candidate ' + (c.i + 1)} has no party.`);
+    if (c.pctUse == null) warn.push(`${c.name || 'Candidate ' + (c.i + 1)} has no votes or percentage yet.`);
+    if (c.pctUse != null && (c.pctUse < 0 || c.pctUse > 100)) warn.push(`${c.name}'s share (${c.pctUse.toFixed(1)}%) is outside 0–100%.`);
+  }
+  const manualTotal = cands.filter(c => c.pctSrc === 'manual').reduce((t, c) => t + c.pctUse, 0);
+  if (cands.length && cands.every(c => c.pctSrc === 'manual') && Math.abs(manualTotal - 100) > .6 && el.denom !== 'custom') warn.push(`The entered percentages add up to ${manualTotal.toFixed(1)}%, not 100%.`);
+  if (cands.some(c => c.swingSrc === 'manual')) info.push('Some swings were entered by hand (no previous result to compare).');
+  // party lists: share out the district's seats
+  let alloc = null; const seatsAvail = rnum(el.seatsAvail);
+  if (isList){
+    const LS = E.list || {}, thr = rnum(LS.threshold) || 0, nat = LS.scope === 'national' ? nationalCalc(E) : null, agg = new Map(), prevS = new Map();
+    for (const k of cands){ if (!k.party) continue; if (k.pctUse != null) agg.set(k.party, (agg.get(k.party) || 0) + k.pctUse); if (rnum(k.prevSeats) != null) prevS.set(k.party, (prevS.get(k.party) || 0) + rnum(k.prevSeats)); }
+    if (agg.size < cands.filter(k => k.party && k.pctUse != null).length) info.push('A party is listed more than once; its rows are added together.');
+    const rows = [...agg].map(([pid, v]) => { const sh = nat ? nat[pid] && nat[pid].pct : v; return { pid, v, below: thr > 0 && sh != null && sh < thr }; });
+    const m = listAlloc(rows.filter(r => !r.below), seatsAvail, LS.method || 'dhondt');
+    alloc = rows.map(r => ({ P: partyOf(E, r.pid), pid: r.pid, pct: r.v, below: r.below, seats: m.get(r.pid) || 0, prev: prevS.get(r.pid) || 0 })).sort((a, b) => b.seats - a.seats || b.pct - a.pct);
+    for (const k of cands){ const a = alloc.find(x => x.pid === k.party); k.seatsWon = a ? a.seats : 0; k.below = a ? a.below : false; k.prevSeatsP = a ? a.prev : 0; }
+    if (seatsAvail == null) warn.push('Enter how many seats this district elects, so they can be shared out.');
+    if (rows.length && rows.every(r => r.below)) warn.push(`Every party is below the ${thr}% threshold, so no seats can be given out.`);
+  }
+  // ordering
+  const S = rStyle();
+  let ordered = cands.slice();
+  if (S.order === 'votes') ordered.sort((a, b) => (b.pctUse ?? -1) - (a.pctUse ?? -1) || a.i - b.i);
+  else if (S.order === 'party') ordered.sort((a, b) => (a.P.order ?? 99) - (b.P.order ?? 99) || a.i - b.i);
+  // blocs in this seat: sum of member parties' shares
+  const blocs = (E.blocs || []).map(b => { const mem = cands.filter(k => b.parties.includes(k.party));
+    const share = mem.some(k => k.pctUse != null) ? mem.reduce((t, k) => t + (k.pctUse || 0), 0) : null;
+    const prev = mem.length && mem.every(k => rnum(k.prevPct) != null) ? mem.reduce((t, k) => t + rnum(k.prevPct), 0) : null;
+    return { B: b, P: blocParty(b), share, prev, swing: share != null && prev != null ? share - prev : null }; });
+  const useTpp = !!(E.tppOn && el.countType === 'tpp');
+  // two-party preferred (optional) or the two compared blocs
+  const T = el.tpp || {};
+  let A = partyOf(E, T.a), B = partyOf(E, T.b);
+  let aPct = null, tppSrc = 'none';
+  const av = rnum(T.aVotes), bv = rnum(T.bVotes);
+  if (av != null && bv != null && av + bv > 0){ aPct = av/(av + bv)*100; tppSrc = 'votes'; }
+  else if (rnum(T.aPct) != null){ aPct = rnum(T.aPct); tppSrc = 'manual'; }
+  if ((av == null) !== (bv == null)) warn.push('Two-party preferred: enter votes for both sides, or use the % field.');
+  if (T.a && T.a === T.b) warn.push('Two-party preferred: both sides are the same party.');
+  if (aPct != null && (aPct < 0 || aPct > 100)) warn.push('Two-party preferred % must be between 0 and 100.');
+  let bPct = aPct != null ? 100 - aPct : null;
+  const prevA = rnum(T.prevAPct); let tppSwingA = aPct != null && prevA != null ? aPct - prevA : rnum(T.swing), tppSwingSrc = aPct != null && prevA != null ? 'calc' : rnum(T.swing) != null ? 'manual' : 'none';
+  let cmpLabel = 'TWO-PARTY PREFERRED', cmpFrac = aPct != null ? aPct/100 : null, cmpBloc = false;
+  if (!useTpp){
+    if (!E.tppOn) warn.splice(0, warn.length, ...warn.filter(w => !w.startsWith('Two-party')));
+    const ba = blocs.find(x => x.B.id === E.blocA) || blocs[0], bb = blocs.find(x => x.B.id === E.blocB) || blocs[1];
+    cmpBloc = true; cmpLabel = 'BLOC VOTE';
+    if (ba && bb){ A = ba.P; B = bb.P; aPct = ba.share; bPct = bb.share; tppSrc = 'blocs'; cmpFrac = aPct != null && bPct != null && aPct + bPct > 0 ? aPct/(aPct + bPct) : null;
+      tppSwingA = ba.swing; tppSwingSrc = ba.swing != null ? 'calc' : 'none'; }
+    else { aPct = bPct = cmpFrac = null; warn.push('Set up two blocs to compare under the Blocs tab.'); }
+  }
+  // progress (booths and votes are different measures and are kept apart)
+  const bc = rnum(el.boothsCounted), bt = rnum(el.boothsTotal), vc = rnum(el.votesCounted), ve = rnum(el.votesExpected), en = rnum(el.enrolled);
+  if (bc != null && bt != null && bc > bt) warn.push('More booths counted than there are booths.');
+  if (vc != null && ve != null && vc > ve) warn.push('More votes counted than expected. Check the expected total.');
+  if (vc != null && en != null && vc > en) warn.push('More votes counted than enrolled voters.');
+  const boothsPct = bc != null && bt > 0 ? bc/bt*100 : null, votesPct = vc != null && ve > 0 ? vc/ve*100 : null;
+  const unit = el.unitLabel || 'booths';
+  let progMain = '', progSub = '', progFrac = null;
+  if (el.metric === 'votesPct'){ progMain = votesPct != null ? `${votesPct.toFixed(1)}% COUNTED` : 'COUNTING'; progSub = bc != null && bt != null ? `(${bc}/${bt} ${unit})` : ''; progFrac = votesPct != null ? votesPct/100 : null; if (votesPct == null && vc != null) warn.push('Add the expected number of votes to show the % counted.'); }
+  else if (el.metric === 'boothsPct'){ progMain = boothsPct != null ? `${boothsPct.toFixed(1)}% OF ${unit.toUpperCase()}` : 'COUNTING'; progSub = bc != null && bt != null ? `(${bc}/${bt} ${unit})` : ''; progFrac = boothsPct != null ? boothsPct/100 : null; }
+  else { progMain = votesPct != null ? `${votesPct.toFixed(1)}% COUNTED` : 'COUNTING'; progSub = bc != null && bt != null ? `(${bc}/${bt} ${unit})` : ''; progFrac = boothsPct != null ? boothsPct/100 : votesPct != null ? votesPct/100 : null; }
+  progMain = decC(progMain);
+  const outstanding = bc != null && bt != null ? Math.max(0, bt - bc) : null;
+  // who is ahead, and what the status means
+  let lead = null, tie = false;
+  if (useTpp && aPct != null){ if (Math.abs(aPct - 50) < 1e-9) tie = true; else lead = aPct > 50 ? A : B; }
+  else { const top = cands.filter(c => c.pctUse != null).sort((a, b) => b.pctUse - a.pctUse); if (top.length > 1 && Math.abs(top[0].pctUse - top[1].pctUse) < 1e-9) tie = true; else if (top[0]) lead = top[0].P; }
+  if (tie) info.push('The two leading figures are tied.');
+  const winnerP = el.winner && !isList ? partyOf(E, el.winner) : lead;
+  const st = el.status || 'counting';
+  let seatClass = null, seatParty = null;
+  if (isList) seatClass = st === 'declared' || st === 'final' ? 'declared' : st === 'projected' || st === 'projres' ? 'projected' : 'leading';
+  else if (st === 'declared' || st === 'final'){ if (winnerP && winnerP.id){ seatClass = 'declared'; seatParty = winnerP.id; } else warn.push('Declared result: choose the winning party.'); }
+  else if (st === 'projected' || st === 'projres'){ if (winnerP && winnerP.id){ seatClass = 'projected'; seatParty = winnerP.id; } }
+  else if (lead && lead.id){ seatClass = 'leading'; seatParty = lead.id; }      // a lead is never counted as a win
+  const W0 = winnerP && winnerP.id ? winnerP : null;
+  const defText = isList ? { counting: 'COUNTING', leading: tie ? 'TOO CLOSE TO CALL' : `${lead ? lead.abbr : ''} LARGEST PARTY`, projected: 'PROJECTED SEATS', projres: 'PROJECTED RESULT', declared: 'SEATS DECLARED', final: 'FINAL RESULT' }[st] : { counting: 'COUNTING', leading: tie ? 'TOO CLOSE TO CALL' : `${lead ? lead.abbr : ''} LEADING`, projected: `${W0 ? W0.abbr : ''} WIN`, projres: 'PROJECTED RESULT', declared: `${W0 ? W0.abbr : ''} WIN`, final: 'FINAL RESULT' }[st];
+  const statusText = (el.statusText || '').trim() || defText;
+  return { cands, ordered, formal, denom, denomLabel, A, B, aPct, bPct, tppSrc, tppSwingA, tppSwingSrc, cmpLabel, cmpFrac, cmpBloc, useTpp, blocs, boothsPct, votesPct, progMain, progSub, progFrac, outstanding,
+    isList, alloc, seatsAvail, hasPrevSeats: isList && el.candidates.some(k => rnum(k.prevSeats) != null), lead, tie, winner: W0, status: st, statusText, provisional: st === 'projected' || st === 'projres' || st === 'leading' || st === 'counting', seatClass, seatParty, warn, info };
+}
+/* a bloc drawn like a party (abbreviation, colour) */
+const blocParty = b => ({ id: b.id, abbr: b.short || b.name, name: b.name, color: b.color || '#5B6170', text: '', color2: '', bloc: true });
+/* nationwide vote by party: typed figures, otherwise worked out from all electorates with votes */
+function nationalCalc(E){
+  E = E || ensureElection(); const tot = new Map(); let all = 0;
+  for (const el of E.electorates) for (const k of el.candidates){ const v = rnum(k.votes); if (v == null) continue; tot.set(k.party, (tot.get(k.party) || 0) + v); all += v; }
+  const out = {};
+  for (const p of E.parties){ const m = (E.national || {})[p.id] || {}, calc = all > 0 && tot.has(p.id) ? tot.get(p.id)/all*100 : null;
+    out[p.id] = { pct: rnum(m.pct) != null ? rnum(m.pct) : calc, calc, typed: rnum(m.pct) != null, prev: rnum(m.prevPct) }; }
+  return out;
+}
+/* blocs across the election: vote share and seats of their member parties */
+function blocCalc(E){
+  E = E || ensureElection(); const nat = nationalCalc(E), sc = seatCalc(E);
+  return (E.blocs || []).map(b => {
+    const P = b.parties.map(id => E.parties.find(p => p.id === id)).filter(Boolean);
+    const shares = P.map(p => nat[p.id].pct), share = shares.some(v => v != null) ? shares.reduce((t, v) => t + (v || 0), 0) : null;
+    const prev = P.length && P.every(p => nat[p.id].prev != null) ? P.reduce((t, p) => t + nat[p.id].prev, 0) : null;
+    const rows = P.map(p => sc.list.find(r => r.P.id === p.id));
+    const seats = rows.reduce((t, r) => t + (r ? r.seats : 0), 0), ahead = rows.reduce((t, r) => t + (r ? r.leading : 0), 0), prevSeats = rows.reduce((t, r) => t + (r ? r.prev : 0), 0);
+    return { B: b, P: blocParty(b), parties: P, share, prev, swing: share != null && prev != null ? share - prev : null, seats, ahead, prevSeats,
+      segVote: P.map(p => ({ p, v: nat[p.id].pct || 0 })), segSeats: P.map((p, i) => ({ p, v: rows[i] ? rows[i].seats : 0 })), majority: sc.majority, total: sc.total };
+  });
+}
+/* seat totals across the election: from electorate results plus any seats entered by hand */
+function seatCalc(E){
+  E = E || ensureElection();
+  const rows = new Map(E.parties.map(p => [p.id, { P: p, declared: 0, projected: 0, leading: 0, prev: 0, gains: 0, losses: 0 }]));
+  const src = E.seats.source || 'both';
+  if (src !== 'manual') for (const el of E.electorates){
+    const c = elCalc(el, E);
+    if (c.isList){ for (const a of c.alloc || []){ const Rw = rows.get(a.pid); if (!Rw) continue; Rw[c.seatClass] += a.seats;
+        if (c.seatClass !== 'leading'){ Rw.prev += a.prev; const nt = a.seats - a.prev; if (nt > 0) Rw.gains += nt; else Rw.losses -= nt; } } continue; }
+    if (!c.seatParty || !rows.has(c.seatParty)) continue;
+    rows.get(c.seatParty)[c.seatClass]++;
+    if (c.seatClass !== 'leading' && el.prevParty && rows.has(el.prevParty)) rows.get(el.prevParty).prev++;   // only called seats are compared with last time
+    if (c.seatClass !== 'leading' && el.prevParty && el.prevParty !== c.seatParty && rows.has(el.prevParty)){ rows.get(c.seatParty).gains++; rows.get(el.prevParty).losses++; }
+  }
+  if (src !== 'electorates') for (const r of E.seats.rows || []){
+    const R = rows.get(r.party); if (!R) continue;
+    R.declared += rnum(r.declared) || 0; R.projected += rnum(r.projected) || 0; R.leading += rnum(r.leading) || 0; R.prev += rnum(r.prev) || 0;
+    // gains and losses for hand-entered seats: as typed, or worked out from the change on last time
+    const rowNet = (rnum(r.declared) || 0) + (rnum(r.projected) || 0) - (rnum(r.prev) || 0);
+    R.gains += rnum(r.gains) != null ? rnum(r.gains) : Math.max(0, rowNet); R.losses += rnum(r.losses) != null ? rnum(r.losses) : Math.max(0, -rowNet);
+  }
+  const list = [...rows.values()].map(R => Object.assign(R, { seats: R.declared + R.projected, net: (R.declared + R.projected) - R.prev, hasGL: R.gains || R.losses }))
+    .filter(R => R.seats || R.leading || R.prev).sort((a, b) => b.seats - a.seats || b.leading - a.leading || (a.P.order ?? 99) - (b.P.order ?? 99));
+  const total = rnum(E.seats.total) || 0, majority = rnum(E.seats.majority) || Math.floor(total/2) + 1;
+  const declared = list.reduce((t, R) => t + R.declared, 0), projected = list.reduce((t, R) => t + R.projected, 0), leading = list.reduce((t, R) => t + R.leading, 0);
+  const warn = [];
+  if (declared + projected + leading > total && total) warn.push(`Seats add up to ${declared + projected + leading}, more than the ${total} in parliament.`);
+  if (majority > total && total) warn.push('The majority is larger than the number of seats.');
+  const top = list[0], majorityText = top && top.seats >= majority ? `${top.P.abbr} MAJORITY` : top && top.seats + top.leading >= majority ? `${top.P.abbr} ON TRACK FOR MAJORITY` : 'NO MAJORITY YET';
+  return { list, total, majority, declared, projected, leading, undecided: Math.max(0, total - declared - projected), warn, majorityText, top };
+}
+/* style per graphic kind, with sensible broadcast defaults */
+const R_STYLE_DEF = { w: 1920, h: 1080, order: 'votes', scale: 'leader', scaleMax: 60, maxRows: 9, barH: 0, gap: 0, radius: 10, labelW: 0, namePos: 'left', pctPos: 'right',
+  weight: 800, nameWeight: 500, text: '', bgColor: '', dividers: true, tex: true, texOp: 22, showVotes: false, showSwing: false, showMP: true, showStatus: true, thrLine: true,
+  tppLayout: 'semi', sep: 6, border: 0, segTex: true, segOp: 30, labelSize: 1, banner: true, projBanner: true, progPos: 'header', arcLabels: false, font: '' };
+function rStyle(kind){
+  const E = ensureElection(); kind = kind || (tpl && tpl.rkind) || 'cand';
+  E.style = E.style || {}; const S = Object.assign({}, R_STYLE_DEF, E.style[kind] || {});
+  if (!S.font) S.font = (E.branding && E.branding.font) || 'Archivo';
+  return S;
+}
+function setStyle(key, v, kind){ const E = ensureElection(); kind = kind || tpl.rkind; E.style[kind] = Object.assign({}, E.style[kind] || {}, { [key]: v }); }
+/* electorates combined: votes counted across the election */
+function electionCounted(E){
+  let vc = 0, ve = 0, bc = 0, bt = 0; for (const el of E.electorates){ vc += rnum(el.votesCounted) || 0; ve += rnum(el.votesExpected) || 0; bc += rnum(el.boothsCounted) || 0; bt += rnum(el.boothsTotal) || 0; }
+  return { votesPct: ve > 0 ? vc/ve*100 : null, boothsPct: bt > 0 ? bc/bt*100 : null, vc, ve, bc, bt };
+}
+
+/* =====================================================================
+   Election Results: graphics. Each kind builds ordinary editable layers
+   (shapes, text, images) from the election data. Layers carry stable ids
+   (rb_*) so a rebuild keeps anything the user moved or restyled.
+   ===================================================================== */
+const rmCtx = document.createElement('canvas').getContext('2d');
+function tw(t, size, weight, font){ rmCtx.font = `${weight} ${size}px "${font}", sans-serif`; if ('letterSpacing' in rmCtx) rmCtx.letterSpacing = '0px'; return rmCtx.measureText(String(t)).width; }
+function RB(kind){
+  const E = ensureElection(), S = rStyle(kind), F = S.font, Bd = E.branding || {}, out = [];
+  const w0 = S.w, h0 = S.h, wide = w0/h0 >= 1.25, u = wide ? Math.min(w0/1280, h0/720) : w0/880;
+  const dark = Bd.bg === 'dark', ink = S.text || (dark ? '#FFFFFF' : '#111318'), sub = dark ? 'rgba(255,255,255,.72)' : '#4A4F5C';
+  const add = L => { L.rb = 1; if (L.type === 'text') L.keepFont = true; out.push(L); return L; };
+  const R = {
+    E, S, F, Bd, W: w0, H: h0, u, wide, dark, ink, sub, out,
+    rect: (k, x, y, w, h, fill, o = {}) => add(shapeLayer('rect', Object.assign({ id: 'rb_' + k, name: k, x: x + w/2, y: y + h/2, w: Math.max(.5, w), h: Math.max(.5, h), fill, radius: 0, strokeW: 0, strokeOn: false, shade: 0 }, o))),
+    text: (k, t, x, y, size, o = {}) => add(textLayer(Object.assign({ id: 'rb_' + k, name: k, text: String(t), x, y, size: Math.max(6, size), font: F, weight: 800, color: ink, align: 'left', vmid: true, track: 0, gap: 1, width: 0, emFont: null, emItalic: false, emWeight: 900, emOn: true, marks: false }, o))),
+    arc: (k, cx, cy, r, a0, a1, fill, o = {}) => add(shapeLayer('arc', Object.assign({ id: 'rb_' + k, name: k, x: cx, y: o.semi === false ? cy : cy - r/2, w: r*2, h: o.semi === false ? r*2 : r, a0, a1, ir: 0, semi: o.semi !== false, fill, strokeW: 0, strokeOn: false, shade: 0 }, o))),
+    line: (k, x1, x2, y, color, o = {}) => add(shapeLayer('poly', Object.assign({ id: 'rb_' + k, name: k, x: (x1 + x2)/2, y, w: Math.max(1, x2 - x1), h: 1, closed: false, fillOn: false, fill: color, stroke: color, strokeW: 3*u, strokeOn: true, strokeDash: 'dash', pts: [[-.5, 0], [.5, 0]] }, o))),
+    icon: (k, icon, x, y, size, color, o = {}) => add(iconLayer(Object.assign({ id: 'rb_' + k, name: k, icon, x, y, size, color }, o))),
+    image: (k, x, y, w, h, o = {}) => add(imageLayer(Object.assign({ id: 'rb_' + k, name: k, x, y, box: [w, h], scale: 1 }, o))),
+  };
+  return R;
+}
+const hatch = (S, op) => S.tex ? { tex: 'hatch', texOp: op ?? S.texOp } : {};
+/* background, header (region + title), branding and counting progress */
+function rFrame(R, region, title, opts = {}){
+  const { W, H, u, Bd, dark, ink, sub, S } = R;
+  if (Bd.bg !== 'transparent') R.rect('bg', 0, 0, W, H, Bd.bg === 'dark' ? '#0B1220' : Bd.bg === 'colour' ? (S.bgColor || Bd.accent || '#14284B') : '#ECEEF2', { name: 'Background', locked: true });
+  if (Bd.bg === 'light' || !Bd.bg){ for (let i = 0; i < 4; i++) R.rect('bgp' + i, W*(.08 + i*.24), H*.22, W*.2, H*.72, '#FFFFFF', { name: 'Background panel', opacity: 28, locked: true }); }
+  const hh = opts.hh || (R.wide ? 125*u : 140*u), pad = R.wide ? 64*u : 48*u;
+  if (opts.header !== false){
+    R.rect('head', 0, 0, W, hh, dark ? '#121B2E' : '#FFFFFF', { name: 'Header band', opacity: Bd.bg === 'transparent' ? 92 : 100 });
+    R.rect('headline', 0, hh - 2*u, W, 2*u, dark ? '#25304A' : '#D5D8DE', { name: 'Header line' });
+    R.text('region', String(region || '').toUpperCase(), pad, hh*.34, 24*u, { bind: opts.bindEl ? { t: 'elregion' } : null, name: 'Region', weight: 800, color: ink, fitW: W*.5 });
+    R.text('title', String(title || '').toUpperCase(), pad - 2*u, hh*.66, 56*u, { bind: opts.bindEl ? { t: 'elname' } : null, name: 'Title', weight: 900, color: ink, track: -1, fitW: W*(R.wide ? .52 : .6) });
+  }
+  // branding: uploaded logo, or a neutral stripe mark in party colours with the programme name
+  const bx = W - pad, by = hh*.5;
+  if (Bd.logo){ R.image('logo', bx - 110*u, by, 220*u, hh*.62, { name: 'Logo' }); }
+  else {
+    const P = R.E.parties.slice(0, 5), sw = 54*u, top = by - 22*u;
+    P.forEach((p, i) => R.rect('stripe' + i, bx - 200*u, top + i*9*u, sw, 6*u, p.color, { name: 'Brand stripe', radius: 1*u }));
+    R.text('prog1', (Bd.programme || '').toUpperCase(), bx - 136*u, by - 11*u, 25*u, { name: 'Programme', weight: 900, color: dark ? '#FFFFFF' : (Bd.accent || '#14284B'), fitW: 140*u });
+    R.text('prog2', (Bd.programme2 || '').toUpperCase(), bx - 136*u, by + 13*u, 25*u, { name: 'Programme line 2', weight: 400, color: dark ? '#FFFFFF' : (Bd.accent || '#14284B'), fitW: 140*u });
+  }
+  if (Bd.watermark) R.text('watermark', Bd.watermark, W - pad, H - 24*u, 16*u, { name: 'Watermark', align: 'right', weight: 600, color: dark ? 'rgba(255,255,255,.5)' : 'rgba(0,0,0,.35)' });
+  return { hh, pad };
+}
+function rProgress(R, c, x, y, o = {}){
+  const { u } = R;
+  const num = c.progMain.replace(/^([\d.]+%)/, '*$1*');
+  R.text('prog', num, x, y, (o.size || 21)*u, { name: 'Count progress', align: 'right', weight: 500, emWeight: 800, color: R.ink, fitW: 360*u });
+  if (c.progSub) R.text('progsub', c.progSub, x, y + 23*u, 17*u, { name: 'Reporting units', align: 'right', weight: 400, color: R.sub });
+}
+const rScale = (S, p, maxP) => p == null ? 0 : clamp(S.scale === 'formal' ? p/100 : S.scale === 'custom' ? p/(S.scaleMax || 100) : p/(maxP || 1), 0, 1);
+function rStatusColour(R, c){ return c.status === 'counting' ? '#5B6170' : c.winner ? c.winner.color : c.lead ? c.lead.color : '#5B6170'; }
+/* ---------- A. candidate results (horizontal bars) ---------- */
+function buildCand(R, opts = {}){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E);
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - pad - 250*u, hh*.42);
+  const T = rThrSplit(R, c, Math.max(1, S.maxRows)), list = T.list, n = list.length, thrGap = T.on ? 44*u : 0;
+  const showBanner = S.showStatus && c.status !== 'counting' && !opts.noBanner, bottom = H - (showBanner ? 104*u : 40*u), top = hh + 18*u;
+  const gap = S.gap || 7*u, barH = S.barH || Math.min(80*u, (bottom - top - gap*(n - 1) - thrGap)/n), x0 = pad*.82, fullW = W - x0*2, labelW = S.labelW || 150*u;
+  const maxP = Math.max(...list.map(k => k.pctUse ?? 0), 0.0001), F = E.fmt || {};
+  list.forEach((k, i) => {
+    const P = k.P, y = top + i*(barH + gap) + (i >= T.nA ? thrGap : 0), txt = pText(P), base = 'c' + i, nm = k.name || 'Candidate';
+    R.rect(base + 'bg', x0, y, fullW, barH, pDark(P), Object.assign({ name: `${nm}: bar track`, radius: S.radius }, hatch(S)));
+    const fw = labelW + rScale(S, k.pctUse, maxP)*(fullW - labelW);
+    const fill = R.rect(base + 'fill', x0, y, fw, barH, P.color, { name: `${nm}: vote bar`, radius: S.radius }); fill.dk = ['w', 'x'];
+    if (S.dividers) R.rect(base + 'div', x0 + labelW - 1*u, y, 2*u, barH, '#FFFFFF', { name: `${nm}: divider`, opacity: 22 });
+    const fs = barH*.42*(S.labelSize || 1);
+    R.text(base + 'abbr', P.abbr, x0 + labelW/2, y + barH/2, fs, { bind: { t: 'pabbr', pid: P.id }, name: `${nm}: party`, align: 'center', weight: 900, color: txt, fitW: labelW - 16*u });
+    const pctRight = x0 + fullW - barH*.55, pctSign = tw('%', fs*.62, 800, R.F);
+    R.text(base + 'pct', fmtNum(k.pctUse, F.dp ?? 1), pctRight - pctSign - 2*u, y + barH/2, fs*1.02, { bind: { t: 'cpct', cid: k.id }, name: `${nm}: percentage`, align: 'right', weight: 800, color: txt });
+    R.text(base + 'pcts', '%', pctRight - pctSign, y + barH/2 + fs*.08, fs*.62, { name: `${nm}: % sign`, weight: 800, color: txt });
+    let rightEdge = pctRight - pctSign - tw(fmtNum(k.pctUse, F.dp ?? 1), fs*1.02, 800, R.F) - 26*u;
+    if (S.showSwing && k.swingUse != null){ const t = (k.swingUse > 0 ? '▲ ' : k.swingUse < 0 ? '▼ ' : '') + fmtSwing(k.swingUse, F, { word: false, noSign: true }); R.text(base + 'sw', t, rightEdge, y + barH/2, fs*.6, { name: `${nm}: swing`, align: 'right', weight: 700, color: txt, opacity: 90 }); rightEdge -= tw(t, fs*.6, 700, R.F) + 22*u; }
+    if (S.showVotes && rnum(k.votes) != null){ const t = Math.round(k.votes).toLocaleString('en-AU'); R.text(base + 'votes', t, rightEdge, y + barH/2, fs*.6, { bind: { t: 'cvotes', cid: k.id }, name: `${nm}: votes`, align: 'right', weight: 500, color: txt, opacity: 88 }); rightEdge -= tw(t, fs*.6, 500, R.F) + 22*u; }
+    const nx = x0 + labelW + barH*.55, nfs = fs*.98;
+    const lb = c.isList && S.showMP ? (k.below ? 'BELOW THRESHOLD' : k.seatsWon ? `${k.seatsWon} SEAT${k.seatsWon > 1 ? 'S' : ''}` : '') : '';
+    const badges = (S.showMP && k.mp ? tw('MP', nfs*.55, 800, R.F) + 40*u : 0) + (S.showStatus && k.status ? tw(k.status.toUpperCase(), nfs*.5, 800, R.F) + 50*u : 0) + (lb ? tw(lb, nfs*.5, 800, R.F) + 50*u : 0);
+    const nameW = Math.min(tw(nm, nfs, S.nameWeight, R.F), Math.max(60*u, rightEdge - nx - badges));
+    R.text(base + 'name', nm, nx, y + barH/2, nfs, { bind: { t: 'cname', cid: k.id }, name: `${nm}: name`, weight: S.nameWeight, color: txt, fitW: Math.max(60*u, rightEdge - nx - badges), track: .5 });
+    let bxp = nx + nameW + 14*u;
+    if (S.showMP && k.mp){ const bw = tw('MP', nfs*.55, 800, R.F) + 16*u, bh = nfs*.82; R.rect(base + 'mpb', bxp, y + barH/2 - bh/2, bw, bh, txt, { name: `${nm}: MP badge`, radius: 5*u }); R.text(base + 'mp', 'MP', bxp + bw/2, y + barH/2, nfs*.55, { name: `${nm}: MP`, align: 'center', weight: 800, color: P.color }); bxp += bw + 12*u; }
+    if (lb){ const bw = tw(lb, nfs*.5, 800, R.F) + 18*u, bh = nfs*.82;
+      if (k.below) R.rect(base + 'lsb', bxp, y + barH/2 - bh/2, bw, bh, 'rgba(0,0,0,0)', { name: `${nm}: threshold`, radius: bh/2, fillOn: false, strokeOn: true, strokeW: 2*u, stroke: txt });
+      else R.rect(base + 'lsb', bxp, y + barH/2 - bh/2, bw, bh, txt, { name: `${nm}: seats badge`, radius: 5*u });
+      R.text(base + 'ls', lb, bxp + bw/2, y + barH/2, nfs*.5, { name: `${nm}: seats won`, align: 'center', weight: 800, color: k.below ? txt : P.color }); bxp += bw + 12*u; }
+    if (S.showStatus && k.status){ const t = (k.status === 'elected' ? '✓ ' : '') + k.status.toUpperCase(), bw = tw(t, nfs*.5, 800, R.F) + 18*u, bh = nfs*.78;
+      R.rect(base + 'stb', bxp, y + barH/2 - bh/2, bw, bh, 'rgba(0,0,0,0)', { name: `${nm}: status`, radius: bh/2, fillOn: false, strokeOn: true, strokeW: 2*u, stroke: txt }); R.text(base + 'st', t, bxp + bw/2, y + barH/2, nfs*.5, { name: `${nm}: status text`, align: 'center', weight: 800, color: txt }); }
+  });
+  if (T.on) rThrLine(R, T, x0, fullW, top + T.nA*(barH + gap) - gap + (thrGap + gap)/2);
+  if (showBanner) rBanner(R, c, pad*.82, H - 86*u, W - pad*1.64, 58*u);
+  return c;
+}
+/* party-list threshold: parties at or above it first, then a dashed line, then those below it, largest first */
+function rThrSplit(R, c, max){
+  const { E, S } = R, thr = rnum((E.list || {}).threshold), on = !!(c.isList && S.thrLine !== false && thr > 0);
+  if (!on) return { on, list: c.ordered.slice(0, max), nA: Infinity };
+  const above = c.ordered.filter(k => !k.below), below = c.cands.filter(k => k.below).sort((a, b) => (b.pctUse ?? -1) - (a.pctUse ?? -1) || a.i - b.i);
+  const list = above.concat(below).slice(0, max), nA = list.filter(k => !k.below).length;
+  return { on, list, nA, label: `${decC(String(thr))}% THRESHOLD${E.list.scope === 'national' ? ' · NATIONWIDE VOTE' : ''}` };
+}
+function rThrLine(R, T, x, w, y){
+  const { u } = R, fs = 18*u, lw = tw(T.label, fs, 800, R.F);
+  R.text('thrlabel', T.label, x, y, fs, { name: 'Threshold label', weight: 800, color: R.ink, track: .5 });
+  R.line('thrline', x + lw + 16*u, x + w, y, R.ink, { name: 'Threshold line', opacity: 75 });
+}
+/* status banner + source pill; projections look different from declared results */
+function rBanner(R, c, x, y, w, h){
+  const { u, Bd } = R, col = rStatusColour(R, c), P = c.winner || c.lead, txt = P ? pText(P) : '#FFFFFF';
+  const decl = c.status === 'declared' || c.status === 'final';
+  R.rect('banner', x, y, w, h, col, { name: 'Status banner', radius: 12*u });
+  if (!decl && c.status !== 'counting') R.rect('bannerhatch', x, y, w, h, col, Object.assign({ name: 'Provisional texture', radius: 12*u }, { tex: 'hatch', texOp: 18 }));
+  R.text('status', (decl ? '✓ ' : '') + c.statusText.toUpperCase(), x + w/2, y + h/2, h*.52, { name: 'Status', align: 'center', weight: 800, color: txt, fitW: w - 40*u });
+  return { decl };
+}
+function rSourcePill(R, c, x, y, w, h){
+  const { u, Bd } = R, decl = c.status === 'declared' || c.status === 'final';
+  const t = decl ? 'DECLARED RESULT' : c.status === 'counting' ? 'COUNTING CONTINUES' : `${(Bd.org || '').toUpperCase()}  ${(Bd.source || 'PROJECTION').toUpperCase()}`.trim();
+  R.rect('pill', x, y, w, h, '#FFFFFF', { name: 'Source pill', radius: h/2, opacity: 96 });
+  R.text('pilltext', t, x + w/2, y + h/2, h*.5, { name: 'Source label', align: 'center', weight: 600, color: '#111318', fitW: w - 30*u });
+}
+/* ---------- B. two-party preferred ---------- */
+function buildTpp(R){
+  const { E, S, W, H, u, wide } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - pad - 250*u, hh*.42);
+  const A = c.A, B = c.B, a = c.aPct, b = c.bPct;
+  // left: two columns
+  const bx = wide ? 82*u : pad, colW = wide ? 254*u : (W - pad*2)/2, bot = wide ? H - 103*u : H*.5, topMax = hh + 23*u, maxH = bot - topMax;
+  const big = Math.max(a ?? 0, b ?? 0) || 1;
+  [[A, a, 'A'], [B, b, 'B']].forEach(([P, v, s], i) => {
+    const x = bx + i*colW, hgt = maxH*(S.scale === 'formal' ? (v ?? 0)/100 : S.scale === 'custom' ? clamp((v ?? 0)/(S.scaleMax || 100), 0, 1) : (v ?? 0)/big), y = bot - hgt;
+    R.rect('col' + s, x, hh, colW, bot - hh, R.dark ? '#1A2337' : '#D3D6DC', { name: `${P.abbr} column`, opacity: 70 });
+    const head = Math.min(62*u, hgt);
+    R.rect('body' + s, x, y, colW, hgt, pDark(P), Object.assign({ name: `${P.abbr} bar`, dk: ['h', 'y'] }, hatch(S)));
+    R.rect('head' + s, x, y, colW, head, P.color, { name: `${P.abbr} bar top` });
+    const fs = 34*u*(S.labelSize || 1), tc = pText(P);
+    R.text('abbr' + s, P.abbr, x + 18*u, y + head/2, fs, { name: `${P.abbr} label`, weight: 600, color: tc, fitW: colW*.45 });
+    const ps = tw('%', fs*.6, 800, R.F);
+    R.text('pct' + s, fmtNum(v, F.dp ?? 1), x + colW - 22*u - ps, y + head/2, fs, { bind: { t: 'cmp', side: s }, name: `${P.abbr} percentage`, align: 'right', weight: 800, color: tc });
+    R.text('pcts' + s, '%', x + colW - 20*u - ps, y + head/2 + fs*.08, fs*.6, { name: `${P.abbr} % sign`, weight: 800, color: tc });
+  });
+  // right: swing pill, comparison graphic, banner, source
+  const cx = wide ? 933*u + (W - 1280*u)/2*0 : W/2, r = wide ? 250*u : Math.min(W*.4, H*.2), cy = wide ? H - 215*u : H - 210*u;
+  const sw = c.tppSwingA, swP = sw == null ? A : sw >= 0 ? A : B;
+  if (sw != null){
+    const t = `${fmtSwing(Math.abs(sw), Object.assign({}, F, { word: false, plus: false }))}   ${F.word !== false ? 'SWING' : ''}`.trim(), pw = Math.max(280*u, tw(t, 40*u, 800, R.F) + 80*u), ph = 62*u, py = wide ? hh + 32*u : cy - r - 110*u;
+    R.rect('swingpill', cx - pw/2, py, pw, ph, swP.color, { name: 'Swing banner', radius: 16*u });
+    R.text('swing', `*${fmtSwing(Math.abs(sw), Object.assign({}, F, { word: false, plus: false })).replace(/%$/, '')}*${F.pp ? '' : '%'}   ${F.word !== false ? 'SWING' : ''}`.trim(), cx, py + ph/2, 40*u, { name: 'Swing', align: 'center', weight: 800, emWeight: 800, color: pText(swP), fitW: pw - 40*u });
+    if (c.tppSwingSrc === 'manual') R.text('swingnote', 'swing entered manually', cx, py + ph + 14*u, 13*u, { name: 'Swing note', align: 'center', weight: 500, color: R.sub });
+  }
+  rCompare(R, c, cx, cy, r);
+  const bw = r*2 + 4*u;
+  if (S.banner) rBanner(R, c, cx - bw/2, cy + 2*u, bw, 46*u);
+  if (S.projBanner) rSourcePill(R, c, cx - bw/2, cy + 56*u, bw, 42*u);
+  return c;
+}
+/* the two-party comparison: semicircle, full circle or a straight split bar */
+function rCompare(R, c, cx, cy, r){
+  const { S, u } = R, A = c.A, B = c.B, a = (c.cmpFrac ?? .5)*100, F = R.E.fmt || {};
+  const sepCol = R.dark ? '#0B1220' : '#FFFFFF';
+  if (S.tppLayout === 'rect'){
+    const w = r*2, h = r*.5, x = cx - r, y = cy - h, wa = w*a/100;
+    R.rect('cmpA', x, y, wa, h, A.color, { name: `${A.abbr} share`, dk: ['w', 'x'] }); R.rect('cmpB', x + wa, y, w - wa, h, B.color, { name: `${B.abbr} share`, dk: ['w', 'x'] });
+    if (S.segTex){ R.rect('cmpAt', x, y, wa, h, pDark(A), { name: `${A.abbr} texture`, opacity: S.segOp, tex: 'hatch', texOp: 40, dk: ['w', 'x'] }); R.rect('cmpBt', x + wa, y, w - wa, h, pDark(B), { name: `${B.abbr} texture`, opacity: S.segOp, tex: 'hatch', texOp: 40, dk: ['w', 'x'] }); }
+    R.rect('cmpsep', x + wa - S.sep*u/2, y - 8*u, S.sep*u, h + 16*u, sepCol, { name: 'Separator', dk: ['x'] });
+    R.text('cmpAl', `${A.abbr} ${fmtNum(c.aPct, F.dp ?? 1)}%`, x + 20*u, y + h/2, h*.3, { name: `${A.abbr} label`, weight: 800, color: pText(A) });
+    R.text('cmpBl', `${B.abbr} ${fmtNum(c.bPct, F.dp ?? 1)}%`, x + w - 20*u, y + h/2, h*.3, { name: `${B.abbr} label`, weight: 800, color: pText(B), align: 'right' });
+    return;
+  }
+  const full = S.tppLayout === 'circle', semi = !full, span = full ? 360 : 180, start = full ? -90 : 180, mid = start + span*a/100;
+  const ccy = full ? cy - r - 10*u : cy;
+  R.arc('segA', cx, ccy, r, start, mid, A.color, { name: `${A.abbr} segment`, semi, dk: ['a1'], ir: full ? .45 : 0 });
+  R.arc('segB', cx, ccy, r, mid, start + span, B.color, { name: `${B.abbr} segment`, semi, dk: ['a0'], ir: full ? .45 : 0 });
+  if (S.segTex){
+    R.arc('innA', cx, ccy, r*.8, start, mid, pDark(A), { name: `${A.abbr} inner`, semi, opacity: S.segOp + 40, tex: 'hatch', texOp: 30, ir: full ? .56 : 0 });
+    R.arc('innB', cx, ccy, r*.8, mid, start + span, pDark(B), { name: `${B.abbr} inner`, semi, opacity: S.segOp + 40, tex: 'hatch', texOp: 30, ir: full ? .56 : 0 });
+  }
+  const t = mid*D2R, L0 = full ? r*.55 : 0, len = r - L0 + 4*u;
+  R.rect('sep', cx + Math.cos(t)*(L0 + len/2) - len/2, ccy + Math.sin(t)*(L0 + len/2) - S.sep*u/2, len, S.sep*u, sepCol, { name: 'Separator', rot: mid, dk: ['x', 'y', 'rot'] });
+  if (S.border > 0) R.arc('ring', cx, ccy, r, start, start + span, 'rgba(0,0,0,0)', { name: 'Border', semi, fillOn: false, strokeOn: true, strokeW: S.border*u, stroke: sepCol });
+  if (S.arcLabels){
+    [[A, c.aPct, start + span*a/200, 'A'], [B, c.bPct, mid + (start + span - mid)/2, 'B']].forEach(([P, v, ang, s]) => { if (v == null || v < 12) return;
+      const rr = full ? r*.73 : r*.62; R.text('arcl' + s, `${fmtNum(v, F.dp ?? 1)}%`, cx + Math.cos(ang*D2R)*rr, ccy + Math.sin(ang*D2R)*rr, r*.13, { name: `${P.abbr} arc label`, align: 'center', weight: 800, color: pText(P) }); });
+  }
+  if (full){ R.text('cmpc', `${(c.lead || A).abbr}`, cx, ccy, r*.26, { name: 'Centre label', align: 'center', weight: 900, color: R.ink }); }
+}
+/* ---------- C. count progress ---------- */
+function buildCount(R){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E);
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  const isBooth = el.metric === 'booths' || el.metric === 'boothsPct' || el.metric === 'units';
+  const pct = el.metric === 'votesPct' || el.metric === 'booths' ? c.votesPct : c.boothsPct, unit = el.unitLabel || 'booths';
+  const cy = hh + (H - hh)*.4;
+  R.text('bignum', pct != null ? `${pct.toFixed(1)}%` : '—', W/2, cy - 40*u, 190*u, { name: 'Headline figure', align: 'center', weight: 900, color: R.ink });
+  R.text('biglabel', el.metric === 'boothsPct' ? `OF ${unit.toUpperCase()} REPORTING` : 'OF VOTES COUNTED', W/2, cy + 80*u, 40*u, { name: 'Headline label', align: 'center', weight: 700, color: R.sub });
+  const bw = W - pad*2, by = cy + 140*u, bh = 34*u, f = pct != null ? clamp(pct/100, 0, 1) : 0;
+  R.rect('barbg', pad, by, bw, bh, R.dark ? '#1F2A40' : '#D3D6DC', { name: 'Progress track', radius: bh/2 });
+  R.rect('barfill', pad, by, Math.max(bh, bw*f), bh, E.branding.accent || '#14284B', { name: 'Progress bar', radius: bh/2, dk: ['w', 'x'] });
+  const bits = [];
+  if (rnum(el.boothsCounted) != null && rnum(el.boothsTotal) != null) bits.push(`${el.boothsCounted} of ${el.boothsTotal} ${unit} reporting`);
+  if (c.outstanding != null) bits.push(`${c.outstanding} outstanding`);
+  if (rnum(el.votesCounted) != null) bits.push(`${Math.round(el.votesCounted).toLocaleString('en-AU')} votes counted`);
+  if (el.updated) bits.push(`Updated ${el.updated}`);
+  R.text('detail', bits.join('  ·  '), W/2, by + bh + 50*u, 26*u, { name: 'Reporting detail', align: 'center', weight: 500, color: R.ink, fitW: bw });
+  if (isBooth && c.votesPct != null && c.boothsPct != null) R.text('note', `Booths reporting (${c.boothsPct.toFixed(1)}%) and votes counted (${c.votesPct.toFixed(1)}%) are measured separately.`, W/2, by + bh + 92*u, 18*u, { name: 'Measure note', align: 'center', weight: 400, color: R.sub, fitW: bw });
+  return c;
+}
+/* ---------- seat tracker pieces ---------- */
+function rSeatBar(R, sc, x, y, w, h){
+  const { u } = R; let cx = x; const tot = Math.max(1, sc.total);
+  R.rect('seatbg', x, y, w, h, R.dark ? '#1F2A40' : '#D3D6DC', { name: 'Seat bar track' });
+  sc.list.forEach((s, i) => {
+    const dw = w*s.declared/tot, pw = w*s.projected/tot, lw = w*s.leading/tot;
+    if (dw > 0) R.rect('sd' + i, cx, y, dw, h, s.P.color, { name: `${s.P.abbr} declared seats`, dk: ['w', 'x'] }); cx += dw;
+    if (pw > 0) R.rect('sp' + i, cx, y, pw, h, s.P.color, { name: `${s.P.abbr} projected seats`, opacity: 75, tex: 'hatch', texOp: 30, dk: ['w', 'x'] }); cx += pw;
+    if (lw > 0) R.rect('sl' + i, cx, y, lw, h, s.P.color, { name: `${s.P.abbr} seats ahead`, opacity: 35, dk: ['w', 'x'] }); cx += lw;
+  });
+  const mx = x + w*sc.majority/tot;
+  R.rect('majline', mx - 2*u, y - 16*u, 4*u, h + 32*u, R.ink, { name: 'Majority line', dk: ['x'] });
+  R.text('majlabel', `${sc.majority} FOR MAJORITY`, mx, y - 34*u, 20*u, { name: 'Majority label', align: 'center', weight: 800, color: R.ink });
+}
+function rLegend(R, x, y){
+  const { u } = R, items = [['Declared', 100, false], ['Projected', 75, true], ['Ahead, not called', 35, false]];
+  let cx = x; items.forEach(([t, op, h], i) => { R.rect('lg' + i, cx, y - 9*u, 18*u, 18*u, R.dark ? '#FFFFFF' : '#5B6170', { name: 'Legend swatch', opacity: op, tex: h ? 'hatch' : '', texOp: 40 }); R.text('lgt' + i, t, cx + 26*u, y, 18*u, { name: 'Legend', weight: 500, color: R.sub }); cx += 34*u + tw(t, 18*u, 500, R.F) + 26*u; });
+}
+/* ---------- D. seat ticker ---------- */
+function buildSeats(R){
+  const { E, S, W, H, u } = R, sc = seatCalc(E);
+  const { hh, pad } = rFrame(R, `${E.name} ${E.year || ''}`.trim(), 'SEAT COUNT');
+  const ec = electionCounted(E); R.text('prog', ec.votesPct != null ? `*${ec.votesPct.toFixed(1)}%* COUNTED` : '', W - pad - 250*u, hh*.42, 21*u, { name: 'Count progress', align: 'right', weight: 500, emWeight: 800 });
+  const parties = sc.list.slice(0, Math.max(2, Math.min(S.maxRows || 6, 7))), n = parties.length, gap = 18*u, tw0 = (W - pad*2 - gap*(n - 1))/n, ty = hh + 40*u, th = (H - hh)*.5;
+  parties.forEach((s, i) => {
+    const x = pad + i*(tw0 + gap), P = s.P, tc = pText(P);
+    R.rect('t' + i, x, ty, tw0, th, P.color, { name: `${P.abbr} tile`, radius: 14*u });
+    R.rect('tb' + i, x, ty + th*.62, tw0, th*.38, pDark(P), Object.assign({ name: `${P.abbr} tile base`, radius: 14*u }, hatch(S)));
+    R.text('ta' + i, P.abbr, x + tw0/2, ty + th*.14, th*.11, { name: `${P.abbr} name`, align: 'center', weight: 800, color: tc, fitW: tw0 - 20*u });
+    R.text('tn' + i, String(s.seats), x + tw0/2, ty + th*.4, th*.34, { name: `${P.abbr} seats`, align: 'center', weight: 900, color: tc });
+    const ch = s.net > 0 ? `▲ ${s.net}` : s.net < 0 ? `▼ ${-s.net}` : 'NO CHANGE';
+    R.text('tc' + i, ch, x + tw0/2, ty + th*.74, th*.09, { name: `${P.abbr} net change`, align: 'center', weight: 800, color: tc });
+    R.text('tg' + i, `+${s.gains} / −${s.losses}${s.leading ? `  ·  ${s.leading} ahead` : ''}`, x + tw0/2, ty + th*.88, th*.065, { name: `${P.abbr} gains and losses`, align: 'center', weight: 500, color: tc, fitW: tw0 - 16*u });
+  });
+  const by = ty + th + 90*u; rSeatBar(R, sc, pad, by, W - pad*2, 44*u);
+  R.text('seatcounts', `Declared ${sc.declared}  ·  Projected ${sc.projected}  ·  Ahead, not called ${sc.leading}  ·  Undecided ${Math.max(0, sc.total - sc.declared - sc.projected - sc.leading)}  ·  ${sc.total} seats`, pad, by + 82*u, 20*u, { name: 'Seat summary', weight: 500, color: R.sub, fitW: W - pad*2 });
+  rLegend(R, pad, by + 118*u);
+  return sc;
+}
+/* ---------- E. seat change ---------- */
+function buildChange(R){
+  const { E, S, W, H, u } = R, sc = seatCalc(E);
+  const { hh, pad } = rFrame(R, `${E.name} ${E.year || ''}`.trim(), 'SEATS CHANGING HANDS');
+  const rows = sc.list.slice(0, S.maxRows || 6), n = Math.max(1, rows.length), top = hh + 50*u, rh = Math.min(84*u, (H - top - 60*u)/n), maxN = Math.max(1, ...rows.map(s => Math.abs(s.net)));
+  const labW = R.wide ? 400*u : 170*u, a0 = pad + labW + 40*u, a1 = W - pad - (R.wide ? 190*u : 20*u), cx = (a0 + a1)/2, half = (a1 - a0)/2 - 70*u;
+  R.rect('axis', cx - 2*u, top - 20*u, 4*u, rh*n + 20*u, R.ink, { name: 'No-change line', opacity: 50 });
+  rows.forEach((s, i) => {
+    const P = s.P, y = top + i*rh + rh/2, bh = rh*.66, len = half*Math.abs(s.net)/maxN;
+    R.rect('ca' + i, pad, y - bh/2, 150*u, bh, P.color, { name: `${P.abbr} label box`, radius: 8*u });
+    R.text('ct' + i, P.abbr, pad + 75*u, y, bh*.5, { name: `${P.abbr} label`, align: 'center', weight: 900, color: pText(P) });
+    if (R.wide) R.text('cn' + i, P.name, pad + 170*u, y, bh*.36, { name: `${P.abbr} name`, weight: 500, color: R.ink, fitW: labW - 180*u });
+    if (s.net){ const b = R.rect('cb' + i, s.net > 0 ? cx : cx - len, y - bh/2, len, bh, P.color, { name: `${P.abbr} change bar`, radius: 6*u, dk: ['w', 'x'] }); }
+    const t = s.net > 0 ? `+${s.net}` : s.net < 0 ? `−${-s.net}` : '0';
+    R.text('cv' + i, t, s.net >= 0 ? cx + len + 16*u : cx - len - 16*u, y, bh*.55, { name: `${P.abbr} change`, align: s.net >= 0 ? 'left' : 'right', weight: 900, color: R.ink });
+    if (R.wide) R.text('cg' + i, `won ${s.gains}, lost ${s.losses}`, W - pad, y, bh*.3, { name: `${P.abbr} gained and lost`, align: 'right', weight: 500, color: R.sub });
+  });
+  return sc;
+}
+/* ---------- F. projected result / G. declared result ---------- */
+function buildOutcome(R, declared){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - pad - 250*u, hh*.42);
+  const P = c.winner || c.lead || c.A, cand = c.cands.filter(k => k.party === (P && P.id)).sort((a, b) => (b.pctUse ?? 0) - (a.pctUse ?? 0))[0];
+  if (declared){
+    const px = pad, py = hh + 40*u, ph = H - py - 40*u, pw = ph*.8;
+    R.rect('photobg', px, py, pw, ph, P.color, { name: 'Photo panel', radius: 16*u });
+    R.image('photo', px + pw/2, py + ph/2, pw, ph, { name: 'Winner photo', gen: 'politician', face: 'leader', clipTo: 'rb_photobg' });
+    const tx = px + pw + 50*u, tw1 = W - tx - pad;
+    const myA = c.isList ? (c.alloc || []).find(a => a.pid === P.id) : null;
+    R.text('kicker', c.isList ? ((c.status === 'declared' || c.status === 'final' ? '✓ ' : '') + 'LARGEST PARTY') : c.status === 'declared' || c.status === 'final' ? '✓ DECLARED ELECTED' : `${c.statusText}`, tx, py + 40*u, 30*u, { name: 'Declared label', weight: 900, color: c.status === 'declared' || c.status === 'final' ? P.color : R.sub, fitW: tw1 });
+    R.text('winner', c.isList ? P.name : cand ? cand.name : P.name, tx - 3*u, py + 130*u, 92*u, { name: 'Winner name', weight: 900, color: R.ink, fitW: tw1, track: -2 });
+    const chipT = c.isList ? `${myA ? myA.seats : 0} OF ${c.seatsAvail || 0} SEATS` : P.name;
+    R.rect('wchip', tx, py + 200*u, Math.min(tw1, tw(chipT, 30*u, 800, R.F) + 50*u), 56*u, P.color, { name: 'Party chip', radius: 28*u });
+    R.text('wparty', chipT, tx + 25*u, py + 228*u, 30*u, { name: 'Party', weight: 800, color: pText(P), fitW: tw1 - 50*u });
+    const lines = [];
+    if (c.useTpp && c.aPct != null){ const mine = P.id === c.A.id ? c.aPct : c.bPct, other = P.id === c.A.id ? c.B : c.A; if (mine != null) lines.push(`${fmtNum(mine, F.dp ?? 1)}% two-party preferred v ${other.abbr}`); }
+    if (!c.useTpp && c.aPct != null && c.bPct != null) lines.push(`${c.A.name} ${fmtNum(c.aPct, F.dp ?? 1)}% · ${c.B.name} ${fmtNum(c.bPct, F.dp ?? 1)}% here`);
+    const sw = c.useTpp ? (c.tppSwingA != null ? (P.id === c.A.id ? c.tppSwingA : -c.tppSwingA) : null) : (cand ? cand.swingUse : null); if (sw != null) lines.push(`${fmtSwing(sw, Object.assign({}, F, { word: false }))} swing${c.useTpp && c.tppSwingSrc === 'manual' ? ' (entered)' : ''}`);
+    if (cand && cand.pctUse != null) lines.push(`${fmtNum(c.isList && myA ? myA.pct : cand.pctUse, F.dp ?? 1)}% ${c.isList ? 'of the vote' : 'primary vote'}`);
+    if (c.isList && c.alloc){ const others = c.alloc.filter(a => a.pid !== P.id && a.seats).slice(0, 3).map(a => `${a.P.abbr} ${a.seats}`); if (others.length) lines.push(others.join(' · ')); }
+    lines.splice(Math.max(1, Math.floor((H - 150*u - (py + 296*u))/(40*u)) + 1));
+    lines.forEach((t, i) => R.text('wl' + i, t, tx, py + 296*u + i*40*u, 28*u, { name: 'Result detail', weight: 500, color: R.ink, fitW: tw1 }));
+    const bw = Math.min(tw1, 620*u); rBanner(R, c, tx, H - 128*u, bw, 50*u); rSourcePill(R, c, tx, H - 70*u, bw, 38*u);
+    return c;
+  }
+  // projected: big split bar + banner, clearly marked as a projection
+  const bw = W - pad*2, by = hh + (H - hh)*.28, bh = 150*u, a = c.aPct, A = c.A, B = c.B;
+  if (a != null){
+    const wa = bw*(c.cmpFrac ?? .5);
+    R.rect('pA', pad, by, wa, bh, A.color, { name: `${A.abbr} share`, radius: 12*u, dk: ['w', 'x'] });
+    R.rect('pB', pad + wa, by, bw - wa, bh, B.color, { name: `${B.abbr} share`, radius: 12*u, dk: ['w', 'x'] });
+    R.rect('pmid', pad + bw/2 - 2*u, by - 22*u, 4*u, bh + 44*u, R.ink, { name: '50% line', opacity: 60 });
+    R.rect('psep', pad + wa - S.sep*u/2, by, S.sep*u, bh, R.dark ? '#0B1220' : '#FFFFFF', { name: 'Separator', dk: ['x'] });
+    R.text('pAl', A.abbr, pad + 30*u, by + bh*.35, bh*.24, { name: `${A.abbr} label`, weight: 800, color: pText(A) });
+    R.text('pAv', `${fmtNum(a, F.dp ?? 1)}%`, pad + 30*u, by + bh*.7, bh*.3, { name: `${A.abbr} %`, weight: 900, color: pText(A) });
+    R.text('pBl', B.abbr, pad + bw - 30*u, by + bh*.35, bh*.24, { name: `${B.abbr} label`, weight: 800, color: pText(B), align: 'right' });
+    R.text('pBv', `${fmtNum(c.bPct, F.dp ?? 1)}%`, pad + bw - 30*u, by + bh*.7, bh*.3, { name: `${B.abbr} %`, weight: 900, color: pText(B), align: 'right' });
+    if (c.tppSwingA != null) R.text('pswing', `${fmtSwing(c.tppSwingA, F)} TO ${c.tppSwingA >= 0 ? A.abbr : B.abbr}`.replace('−', ''), W/2, by - 52*u, 30*u, { name: 'Swing', align: 'center', weight: 800, color: R.ink });
+  } else R.text('pnone', 'No two-party preferred figures yet', W/2, by + bh/2, 40*u, { name: 'Empty state', align: 'center', weight: 600, color: R.sub });
+  const ky = by + bh + 70*u;
+  rBanner(R, c, pad + bw*.2, ky, bw*.6, 70*u);
+  rSourcePill(R, c, pad + bw*.3, ky + 86*u, bw*.4, 44*u);
+  if (c.provisional) R.text('pnote', c.status === 'counting' ? 'Counting continues. No result has been called.' : 'This is a projection, not a declared result.', W/2, ky + 170*u, 20*u, { name: 'Projection note', align: 'center', weight: 500, color: R.sub });
+  return c;
+}
+/* ---------- H. primary vote breakdown ---------- */
+function buildPrimary(R){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - pad - 250*u, hh*.42);
+  R.text('ptitle', c.isList ? 'PARTY VOTE' : 'PRIMARY VOTE', pad, hh + 50*u, 30*u, { name: 'Section title', weight: 900, color: R.ink });
+  const list = c.ordered.filter(k => k.pctUse != null), tot = list.reduce((t, k) => t + k.pctUse, 0) || 1, bw = W - pad*2, by = hh + 90*u, bh = 90*u;
+  let x = pad;
+  list.forEach((k, i) => { const w = bw*k.pctUse/Math.max(100, tot); R.rect('seg' + i, x, by, w, bh, k.P.color, { name: `${k.P.abbr} segment`, dk: ['w', 'x'] });
+    if (w > 70*u) R.text('segl' + i, k.P.abbr, x + 14*u, by + bh/2, 26*u, { name: `${k.P.abbr} segment label`, weight: 800, color: pText(k.P), fitW: w - 20*u });
+    x += w; if (i < list.length - 1) R.rect('segs' + i, x - 1.5*u, by, 3*u, bh, R.dark ? '#0B1220' : '#FFFFFF', { name: 'Segment divider', dk: ['x'] }); });
+  if (tot < 99.5) R.rect('segrest', x, by, pad + bw - x, bh, R.dark ? '#1F2A40' : '#D3D6DC', { name: 'Uncounted share', dk: ['w', 'x'] });
+  const cols = list.length > 4 ? 2 : 1, rows = Math.ceil(list.length/cols), ly = by + bh + 50*u, lh = Math.min(64*u, (H - ly - 30*u)/Math.max(1, rows)), cw = bw/cols;
+  list.forEach((k, i) => {
+    const col = Math.floor(i/rows), row = i % rows, x0 = pad + col*cw, y = ly + row*lh + lh/2;
+    R.rect('lsw' + i, x0, y - lh*.32, lh*.64, lh*.64, k.P.color, { name: `${k.P.abbr} swatch`, radius: 6*u });
+    R.text('lab' + i, `${k.P.abbr}  ${k.name}${k.mp ? ' (MP)' : ''}${c.isList ? (k.below ? ' · below threshold' : ` · ${k.seatsWon} seat${k.seatsWon === 1 ? '' : 's'}`) : ''}`, x0 + lh*.85, y, lh*.36, { name: `${k.name} label`, weight: 600, color: R.ink, fitW: cw - lh*.85 - 260*u });
+    R.text('lpc' + i, `${fmtNum(k.pctUse, F.dp ?? 1)}%`, x0 + cw - 120*u, y, lh*.42, { bind: { t: 'cpct', cid: k.id }, name: `${k.name} %`, align: 'right', weight: 900, color: R.ink });
+    if (k.swingUse != null) R.text('lsw2' + i, fmtSwing(k.swingUse, Object.assign({}, F, { word: false })), x0 + cw - 20*u, y, lh*.3, { name: `${k.name} swing`, align: 'right', weight: 600, color: k.swingUse >= 0 ? '#1F7A3A' : '#B42318' });
+  });
+  return c;
+}
+/* ---------- I. detailed electorate result ---------- */
+function buildDetail(R){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  const tx = pad, tw1 = W*(R.wide ? .62 : 1) - pad*(R.wide ? 1 : 2), top = hh + 40*u, T = rThrSplit(R, c, S.maxRows || 8), list = T.list, thrGap = T.on ? 40*u : 0, rh = Math.min(70*u, (H - top - 80*u - thrGap)/(list.length + 1));
+  const cols = [['PARTY', 0, 'left'], [c.isList ? 'PARTY NAME' : 'CANDIDATE', .15, 'left'], ['VOTES', .7, 'right'], ['%', .83, 'right'], [c.isList ? 'SEATS' : 'SWING', 1, 'right']];
+  cols.forEach(([t, f, al], i) => R.text('th' + i, t, tx + tw1*f, top + rh/2, rh*.3, { name: 'Column heading', weight: 800, color: R.sub, align: al }));
+  list.forEach((k, i) => {
+    const y = top + (i + 1)*rh + (i >= T.nA ? thrGap : 0);
+    R.rect('rw' + i, tx, y + 3*u, tw1, rh - 6*u, R.dark ? '#141E33' : '#FFFFFF', { name: 'Row background', radius: 8*u, opacity: 90 });
+    R.rect('rc' + i, tx, y + 3*u, tw1*.12, rh - 6*u, k.P.color, { name: `${k.P.abbr} chip`, radius: 8*u });
+    R.text('ra' + i, k.P.abbr, tx + tw1*.06, y + rh/2, rh*.34, { name: `${k.P.abbr}`, align: 'center', weight: 900, color: pText(k.P) });
+    R.text('rn' + i, `${k.name}${k.mp ? '  MP' : ''}${k.status ? `  ·  ${k.status.toUpperCase()}` : ''}`, tx + tw1*.15, y + rh/2, rh*.34, { name: `${k.name} name`, weight: 600, color: R.ink, fitW: tw1*.5 });
+    R.text('rv' + i, rnum(k.votes) != null ? Math.round(k.votes).toLocaleString('en-AU') : '–', tx + tw1*.7, y + rh/2, rh*.32, { bind: { t: 'cvotes', cid: k.id }, name: `${k.name} votes`, align: 'right', weight: 500, color: R.ink });
+    R.text('rp' + i, `${fmtNum(k.pctUse, F.dp ?? 1)}%`, tx + tw1*.83, y + rh/2, rh*.36, { bind: { t: 'cpct', cid: k.id }, name: `${k.name} %`, align: 'right', weight: 900, color: R.ink });
+    if (c.isList){ const d = k.seatsWon - (k.prevSeatsP || 0); R.text('rs' + i, k.below ? '—' : `${k.seatsWon}${c.hasPrevSeats ? ` (${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)})` : ''}`, tx + tw1 - 12*u, y + rh/2, rh*.34, { name: `${k.name} seats`, align: 'right', weight: 900, color: k.below ? R.sub : R.ink }); return; }
+    R.text('rs' + i, k.swingUse != null ? fmtSwing(k.swingUse, Object.assign({}, F, { word: false })) + (k.swingSrc === 'manual' ? '*' : '') : '–', tx + tw1 - 12*u, y + rh/2, rh*.3, { name: `${k.name} swing`, align: 'right', weight: 700, color: k.swingUse == null ? R.sub : k.swingUse >= 0 ? '#1F7A3A' : '#B42318' });
+  });
+  if (T.on) rThrLine(R, T, tx, tw1, top + (T.nA + 1)*rh + thrGap/2);
+  const ny = top + (list.length + 1)*rh + thrGap + 24*u;
+  R.text('fnote', c.isList ? `% of ${c.denomLabel}  ·  ${c.seatsAvail || 0} seats by ${listMethodName((E.list || {}).method)}${(E.list || {}).threshold ? `, ${E.list.threshold}% ${E.list.scope === 'national' ? 'nationwide ' : ''}threshold` : ''}${c.cands.some(k => k.below) ? '  ·  — below threshold' : ''}` : `% of ${c.denomLabel}${c.cands.some(k => k.swingSrc === 'manual') ? '  ·  * swing entered by hand' : ''}`, tx, ny, 16*u, { name: 'Table note', weight: 400, color: R.sub, fitW: tw1 });
+  if (R.wide){
+    const rx = W*.66, rw = W - pad - rx;
+    R.text('sidep', c.progMain, rx, top + 20*u, 30*u, { name: 'Counted', weight: 900, color: R.ink, fitW: rw });
+    if (c.progSub) R.text('sidesub', c.progSub.replace(/[()]/g, ''), rx, top + 56*u, 20*u, { name: 'Reporting units', weight: 500, color: R.sub });
+    const f = c.progFrac ?? 0; R.rect('sidetrk', rx, top + 82*u, rw, 14*u, R.dark ? '#1F2A40' : '#D3D6DC', { name: 'Progress track', radius: 7*u }); R.rect('sidebar', rx, top + 82*u, Math.max(14*u, rw*f), 14*u, E.branding.accent || '#14284B', { name: 'Progress', radius: 7*u, dk: ['w', 'x'] });
+    R.text('side2', c.cmpLabel, rx, top + 150*u, 20*u, { name: 'Comparison heading', weight: 800, color: R.sub });
+    if (c.aPct != null){ const wa = rw*(c.cmpFrac ?? .5), y2 = top + 175*u;
+      R.rect('s2a', rx, y2, wa, 60*u, c.A.color, { name: `${c.A.abbr} share`, dk: ['w', 'x'] }); R.rect('s2b', rx + wa, y2, rw - wa, 60*u, c.B.color, { name: `${c.B.abbr} share`, dk: ['w', 'x'] });
+      R.text('s2al', `${c.A.abbr} ${fmtNum(c.aPct, F.dp ?? 1)}`, rx + 12*u, y2 + 30*u, 24*u, { name: `${c.A.abbr} 2PP`, weight: 800, color: pText(c.A) });
+      R.text('s2bl', `${fmtNum(c.bPct, F.dp ?? 1)} ${c.B.abbr}`, rx + rw - 12*u, y2 + 30*u, 24*u, { name: `${c.B.abbr} 2PP`, weight: 800, color: pText(c.B), align: 'right' });
+      if (c.tppSwingA != null) R.text('s2sw', `${fmtSwing(Math.abs(c.tppSwingA), Object.assign({}, F, { plus: false }))} to ${c.tppSwingA >= 0 ? c.A.abbr : c.B.abbr}`, rx, y2 + 92*u, 22*u, { name: '2PP swing', weight: 700, color: R.ink }); }
+    rBanner(R, c, rx, H - 160*u, rw, 56*u); rSourcePill(R, c, rx, H - 92*u, rw, 40*u);
+  }
+  return c;
+}
+/* ---------- M. district seat allocation (party lists) ---------- */
+function buildAlloc(R){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
+  const { hh, pad } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - pad - 250*u, hh*.42);
+  const N = Math.floor(c.seatsAvail || 0), LS = E.list || {};
+  R.text('atitle', c.isList && N ? `${N} SEAT${N === 1 ? '' : 'S'}  ·  ${listMethodName(LS.method).toUpperCase()}` : 'SEAT ALLOCATION', pad, hh + 48*u, 30*u, { name: 'Section title', weight: 900, color: R.ink, fitW: W*.6 });
+  if (LS.threshold && c.isList) R.text('athr', `${decC(String(LS.threshold))}% ${LS.scope === 'national' ? 'NATIONWIDE ' : ''}THRESHOLD`, W - pad, hh + 48*u, 20*u, { name: 'Threshold', align: 'right', weight: 700, color: R.sub });
+  if (!c.isList || !N){ R.text('anone', c.isList ? 'Enter how many seats this district elects' : 'Set the voting system to party lists to share out seats', W/2, (hh + H)/2, 34*u, { name: 'Empty state', align: 'center', weight: 600, color: R.sub }); return c; }
+  const showBanner = S.showStatus && c.status !== 'counting';
+  const gy = hh + 84*u, gh = (H - gy)*.42, gw = W - pad*2;
+  let cols = N, rows = 1, best = 0;
+  for (let r = 1; r <= N; r++){ const cc = Math.ceil(N/r), rr = Math.ceil(N/cc), sz = Math.min(gw/cc, gh/rr, 150*u); if (sz > best + .5){ best = sz; cols = cc; rows = rr; } }
+  const cell = Math.min(gw/cols, gh/rows, 150*u), tile = cell*.86, x0 = pad + (gw - cell*cols)/2, y0 = gy + (gh - cell*rows)/2;
+  const seq = []; (c.alloc || []).forEach(a => { for (let i = 0; i < a.seats; i++) seq.push(a.P); });
+  const tex = c.provisional ? { tex: 'hatch', texOp: 18 } : {};
+  for (let i = 0; i < N; i++){ const P = seq[i], cx = x0 + (i % cols)*cell + (cell - tile)/2, cy = y0 + Math.floor(i/cols)*cell + (cell - tile)/2;
+    R.rect('as' + i, cx, cy, tile, tile, P ? P.color : (R.dark ? '#1F2A40' : '#D3D6DC'), Object.assign({ name: P ? `${P.abbr} seat` : 'Seat not given out', radius: tile*.16 }, P ? tex : {})); }
+  const list = (c.alloc || []).filter(a => a.seats || a.pct >= .5).slice(0, S.maxRows || 8), lc = list.length > 4 ? 2 : 1, lr = Math.ceil(list.length/lc);
+  const ly = gy + gh + 30*u, lbot = H - (showBanner ? 110*u : 36*u), lh = Math.min(70*u, (lbot - ly)/Math.max(1, lr)), cw = (gw - (lc - 1)*40*u)/lc;
+  list.forEach((a, i) => { const col = Math.floor(i/lr), row = i % lr, x = pad + col*(cw + 40*u), y = ly + row*lh + lh/2, k = c.cands.find(q => q.party === a.pid);
+    R.rect('asw' + i, x, y - lh*.36, lh*.72, lh*.72, a.P.color, { name: `${a.P.abbr} swatch`, radius: 6*u });
+    R.text('aab' + i, a.P.abbr, x + lh*.36, y, lh*.28, { bind: { t: 'pabbr', pid: a.pid }, name: `${a.P.abbr} label`, align: 'center', weight: 900, color: pText(a.P), fitW: lh*.66 });
+    R.text('anm' + i, a.P.name, x + lh*.92, y - lh*.12, lh*.34, { bind: k ? { t: 'cname', cid: k.id } : null, name: `${a.P.abbr} name`, weight: 700, color: R.ink, fitW: cw - lh*.92 - 150*u });
+    R.text('apc' + i, a.below ? `${fmtNum(a.pct, F.dp ?? 1)}% · below threshold` : `${fmtNum(a.pct, F.dp ?? 1)}% of the vote`, x + lh*.92, y + lh*.24, lh*.24, { name: `${a.P.abbr} %`, weight: 500, color: R.sub, fitW: cw - lh*.92 - 150*u });
+    const d = a.seats - a.prev, showD = c.hasPrevSeats;
+    R.text('ase' + i, String(a.seats), x + cw - (showD ? 70*u : 0), y, lh*.56, { name: `${a.P.abbr} seats`, align: 'right', weight: 900, color: a.below ? R.sub : R.ink });
+    if (showD) R.text('asd' + i, `${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)}`, x + cw, y, lh*.3, { name: `${a.P.abbr} change`, align: 'right', weight: 700, color: d > 0 ? '#1F7A3A' : d < 0 ? '#B42318' : R.sub }); });
+  if (showBanner) rBanner(R, c, pad, H - 92*u, gw, 58*u);
+  return c;
+}
+/* ---------- J. election summary ---------- */
+function buildSummary(R){
+  const { E, S, W, H, u } = R, sc = seatCalc(E), ec = electionCounted(E);
+  const { hh, pad } = rFrame(R, E.region || '', `${E.name} ${E.year || ''}`.trim());
+  const top = hh + 40*u, top1 = sc.top;
+  const tileW = (W - pad*2 - 3*24*u)/4, th = 210*u;
+  const tiles = [
+    [top1 ? top1.P.abbr : '–', top1 ? `${top1.seats}` : '0', 'SEATS WON OR PROJECTED', top1 ? top1.P.color : '#5B6170'],
+    ['MAJORITY', `${sc.majority}`, `OF ${sc.total} SEATS`, E.branding.accent || '#14284B'],
+    ['COUNTED', ec.votesPct != null ? `${ec.votesPct.toFixed(1)}%` : '–', 'OF EXPECTED VOTES', '#3B4252'],
+    ['UNDECIDED', `${Math.max(0, sc.total - sc.declared - sc.projected)}`, `${sc.leading} AHEAD, NOT CALLED`, '#5B6170'],
+  ];
+  tiles.forEach(([k, v, s, colr], i) => { const x = pad + i*(tileW + 24*u), P = { color: colr, text: '' };
+    R.rect('st' + i, x, top, tileW, th, colr, { name: `${k} tile`, radius: 16*u });
+    R.text('stk' + i, k, x + 24*u, top + 38*u, 26*u, { name: `${k} label`, weight: 800, color: pText(P), fitW: tileW - 40*u });
+    R.text('stv' + i, v, x + 22*u, top + 112*u, 92*u, { name: `${k} figure`, weight: 900, color: pText(P), fitW: tileW - 40*u });
+    R.text('sts' + i, s, x + 24*u, top + 176*u, 17*u, { name: `${k} detail`, weight: 600, color: pText(P), opacity: 85, fitW: tileW - 40*u }); });
+  R.text('majstat', sc.majorityText, pad, top + th + 56*u, 36*u, { name: 'Majority status', weight: 900, color: R.ink });
+  rSeatBar(R, sc, pad, top + th + 130*u, W - pad*2, 40*u);
+  const ly = top + th + 220*u, list = sc.list.slice(0, 5), cw = (W - pad*2)/Math.max(1, list.length);
+  list.forEach((s, i) => { const x = pad + i*cw;
+    R.rect('ls' + i, x, ly, 14*u, 48*u, s.P.color, { name: `${s.P.abbr} swatch` });
+    R.text('ln' + i, `${s.P.abbr}  ${s.seats}`, x + 26*u, ly + 14*u, 30*u, { name: `${s.P.abbr} seats`, weight: 900, color: R.ink });
+    R.text('lc' + i, `${s.net > 0 ? '+' : s.net < 0 ? '−' : ''}${Math.abs(s.net)} on last election`, x + 26*u, ly + 42*u, 17*u, { name: `${s.P.abbr} change`, weight: 500, color: R.sub }); });
+  rLegend(R, pad, H - 40*u);
+  return sc;
+}
+/* ---------- K/L. blocs with their leaders: vote share or seats ---------- */
+function buildBlocLeaders(R, mode){
+  const { E, S, W, H, u, Bd } = R, bl = blocCalc(E), F = E.fmt || {};
+  const pick = [bl.find(b => b.B.id === E.blocA) || bl[0], bl.find(b => b.B.id === E.blocB) || bl[1]].filter(Boolean);
+  const list = S.allBlocs ? bl : pick, n = Math.max(1, list.length);
+  const val = b => mode === 'seats' ? b.seats : b.share, top = list.slice().sort((a, b) => (val(b) ?? -1) - (val(a) ?? -1))[0];
+  const bgc = S.bgMode === 'brand' ? (Bd.bg === 'dark' ? '#0B1220' : Bd.accent || '#14284B') : S.bgMode === 'light' ? '#ECEEF2' : (top ? top.P.color : '#D34337');
+  const onBg = lum(bgc) > .62 ? '#111418' : '#FFFFFF';
+  if (Bd.bg !== 'transparent') R.rect('bg', 0, 0, W, H, bgc, { name: 'Background', locked: true });
+  R.rect('glow', W*.5 - W*.45, H*.1, W*.9, H*.9, '#FFFFFF', { name: 'Background glow', opacity: 10, radius: H*.45 });
+  const pad = (R.wide ? 64 : 48)*u;
+  const ttl = S.title != null && S.title !== '' ? S.title : (mode === 'seats' ? 'SEATS' : 'SHARE OF THE VOTE');
+  R.text('ttl', ttl.toUpperCase(), pad, 60*u, 30*u, { name: 'Title', weight: 900, color: onBg, fitW: W*.6 });
+  R.text('ttl2', `${E.name || ''} ${E.year || ''}`.trim().toUpperCase(), pad, 96*u, 20*u, { name: 'Subtitle', weight: 500, color: onBg, opacity: 85, fitW: W*.6 });
+  const ec = electionCounted(E);
+  const note = mode === 'seats' ? `${bl[0] ? bl[0].majority : ''} SEATS FOR A MAJORITY · ${bl[0] ? bl[0].total : ''} IN TOTAL` : ec.votesPct != null ? `${decC(ec.votesPct.toFixed(1))}% COUNTED` : '';
+  if (note) R.text('note', note, W - pad, 60*u, 22*u, { name: 'Count note', align: 'right', weight: 700, color: onBg, fitW: W*.4 });
+  // columns: photo standing on a white card with a party-colour strip and the big number
+  const gap = 70*u, colW = Math.min(440*u, (W - pad*2 - gap*(n - 1))/n), x0 = (W - (colW*n + gap*(n - 1)))/2, cardY = H*.6, cardH = H*.26, stripH = 12*u;
+  list.forEach((b, i) => {
+    const x = x0 + i*(colW + gap), key = 'bl' + b.B.id, leadP = E.parties.find(p => p.id === b.B.leaderParty) || b.parties[0];
+    const ph = cardY - 120*u, pw = colW*.78;
+    R.image(key + 'photo', x + colW/2, cardY - ph/2, pw, ph, { name: `${b.B.name} leader photo`, gen: 'politician' });
+    R.rect(key + 'card', x, cardY, colW, cardH, '#FFFFFF', { name: `${b.B.name} card`, radius: 4*u });
+    const segs = (mode === 'seats' ? b.segSeats : b.segVote).filter(sg => sg.v > 0), tot = segs.reduce((t, sg) => t + sg.v, 0);
+    let sx = x;
+    if (tot > 0) segs.forEach((sg, j) => { const w = colW*sg.v/tot; R.rect(key + 'seg' + j, sx, cardY, w, stripH, sg.p.color, { name: `${sg.p.abbr} share of ${b.B.short}`, dk: ['w', 'x'] }); sx += w; });
+    else R.rect(key + 'seg0', x, cardY, colW, stripH, b.P.color, { name: `${b.B.name} strip` });
+    const v = val(b), txt = v == null ? '–' : mode === 'seats' ? String(v) : `${fmtNum(v, F.dp ?? 1)}%`;
+    R.text(key + 'num', txt, x + colW/2, cardY + stripH + (cardH - stripH)*.5, (cardH - stripH)*.56, { name: `${b.B.name} ${mode === 'seats' ? 'seats' : 'vote share'}`, align: 'center', weight: 800, color: '#15171C', fitW: colW - 40*u });
+    if (S.showNames !== false){
+      R.text(key + 'name', (b.B.name || '').toUpperCase(), x + colW/2, cardY + cardH + 34*u, 26*u, { bind: { t: 'blocname', bid: b.B.id }, name: `${b.B.name} name`, align: 'center', weight: 900, color: onBg, fitW: colW });
+      if (b.B.leader) R.text(key + 'leader', `${b.B.leader}${leadP ? ' · ' + leadP.abbr : ''}`, x + colW/2, cardY + cardH + 66*u, 20*u, { bind: { t: 'leader', bid: b.B.id }, name: `${b.B.name} leader`, align: 'center', weight: 500, color: onBg, opacity: 90, fitW: colW });
+    }
+    const extra = mode === 'seats' ? (v >= b.majority ? 'MAJORITY' : b.ahead ? `+${b.ahead} AHEAD` : '') : b.swing != null && S.showSwing !== false ? fmtSwing(b.swing, Object.assign({}, F, { word: false })) : '';
+    if (extra){ const ew = tw(extra, 20*u, 800, R.F) + 30*u; R.rect(key + 'tagbg', x + colW - ew - 10*u, cardY - 44*u, ew, 34*u, mode === 'seats' && v >= b.majority ? '#15171C' : '#FFFFFF', { name: `${b.B.name} tag`, radius: 17*u, opacity: 95 });
+      R.text(key + 'tag', extra, x + colW - ew/2 - 10*u, cardY - 27*u, 20*u, { name: `${b.B.name} tag text`, align: 'center', weight: 800, color: mode === 'seats' && v >= b.majority ? '#FFFFFF' : '#15171C' }); }
+  });
+  return bl;
+}
+const R_KINDS = {
+  cand: ['Candidate results', buildCand], tpp: ['Bloc comparison', buildTpp], count: ['Count progress', buildCount], seats: ['Seat ticker', buildSeats],
+  change: ['Seat change', buildChange], proj: ['Projected result', R => buildOutcome(R, false)], decl: ['Declared result', R => buildOutcome(R, true)],
+  primary: ['Primary vote breakdown', buildPrimary], detail: ['Detailed electorate result', buildDetail], summary: ['Election summary', buildSummary],
+  blocvote: ['Bloc vote with leaders', R => buildBlocLeaders(R, 'vote')], blocseats: ['Bloc seats with leaders', R => buildBlocLeaders(R, 'seats')],
+  alloc: ['District seat allocation', buildAlloc],
+};
+const R_LISTNAMES = { cand: 'Party results', primary: 'Party vote breakdown', detail: 'Detailed district result' };
+const rKindName = k => (state.election && state.election.system === 'list' && R_LISTNAMES[k]) || (R_KINDS[k] || R_KINDS.cand)[0];
+function buildResultsLayers(kind){ const R = RB(kind); (R_KINDS[kind] || R_KINDS.cand)[1](R); return R.out; }
+/* rebuild in place: keep moves (as offsets) and style edits the user made, unless the data behind that property changed */
+const R_CARRY = ['strokeDash','strokeOpacity','rot','size','color','font','weight','fill','fillOn','opacity','visible','locked','strokeW','stroke','strokeOn','radius','italic','track','tex','texOp','upper','text','w','h','a0','a1','ir','emWeight','align'];
+let rBuilding = false;
+function rebuildResults(opts = {}){
+  if (!isResults() || rBuilding) return;
+  rBuilding = true;
+  try {
+    const S = rStyle(); if (W !== S.w || H !== S.h){ tpl.w = W = S.w; tpl.h = H = S.h; sizeCanvas(); updateTplChrome && updateTplChrome(); }
+    const fresh = buildResultsLayers(tpl.rkind), old = new Map(state.layers.filter(l => l.rb).map(l => [l.id, l]));
+    for (const L of fresh){
+      const g0 = {}; for (const k of ['x', 'y', ...R_CARRY]) g0[k] = L[k];
+      const o = old.get(L.id);
+      if (o && o.g0 && !opts.reset){
+        const dk = L.dk || [];
+        if (!dk.includes('x')) L.x += (o.x ?? 0) - (o.g0.x ?? 0); else L.x += ((o.x ?? 0) - (o.g0.x ?? 0));
+        L.y += (o.y ?? 0) - (o.g0.y ?? 0);
+        for (const k of R_CARRY) if (o[k] !== o.g0[k] && L[k] === o.g0[k]) L[k] = o[k];
+        if (o.linkTo) L.linkTo = o.linkTo; if (o.clipTo && !L.clipTo) L.clipTo = o.clipTo;
+      }
+      L.g0 = g0; delete L.dk;
+    }
+    const others = state.layers.filter(l => !l.rb);
+    state.layers.splice(0, state.layers.length, ...fresh, ...others);
+    if (state.pages) state.pages[state.page] = state.layers;
+    selIds = selIds.filter(id => byId(id)); if (state.selected && !byId(state.selected)) state.selected = null;
+  } finally { rBuilding = false; }
+  if (!opts.quiet){ renderLayers(); render(); if (!opts.keepInspector) renderInspector(); }
+}
+const isResults = () => !!(tpl && tpl.rkind);
+
+/* =====================================================================
+   Election Results: section, data manager, style, branding, templates
+   ===================================================================== */
+let rTab = 'data', rCustomSize = false, rLive = null, rLiveSpeed = 800;
+const RTABS = [['data','Results'],['parties','Parties'],['seats','Seats'],['style','Style'],['brand','Branding'],['tpls','Templates']];
+const opt = (list, v) => list.map(([k, t]) => `<option value="${esc(k)}" ${String(v) === String(k) ? 'selected' : ''}>${esc(t)}</option>`).join('');
+const rin = (path, v, o = {}) => `<input type="${o.type || 'text'}" ${o.num ? 'inputmode="decimal" data-num="1"' : ''} data-rk="${path}" value="${esc(v == null ? '' : v)}" ${o.ph != null ? `placeholder="${esc(o.ph)}"` : ''} aria-label="${esc(o.label || path)}" ${o.cls ? `class="${o.cls}"` : ''}>`;
+const rsel = (path, list, v, label) => `<select data-rk="${path}" aria-label="${esc(label || path)}">${opt(list, v)}</select>`;
+const rck = (path, v, label) => `<label class="check"><input type="checkbox" data-rk="${path}" ${v ? 'checked' : ''}> ${label}</label>`;
+const rfield = (label, inner, cls = '') => `<label class="ctl ${cls}"><span class="ctl-head">${label}</span>${inner}</label>`;
+function partyList(E, blank){ return (blank ? [['', blank]] : []).concat(E.parties.map(p => [p.id, `${p.abbr} · ${p.name}`])); }
+function renderResultsPanel(){
+  const el0 = $('#rpanel'); if (!el0 || thumbing) return;
+  const on = isResults(); $('#rpane-off').hidden = on; $('#rpane-on').hidden = !on; if (!on) return;
+  document.querySelectorAll('#rnav button').forEach(b => { const s = b.dataset.v === rTab; b.classList.toggle('on', s); b.setAttribute('aria-pressed', s); });
+  const E = ensureElection(), el = curEl(), c = elCalc(el, E), F = E.fmt, isL = E.system === 'list';
+  let h = '';
+  if (rTab === 'data'){
+    h += `<section class="rsec"><h3>Election</h3><div class="grid2">${rfield('Name', rin('E.name', E.name))}${rfield('Year', rin('E.year', E.year, { num: 1 }))}</div>
+      <div class="grid2">${rfield('Country, state or region', rin('E.region', E.region))}${rfield('Election type', rin('E.type', E.type, { ph: 'Lower house' }))}</div>
+      ${rfield('Voting system', `<div class="seg2" role="group" aria-label="Voting system"><button type="button" class="${E.system !== 'list' ? 'on' : ''}" data-ract="sys" data-v="fptp" aria-pressed="${E.system !== 'list'}"><b>Candidates</b><small>Single-member seats · first past the post</small></button><button type="button" class="${E.system === 'list' ? 'on' : ''}" data-ract="sys" data-v="list" aria-pressed="${E.system === 'list'}"><b>Party lists</b><small>Proportional · seats shared by vote</small></button></div>`)}
+      ${E.system === 'list' ? `<div class="grid3">${rfield('Seat formula', rsel('L.method', LIST_METHODS, E.list.method))}${rfield('Threshold %', rin('L.threshold', E.list.threshold, { num: 1, ph: '0' }))}${rfield('Threshold of', rsel('L.scope', [['national','Nationwide vote'],['district','District vote']], E.list.scope))}</div>` : ''}
+      ${rck('E.tppOn', E.tppOn, 'Two-party preferred count (off: compare blocs)')}
+      <div class="grid2">${rfield('Overall status', rsel('E.status', EL_STATUS.filter(s => ['counting','projres','declared','final'].includes(s[0])), E.status))}${rfield('Date', rin('E.date', E.date, { type: 'date' }))}</div></section>
+    <section class="rsec"><h3>${isL ? 'District' : 'Electorate'}</h3>
+      <div class="rrow">${rsel('cur', E.electorates.map(e => [e.id, e.name || 'Untitled']), E.current, 'Electorate')}<button class="btn sm" data-ract="el-add">+ New</button><button class="btn sm" data-ract="el-dup">Duplicate</button><button class="btn sm" data-ract="el-del" ${E.electorates.length < 2 ? 'disabled' : ''}>Delete</button></div>
+      <div class="grid2">${rfield(isL ? 'District name' : 'Electorate name', rin('el.name', el.name))}${rfield('State or region', rin('el.region', el.region))}</div>
+      <div class="grid2">${rfield('Compare', rsel('el.countType', [['bloc','Blocs'],['primary','Leading party']].concat(E.tppOn ? [['tpp','Two-party preferred']] : []), el.countType === 'tpp' && !E.tppOn ? 'bloc' : el.countType))}${isL ? rfield('Seats in this district', rin('el.seatsAvail', el.seatsAvail, { num: 1, ph: 'e.g. 10' })) : rfield('Held before by', rsel('el.prevParty', partyList(E, '—'), el.prevParty))}</div>
+      <div class="grid2">${rfield('Result status', rsel('el.status', EL_STATUS, el.status))}${isL ? '<span></span>' : rfield('Winner', rsel('el.winner', partyList(E, `Auto (${c.lead ? c.lead.abbr + ' ahead' : 'none ahead'})`), el.winner))}</div>
+      ${rfield('Banner text', rin('el.statusText', el.statusText, { ph: c.statusText }))}
+      <p class="hint">${isL ? 'Seats are shared between the party lists by the formula above. Until the district is Declared they count as “ahead, not called” (or projected) in the seat totals.' : c.provisional ? 'Leads and projections are never counted as wins in the seat totals. Set the status to Declared or Final when the seat is called.' : 'Declared: this seat counts as won in the seat totals.'}</p></section>
+    <section class="rsec"><h3>Counting progress</h3>
+      ${rfield('Show progress as', rsel('el.metric', EL_METRIC, el.metric))}
+      <div class="grid3">${rfield('Counted', rin('el.boothsCounted', el.boothsCounted, { num: 1 }))}${rfield('Total', rin('el.boothsTotal', el.boothsTotal, { num: 1 }))}${rfield('Unit name', rin('el.unitLabel', el.unitLabel, { ph: 'booths' }))}</div>
+      <div class="grid2">${rfield('Votes counted', rin('el.votesCounted', el.votesCounted, { num: 1 }))}${rfield('Votes expected', rin('el.votesExpected', el.votesExpected, { num: 1 }))}</div>
+      <div class="grid3">${rfield('Enrolled', rin('el.enrolled', el.enrolled, { num: 1 }))}${rfield('Informal', rin('el.informal', el.informal, { num: 1 }))}${rfield('Updated', rin('el.updated', el.updated, { ph: '21:14' }))}</div>
+      <p class="hint" data-rcalc="prog">${esc(rProgText(el, c))}</p></section>
+    <section class="rsec"><h3>${isL ? 'Party results' : 'Candidates'}</h3>
+      <div class="grid2">${rfield('Percentages of', rsel('el.denom', [['formal','Formal votes (candidate total)'],['counted','All votes counted'],['custom','Custom total']], el.denom))}${el.denom === 'custom' ? rfield('Custom total', rin('el.denomCustom', el.denomCustom, { num: 1 })) : '<span></span>'}</div>
+      <div class="cands">${el.candidates.map((k, i) => {
+        const kc = c.cands[i];
+        return `<div class="cand${isL ? ' listrow' : ''}"><div class="crow1"><span class="csw" style="background:${partyOf(E, k.party).color}"></span>${isL ? '' : rin(`c.${i}.name`, k.name, { label: 'Candidate name', ph: 'Candidate name' })}${rsel(`c.${i}.party`, partyList(E, 'Party…'), k.party, 'Party')}
+          <span class="cbtns"><button class="ib" data-ract="c-up" data-i="${i}" ${i ? '' : 'disabled'} aria-label="Move up" title="Move up">↑</button><button class="ib" data-ract="c-down" data-i="${i}" ${i < el.candidates.length - 1 ? '' : 'disabled'} aria-label="Move down" title="Move down">↓</button><button class="ib" data-ract="c-del" data-i="${i}" aria-label="Remove candidate" title="Remove">✕</button></span></div>
+          <div class="crow2">${rfield('Votes', rin(`c.${i}.votes`, k.votes, { num: 1 }))}${rfield('%', rin(`c.${i}.pct`, k.pct, { num: 1, ph: kc.pctCalc != null ? kc.pctCalc.toFixed(2) : '' }))}${rfield('Prev %', rin(`c.${i}.prevPct`, k.prevPct, { num: 1 }))}${rfield('Swing', rin(`c.${i}.swing`, k.swing, { num: 1, ph: kc.swingSrc === 'calc' ? kc.swingUse.toFixed(2) : '' }))}</div>
+          <div class="crow3">${isL ? `<label class="ctl ps"><span class="ctl-head">Seats last time</span>${rin(`c.${i}.prevSeats`, k.prevSeats, { num: 1, label: 'Seats last time' })}</label>` : `${rck(`c.${i}.mp`, k.mp, 'Sitting MP')}${rsel(`c.${i}.status`, CAND_STATUS, k.status, 'Candidate status')}`}<small data-rcalc="c${i}">${esc(rCandText(kc, F))}</small></div></div>`; }).join('')}</div>
+      <button class="btn sm" data-ract="c-add">${isL ? '+ Add party list' : '+ Add candidate'}</button>
+      <p class="hint">${isL ? 'One row per party list. Candidate names are kept, so switching back to Candidates restores them. ' : ''}Enter votes and the share is worked out from the total chosen above. Leave votes blank to type a % instead. Swing is current minus previous share; type a swing only when there's no previous result.</p></section>
+    <section class="rsec"><h3>Blocs in this ${isL ? 'district' : 'seat'}</h3><div data-rcalc="blocs">${rBlocSeatHtml(c, F)}</div>
+      <p class="hint">Bloc shares add up their member parties’ shares in this seat. Set up blocs, leaders and the two blocs to compare in the Blocs tab.</p></section>
+    <section class="rsec"><h3>Live count</h3><div class="rrow"><button class="btn sm ${rLive ? 'lit' : ''}" data-ract="live">${rLive ? '■ Stop live count' : '▶ Simulate live count'}</button>${rsel('livespeed', [['1500','Slow'],['800','Normal'],['350','Fast']], String(rLiveSpeed), 'Speed')}</div>
+      <p class="hint">Adds votes and booths to this electorate step by step, so every number on the graphic updates as you watch. Edit any figure here or on the graphic itself.</p></section>
+    ${E.tppOn ? `<section class="rsec"><h3>Two-party preferred</h3>
+      <div class="grid2">${rfield('Side A', rsel('el.tpp.a', partyList(E, '—'), el.tpp.a))}${rfield('Side B', rsel('el.tpp.b', partyList(E, '—'), el.tpp.b))}</div>
+      <div class="grid2">${rfield('A votes', rin('el.tpp.aVotes', el.tpp.aVotes, { num: 1 }))}${rfield('B votes', rin('el.tpp.bVotes', el.tpp.bVotes, { num: 1 }))}</div>
+      <div class="grid3">${rfield('A % (if no votes)', rin('el.tpp.aPct', el.tpp.aPct, { num: 1 }))}${rfield('A % last time', rin('el.tpp.prevAPct', el.tpp.prevAPct, { num: 1 }))}${rfield('Swing (manual)', rin('el.tpp.swing', el.tpp.swing, { num: 1, ph: c.tppSwingSrc === 'calc' ? c.tppSwingA.toFixed(2) : '' }))}</div>
+      <p class="hint" data-rcalc="tpp">${esc(rTppText(c, F))}</p></section>` : ''}
+    <section class="rsec"><h3>Checks</h3><div data-rcalc="warn">${rWarnHtml(c)}</div>
+      <div class="rrow"><button class="btn sm" data-ract="csv-import">Import CSV</button><button class="btn sm" data-ract="csv-export">Export results CSV</button><button class="btn sm" data-ract="csv-sample">CSV template</button></div></section>`;
+  }
+  if (rTab === 'parties'){
+    h += `<section class="rsec"><h3>Parties</h3><div class="parties-r">${E.parties.map((p, i) => `<div class="prow"><input type="color" data-rk="p.${i}.color" value="${esc(p.color)}" aria-label="${esc(p.abbr)} colour">${rin(`p.${i}.abbr`, p.abbr, { label: 'Abbreviation', cls: 'abbr' })}${rin(`p.${i}.name`, p.name, { label: 'Party name' })}
+      ${rsel(`p.${i}.text`, [['', 'Auto text'], ['#FFFFFF', 'White text'], ['#111418', 'Dark text']], p.text, 'Text colour')}
+      <span class="cbtns"><button class="ib" data-ract="p-up" data-i="${i}" ${i ? '' : 'disabled'} aria-label="Move up">↑</button><button class="ib" data-ract="p-down" data-i="${i}" ${i < E.parties.length - 1 ? '' : 'disabled'} aria-label="Move down">↓</button><button class="ib" data-ract="p-del" data-i="${i}" aria-label="Remove party">✕</button></span>
+      <label class="ctl p2"><span class="ctl-head">Second colour</span><input type="color" data-rk="p.${i}.color2" value="${esc(p.color2 || pDark(p))}" aria-label="${esc(p.abbr)} second colour"></label></div>`).join('')}</div>
+      <button class="btn sm" data-ract="p-add">+ Add party</button>
+      <p class="hint">Colours and names update every results graphic. Party order is used when candidates are ordered by party. Use made-up parties and colours for fictional elections.</p></section>`;
+  }
+  if (rTab === 'blocs'){
+    const bl = blocCalc(E), nat = nationalCalc(E);
+    h += `<section class="rsec"><h3>Compare</h3><div class="grid2">${rfield('Bloc A', rsel('E.blocA', E.blocs.map(b => [b.id, b.name]), E.blocA))}${rfield('Bloc B', rsel('E.blocB', E.blocs.map(b => [b.id, b.name]), E.blocB))}</div>
+      <p class="hint">Used by the bloc comparison, projected and leader graphics. ${E.tppOn ? 'Two-party preferred is on: electorates set to compare two-party preferred use that instead.' : 'Two-party preferred is off.'}</p></section>
+    <section class="rsec"><h3>Blocs</h3><div class="blocs-r">${E.blocs.map((b, i) => { const bc = bl[i];
+      return `<div class="bloc"><div class="brow"><input type="color" data-rk="b.${i}.color" value="${esc(b.color)}" aria-label="${esc(b.name)} colour">${rin(`b.${i}.name`, b.name, { label: 'Bloc name' })}${rin(`b.${i}.short`, b.short, { label: 'Short label', cls: 'abbr' })}<button class="ib" data-ract="b-del" data-i="${i}" ${E.blocs.length < 3 ? 'disabled' : ''} aria-label="Remove bloc">✕</button></div>
+        <div class="bmem">${E.parties.map(p => `<label class="chip${b.parties.includes(p.id) ? ' on' : ''}" style="--pc:${p.color}"><input type="checkbox" data-rk="bm.${i}.${p.id}" ${b.parties.includes(p.id) ? 'checked' : ''}>${esc(p.abbr)}</label>`).join('')}</div>
+        <div class="grid2">${rfield('Leader', rin(`b.${i}.leader`, b.leader, { ph: 'Leader name' }))}${rfield('Leader’s party', rsel(`b.${i}.leaderParty`, partyList(E, '—').filter(x => !x[0] || b.parties.includes(x[0])), b.leaderParty))}</div>
+        <div class="rrow"><button class="btn sm" data-ract="b-photo" data-i="${i}">Leader photo…</button><small class="bsum">${bc ? `${bc.share != null ? fmtNum(bc.share, F.dp ?? 1) + '% of the vote' : 'no vote yet'} · ${bc.seats} seats${bc.ahead ? ` (+${bc.ahead} ahead)` : ''}` : ''}</small></div></div>`; }).join('')}</div>
+      <button class="btn sm" data-ract="b-add">+ Add bloc</button>
+      <p class="hint">A party can belong to one bloc. Bloc vote is the sum of its parties’ nationwide vote; bloc seats sum their seats from the Seats tab.</p></section>
+    <section class="rsec"><h3>Nationwide vote by party</h3><div class="natrows"><div class="natrow sh"><span>Party</span><span>Vote %</span><span>Last time %</span></div>${E.parties.map(p => { const n = nat[p.id];
+      return `<div class="natrow"><span><span class="csw" style="background:${p.color}"></span>${esc(p.abbr)}</span>${rin(`nat.${p.id}.pct`, (E.national[p.id] || {}).pct, { num: 1, ph: n.calc != null ? n.calc.toFixed(2) : '', label: `${p.abbr} vote %` })}${rin(`nat.${p.id}.prevPct`, (E.national[p.id] || {}).prevPct, { num: 1, label: `${p.abbr} last time` })}</div>`; }).join('')}</div>
+      <p class="hint">Leave a vote % blank to use the total from your electorates (shown greyed). The bloc graphics update as you type.</p></section>`;
+  }
+  if (rTab === 'seats'){
+    const sc = seatCalc(E);
+    h += `<section class="rsec"><h3>Parliament</h3><div class="grid3">${rfield('Total seats', rin('seat.total', E.seats.total, { num: 1 }))}${rfield('Majority', rin('seat.majority', E.seats.majority, { num: 1, ph: String(Math.floor((E.seats.total || 0)/2) + 1) }))}${rfield('Count from', rsel('seat.source', [['both','Electorates + table'],['electorates','Electorates only'],['manual','Table only']], E.seats.source))}</div>
+      <p class="hint">Electorates count as declared or projected only when their status says so. A candidate who is just ahead is shown as “ahead, not called”. Use the table for seats you haven't entered as electorates.</p></section>
+    <section class="rsec"><h3>Seats entered by hand</h3><div class="srows"><div class="srow sh"><span>Party</span><span>Declared</span><span>Projected</span><span>Ahead</span><span>Last time</span></div>${(E.seats.rows || []).map((r, i) => `<div class="srow">${rsel(`sr.${i}.party`, partyList(E), r.party, 'Party')}${rin(`sr.${i}.declared`, r.declared, { num: 1, label: 'Declared' })}${rin(`sr.${i}.projected`, r.projected, { num: 1, label: 'Projected' })}${rin(`sr.${i}.leading`, r.leading, { num: 1, label: 'Ahead' })}${rin(`sr.${i}.prev`, r.prev, { num: 1, label: 'Previous' })}<button class="ib" data-ract="sr-del" data-i="${i}" aria-label="Remove row">✕</button></div>`).join('')}</div>
+      <button class="btn sm" data-ract="sr-add">+ Add party row</button></section>
+    <section class="rsec"><h3>Totals</h3><div data-rcalc="seats">${rSeatHtml(sc)}</div></section>`;
+  }
+  if (rTab === 'style'){
+    const S = rStyle(), k = tpl.rkind, isBars = ['cand', 'detail', 'primary'].includes(k), isTpp = ['tpp'].includes(k);
+    const sizes = [['1920x1080','1920 × 1080 (16:9 broadcast)'],['1280x720','1280 × 720 (16:9)'],['3840x2160','3840 × 2160 (4K)'],['1080x1080','1080 × 1080 (square)'],['1080x1350','1080 × 1350 (4:5)'],['1080x1920','1080 × 1920 (story)'],['custom','Custom size']];
+    const cur = !rCustomSize && sizes.some(s => s[0] === `${S.w}x${S.h}`) ? `${S.w}x${S.h}` : 'custom';
+    const scaleTxt = S.scale === 'leader' ? 'Bars are relative to the leading figure: the leader fills the bar.' : S.scale === 'formal' ? 'Bars are a share of 100%: 33.9% fills a third of the bar.' : `Bars are relative to ${S.scaleMax}%: that value fills the bar.`;
+    h += `<section class="rsec"><h3>${esc(rKindName(k))}</h3>
+      ${rfield('Size', rsel('size', sizes, cur))}${cur === 'custom' ? `<div class="grid2">${rfield('Width px', rin('S.w', S.w, { num: 1 }))}${rfield('Height px', rin('S.h', S.h, { num: 1 }))}</div>` : ''}
+      ${rfield('Font', `<select data-rk="S.font">${FONT_LIST.map(f => `<option ${f.f === S.font ? 'selected' : ''}>${esc(f.f)}</option>`).join('')}</select>`)}</section>`;
+    if (isBars || k === 'seats' || k === 'change') h += `<section class="rsec"><h3>Rows</h3><div class="grid2">${rfield('Order', rsel('S.order', [['votes','By vote share'],['party','By party order'],['manual','As entered']], S.order))}${rfield('Rows shown', rin('S.maxRows', S.maxRows, { num: 1 }))}</div>
+      ${k === 'cand' ? `<div class="grid2">${rfield('Bar scale', rsel('S.scale', [['leader','Relative to leader'],['formal','Share of 100%'],['custom','Custom maximum']], S.scale))}${S.scale === 'custom' ? rfield('Maximum %', rin('S.scaleMax', S.scaleMax, { num: 1 })) : '<span></span>'}</div><p class="hint">${scaleTxt}</p>
+      <div class="grid2">${rfield('Bar height (0 = fit)', rin('S.barH', S.barH, { num: 1 }))}${rfield('Row spacing', rin('S.gap', S.gap, { num: 1, ph: 'auto' }))}</div>
+      <div class="grid2">${rfield('Corner radius', rin('S.radius', S.radius, { num: 1 }))}${rfield('Party label width', rin('S.labelW', S.labelW, { num: 1, ph: 'auto' }))}</div>
+      <div class="grid2">${rfield('Label size ×', rin('S.labelSize', S.labelSize, { num: 1 }))}${rfield('Name weight', rsel('S.nameWeight', [[400,'Regular'],[500,'Medium'],[600,'Semibold'],[700,'Bold']], S.nameWeight))}</div>
+      <div class="grid2">${rck('S.dividers', S.dividers, 'Dividers')}${rck('S.tex', S.tex, 'Bar texture')}</div>${rfield('Texture strength %', rin('S.texOp', S.texOp, { num: 1 }))}
+      <div class="grid2">${rck('S.showVotes', S.showVotes, 'Vote counts')}${rck('S.showSwing', S.showSwing, 'Swing')}</div><div class="grid2">${rck('S.showMP', S.showMP, E.system === 'list' ? 'Seats won badge' : 'MP badge')}${rck('S.showStatus', S.showStatus, 'Status and banner')}</div>${E.system === 'list' ? `<div class="grid2">${rck('S.thrLine', S.thrLine, 'Threshold line')}</div>` : ''}` : ''}</section>`;
+    if (isTpp || k === 'proj') h += `<section class="rsec"><h3>Comparison</h3>${isTpp ? rfield('Layout', rsel('S.tppLayout', [['semi','Semicircle'],['circle','Full circle'],['rect','Split bar']], S.tppLayout)) : ''}
+      <div class="grid2">${rfield('Separator', rin('S.sep', S.sep, { num: 1 }))}${rfield('Border', rin('S.border', S.border, { num: 1 }))}</div>
+      <div class="grid2">${rck('S.segTex', S.segTex, 'Segment texture')}${rfield('Inner opacity', rin('S.segOp', S.segOp, { num: 1 }))}</div>
+      <div class="grid2">${rck('S.arcLabels', S.arcLabels, '% on segments')}${rfield('Label size ×', rin('S.labelSize', S.labelSize, { num: 1 }))}</div>
+      <div class="grid2">${rck('S.banner', S.banner, 'Result banner')}${rck('S.projBanner', S.projBanner, 'Source label')}</div>
+      ${isTpp ? `<div class="grid2">${rfield('Bar scale', rsel('S.scale', [['leader','Relative to leader'],['formal','Share of 100%'],['custom','Custom maximum']], S.scale))}${rck('S.tex', S.tex, 'Bar texture')}</div>` : ''}</section>`;
+    if (k === 'blocvote' || k === 'blocseats') h += `<section class="rsec"><h3>Leaders layout</h3>${rfield('Background', rsel('S.bgMode', [['lead','Colour of the leading bloc'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}
+      ${rfield('Title', rin('S.title', S.title, { ph: k === 'blocseats' ? 'SEATS' : 'SHARE OF THE VOTE' }))}
+      <div class="grid2">${rck('S.allBlocs', S.allBlocs, 'Show every bloc')}${rck('S.showNames', S.showNames !== false, 'Bloc and leader names')}</div>${k === 'blocvote' ? rck('S.showSwing', S.showSwing !== false, 'Swing tag') : ''}
+      <p class="hint">Click a leader photo and use Replace image, or use Leader photo in the Blocs tab.</p></section>`;
+    h += `<section class="rsec"><h3>Numbers</h3><div class="grid2">${rfield('Decimal places', rsel('F.dp', [[0,'0'],[1,'1'],[2,'2']], F.dp))}${rfield('Swing shown as', rsel('F.pp', [['', '%'], ['1', 'pp (points)']], F.pp ? '1' : ''))}</div>
+      <div class="grid2">${rck('F.plus', F.plus !== false, 'Plus sign on gains')}${rck('F.word', F.word !== false, 'Word SWING')}</div>${rck('F.comma', F.comma, 'Decimal comma (51,3%)')}</section>
+    <section class="rsec"><div class="rrow"><button class="btn sm" data-ract="style-reset">Reset style</button><button class="btn sm" data-ract="edits-reset" title="Undo moves and restyling done directly on the graphic">Clear canvas edits</button></div>
+      <p class="hint">You can also select, move, restyle, lock or hide any element on the graphic. Those edits stay when the data changes, unless that property is driven by the data.</p></section>`;
+  }
+  if (rTab === 'brand'){
+    const Bd = E.branding;
+    h += `<section class="rsec"><h3>Programme</h3><div class="grid2">${rfield('Name line 1', rin('B.programme', Bd.programme))}${rfield('Name line 2', rin('B.programme2', Bd.programme2))}</div>
+      <div class="grid2">${rfield('Organisation', rin('B.org', Bd.org, { ph: 'RESULTS DESK' }))}${rfield('Source label', rin('B.source', Bd.source, { ph: 'PROJECTION' }))}</div>
+      ${rfield('Watermark', rin('B.watermark', Bd.watermark, { ph: 'none' }))}
+      <div class="rrow">${rck('B.logo', Bd.logo, 'Use my logo')}${Bd.logo ? `<button class="btn sm" data-ract="logo-up">${assets.rb_logo ? 'Replace logo' : 'Upload logo'}</button>` : ''}</div>
+      <p class="hint">No broadcaster branding is included. Without a logo, a neutral stripe mark in your party colours is shown.</p></section>
+    <section class="rsec"><h3>Look</h3><div class="grid2">${rfield('Background', rsel('B.bg', [['light','Light'],['dark','Dark'],['colour','Colour'],['transparent','Transparent (overlay)']], Bd.bg))}${rfield('Accent colour', `<input type="color" data-rk="B.accent" value="${esc(Bd.accent || '#14284B')}" aria-label="Accent colour">`)}</div>
+      ${rfield('Font for all graphics', `<select data-rk="B.font">${FONT_LIST.map(f => `<option ${f.f === Bd.font ? 'selected' : ''}>${esc(f.f)}</option>`).join('')}</select>`)}
+      <p class="hint">Transparent backgrounds export as PNG or WebP with transparency for use as overlays.</p></section>`;
+  }
+  if (rTab === 'tpls'){
+    const saved = rSaved();
+    h += `<section class="rsec"><h3>Election night graphics</h3><div class="rkinds">${Object.entries(R_KINDS).map(([k, [nm]], i) => `<button class="rkind${tpl.rkind === k ? ' on' : ''}" data-ract="kind" data-k="${k}"><b>${String.fromCharCode(65 + i)}</b>${esc(rKindName(k))}</button>`).join('')}</div>
+      <p class="hint">Switching graphics keeps all your results data.</p></section>
+    <section class="rsec"><h3>My saved designs</h3><div class="rrow">${rin('tplname', '', { ph: 'Design name', label: 'Design name' })}<button class="btn sm primary" data-ract="tpl-save">Save current</button></div>
+      <div class="rsaved">${saved.length ? saved.map(s => `<div class="rsv"><span><b>${esc(s.name)}</b><small>${esc(R_KINDS[s.kind] ? R_KINDS[s.kind][0] : s.kind)} · ${s.style.w} × ${s.style.h}</small></span><button class="btn sm" data-ract="tpl-apply" data-id="${s.id}">Use</button><button class="btn sm" data-ract="tpl-dup" data-id="${s.id}">Duplicate</button><button class="ib" data-ract="tpl-del" data-id="${s.id}" aria-label="Delete design">✕</button></div>`).join('') : '<p class="hint">Saved designs keep a graphic’s layout, size, style and branding, and can be reused with any results.</p>'}</div></section>`;
+  }
+  h += `<div class="rexport"><button class="btn primary" data-act="export">Export graphic…</button></div>`;
+  el0.innerHTML = h;
+}
+const rProgText = (el, c) => [c.votesPct != null ? `${c.votesPct.toFixed(1)}% of expected votes counted` : null, c.boothsPct != null ? `${c.boothsPct.toFixed(1)}% of ${el.unitLabel || 'booths'} reporting` : null, c.outstanding != null ? `${c.outstanding} outstanding` : null].filter(Boolean).join(' · ') || 'Enter counted and total figures to work out progress.';
+const rCandText = (k, F) => [k.seatsWon != null ? (k.below ? 'below threshold, no seats' : `${k.seatsWon} seat${k.seatsWon === 1 ? '' : 's'} won`) : '', k.pctUse != null ? `${fmtNum(k.pctUse, 2)}%${k.pctSrc === 'manual' ? ' (typed)' : ''}` : 'no share yet', k.swingUse != null ? `swing ${fmtSwing(k.swingUse, Object.assign({}, F, { word: false, dp: 2 }))}${k.swingSrc === 'manual' ? ' (typed)' : ''}` : ''].filter(Boolean).join(' · ');
+const rBlocSeatHtml = (c, F) => c.blocs.length ? `<div class="stot">${c.blocs.map(b => `<div><span class="csw" style="background:${b.P.color}"></span><b>${esc(b.B.name)}</b> ${b.share != null ? fmtNum(b.share, F.dp ?? 1) + '%' : '–'} <small>${b.swing != null ? fmtSwing(b.swing, Object.assign({}, F, { word: false })) + ' on last time' : ''}</small></div>`).join('')}</div>` : '<p class="hint">No blocs set up.</p>';
+const rTppText = (c, F) => c.aPct == null ? 'Enter votes for both sides, or side A’s %, to show the two-party result.' : `${c.A.abbr} ${fmtNum(c.aPct, 2)}% · ${c.B.abbr} ${fmtNum(c.bPct, 2)}%${c.tppSrc === 'votes' ? ' (from votes)' : ''}${c.tppSwingA != null ? ` · swing ${fmtSwing(c.tppSwingA, Object.assign({}, F, { word: false, dp: 2 }))} to ${c.A.abbr}${c.tppSwingSrc === 'manual' ? ' (typed)' : ' (v previous 2PP)'}` : ''}`;
+const rWarnHtml = c => (c.warn.length ? c.warn.map(w => `<p class="warnline">⚠ ${esc(w)}</p>`).join('') : '<p class="ok">✓ No problems found.</p>') + c.info.map(w => `<p class="hint">${esc(w)}</p>`).join('');
+const rSeatHtml = sc => `<div class="stot">${sc.list.map(s => `<div><span class="csw" style="background:${s.P.color}"></span><b>${esc(s.P.abbr)}</b> ${s.seats} <small>(${s.declared} declared, ${s.projected} projected, ${s.leading} ahead) · net ${s.net > 0 ? '+' : ''}${s.net}</small></div>`).join('')}</div>
+  <p class="hint">${sc.declared} declared · ${sc.projected} projected · ${sc.leading} ahead · ${sc.total} seats, ${sc.majority} for a majority · ${esc(sc.majorityText)}</p>${sc.warn.map(w => `<p class="warnline">⚠ ${esc(w)}</p>`).join('')}`;
+function refreshResultsCalc(){
+  const E = ensureElection(), el = curEl(), c = elCalc(el, E), F = E.fmt;
+  const set = (k, v, html) => { const n = document.querySelector(`#rpanel [data-rcalc="${k}"]`); if (n){ if (html) n.innerHTML = v; else n.textContent = v; } };
+  set('prog', rProgText(el, c)); set('tpp', rTppText(c, F)); set('warn', rWarnHtml(c), true); set('blocs', rBlocSeatHtml(c, F), true);
+  c.cands.forEach((k, i) => { set('c' + i, rCandText(k, F));
+    const pi = document.querySelector(`#rpanel [data-rk="c.${i}.pct"]`); if (pi) pi.placeholder = k.pctCalc != null ? k.pctCalc.toFixed(2) : '';
+    const si = document.querySelector(`#rpanel [data-rk="c.${i}.swing"]`); if (si) si.placeholder = k.swingSrc === 'calc' ? k.swingUse.toFixed(2) : ''; });
+  if (rTab === 'seats') set('seats', rSeatHtml(seatCalc(E)), true);
+}
+/* set a value from the panel */
+function rSet(path, raw, el0){
+  const E = ensureElection(), el = curEl(), p = path.split('.'), num = el0 && el0.dataset.num;
+  let v = el0 && el0.type === 'checkbox' ? el0.checked : num ? rnum(String(raw).replace(/,/g, '')) : raw;
+  let structural = false;
+  if (p[0] === 'E'){ E[p[1]] = p[1] === 'year' ? rnum(v) : v; if (['tppOn', 'blocA', 'blocB'].includes(p[1])) structural = true; }
+  else if (p[0] === 'cur'){ E.current = v; structural = true; }
+  else if (p[0] === 'L'){ E.list[p[1]] = p[1] === 'threshold' ? rnum(v) : v; }
+  else if (p[0] === 'el' && p[1] === 'tpp') el.tpp[p[2]] = ['a', 'b'].includes(p[2]) ? v : rnum(v);
+  else if (p[0] === 'el'){ el[p[1]] = v; if (['denom', 'status', 'name', 'metric'].includes(p[1])) structural = p[1] !== 'name'; if (p[1] === 'name') structural = 'soft'; }
+  else if (p[0] === 'c'){ const k = el.candidates[+p[1]]; if (!k) return; k[p[2]] = v; if (p[2] === 'party') structural = true; }
+  else if (p[0] === 'p'){ const P = E.parties[+p[1]]; if (!P) return; P[p[2]] = p[2] === 'abbr' ? String(v).toUpperCase().slice(0, 6) : v; if (p[2] === 'abbr' || p[2] === 'name') structural = 'soft'; }
+  else if (p[0] === 'S'){ setStyle(p[1], v); if (['scale', 'order', 'tppLayout'].includes(p[1])) structural = true; }
+  else if (p[0] === 'size'){ if (v !== 'custom'){ const [w, h] = v.split('x').map(Number); setStyle('w', w); setStyle('h', h); rCustomSize = false; } else rCustomSize = true; structural = true; }
+  else if (p[0] === 'F'){ E.fmt[p[1]] = p[1] === 'dp' ? +v : p[1] === 'pp' ? !!v : v; if (p[1] === 'comma') structural = true; }
+  else if (p[0] === 'B'){ E.branding[p[1]] = v; if (p[1] === 'font'){ for (const k of Object.keys(E.style || {})) if (E.style[k]) delete E.style[k].font; } if (p[1] === 'logo') structural = true; }
+  else if (p[0] === 'seat'){ E.seats[p[1]] = p[1] === 'source' ? v : rnum(v); }
+  else if (p[0] === 'sr'){ const r = E.seats.rows[+p[1]]; if (!r) return; r[p[2]] = p[2] === 'party' ? v : rnum(v); }
+  else if (p[0] === 'b'){ const b = E.blocs[+p[1]]; if (!b) return; b[p[2]] = p[2] === 'short' ? String(v).toUpperCase().slice(0, 12) : v; if (p[2] === 'name') structural = 'soft'; }
+  else if (p[0] === 'bm'){ const b = E.blocs[+p[1]], pid = p[2]; if (!b) return; for (const o of E.blocs) o.parties = o.parties.filter(x => x !== pid); if (v) b.parties.push(pid); if (b.leaderParty && !b.parties.includes(b.leaderParty)) b.leaderParty = b.parties[0] || ''; structural = true; }
+  else if (p[0] === 'nat'){ E.national[p[1]] = Object.assign({}, E.national[p[1]] || {}, { [p[2]]: rnum(v) }); }
+  else if (p[0] === 'livespeed'){ rLiveSpeed = +v; if (rLive){ rLiveStop(); rLiveStart(); } return; }
+  if (p[0] === 'S' && (p[1] === 'w' || p[1] === 'h')){ const S = rStyle(); setStyle(p[1], clamp(Math.round(rnum(v) || S[p[1]]), 200, 8000)); }
+  rebuildResults({ keepInspector: true });
+  if (structural === true) renderResultsPanel();
+  else { refreshResultsCalc(); if (structural === 'soft') rSoftRefresh(); }
+  commitSoon();
+}
+function rSoftRefresh(){ clearTimeout(rSoftRefresh.t); rSoftRefresh.t = setTimeout(() => { const a = document.activeElement, k = a && a.dataset && a.dataset.rk, pos = a && a.selectionStart; renderResultsPanel(); if (k){ const n = document.querySelector(`#rpanel [data-rk="${k}"]`); if (n){ n.focus(); try { n.setSelectionRange(pos, pos); } catch {} } } }, 600); }
+document.addEventListener('input', e => { const t = e.target; if (!t.dataset || !t.dataset.rk || !t.closest('#rpanel')) return; if (t.tagName === 'SELECT' || t.type === 'checkbox') return; rSet(t.dataset.rk, t.value, t); });
+document.addEventListener('change', e => { const t = e.target; if (!t.dataset || !t.dataset.rk || !t.closest('#rpanel')) return; if (t.tagName === 'SELECT' || t.type === 'checkbox') rSet(t.dataset.rk, t.value, t); });
+/* structural actions */
+function rAct(a, b){
+  const E = ensureElection(), el = curEl(), i = +b.dataset.i;
+  const mv = (arr, j, d) => { const k = j + d; if (k < 0 || k >= arr.length) return; [arr[j], arr[k]] = [arr[k], arr[j]]; };
+  switch (a){
+    case 'el-add': { const n = { id: rid('e'), name: rand(ELECTORATES.filter(x => !E.electorates.some(e => e.name === x))) || 'New electorate', region: el.region, countType: 'primary', metric: 'booths', unitLabel: 'booths', boothsCounted: 0, boothsTotal: 40, votesCounted: 0, votesExpected: 100000, enrolled: null, informal: null, denom: 'formal', denomCustom: null, status: 'counting', statusText: '', winner: '', prevParty: '', updated: '', candidates: E.parties.filter(p => TPL_ABBR[p.name] || !['OTH', 'IND'].includes(p.abbr)).map(p => ({ id: rid('c'), name: `${rand(FIRST)} ${rand(LAST)}`, party: p.id, mp: false, votes: null, pct: null, prevPct: null, swing: null, status: '' })), tpp: { a: E.parties[0] && E.parties[0].id, b: E.parties[1] && E.parties[1].id, aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null } };
+      E.electorates.push(n); E.current = n.id; toast(`${n.name} added. Enter its results below.`); break; }
+    case 'el-dup': { const n = JSON.parse(JSON.stringify(el)); n.id = rid('e'); n.name = el.name + ' copy'; n.candidates.forEach(k => k.id = rid('c')); E.electorates.push(n); E.current = n.id; break; }
+    case 'el-del': if (E.electorates.length < 2) return; E.electorates = E.electorates.filter(e => e !== el); E.current = E.electorates[0].id; toast(`${el.name} deleted.`); break;
+    case 'sys': { const v = b.dataset.v; if (E.system === v) return; E.system = v; if (v === 'list'){ for (const e of E.electorates) if (rnum(e.seatsAvail) == null) e.seatsAvail = 10; }
+      toast(v === 'list' ? 'Party lists: seats in each district are shared out by vote. Candidate names are kept for later.' : 'Candidates: one winner per electorate.'); break; }
+    case 'c-add': el.candidates.push({ id: rid('c'), name: '', party: E.system === 'list' ? ((E.parties.find(p => !el.candidates.some(k => k.party === p.id)) || {}).id || '') : '', mp: false, votes: null, pct: null, prevPct: null, swing: null, status: '' }); break;
+    case 'c-del': el.candidates.splice(i, 1); break;
+    case 'c-up': mv(el.candidates, i, -1); setStyle('order', 'manual'); break;
+    case 'c-down': mv(el.candidates, i, 1); setStyle('order', 'manual'); break;
+    case 'p-add': { const used = new Set(E.parties.map(p => p.abbr)); let n = 1; while (used.has('PTY' + n)) n++; E.parties.push({ id: rid('p'), abbr: 'PTY' + n, name: 'New party', color: '#8A3FB0', color2: '', text: '', order: E.parties.length + 1 }); break; }
+    case 'p-del': { const P = E.parties[i]; const used = E.electorates.some(e => e.candidates.some(k => k.party === P.id) || e.tpp.a === P.id || e.tpp.b === P.id); if (used && !b.classList.contains('arm')){ b.classList.add('arm'); b.textContent = '?'; b.title = 'This party has candidates. Click again to remove it anyway.'; return; } E.parties.splice(i, 1); break; }
+    case 'p-up': mv(E.parties, i, -1); E.parties.forEach((p, j) => p.order = j + 1); break;
+    case 'p-down': mv(E.parties, i, 1); E.parties.forEach((p, j) => p.order = j + 1); break;
+    case 'sr-add': E.seats.rows.push({ party: (E.parties.find(p => !E.seats.rows.some(r => r.party === p.id)) || E.parties[0]).id, declared: 0, projected: 0, leading: 0, prev: 0 }); break;
+    case 'sr-del': E.seats.rows.splice(i, 1); break;
+    case 'b-add': { const free = E.parties.filter(p => !E.blocs.some(b => b.parties.includes(p.id))); E.blocs.push({ id: rid('b'), name: `Bloc ${E.blocs.length + 1}`, short: `BLOC ${E.blocs.length + 1}`, color: free[0] ? free[0].color : '#5B6170', parties: free.slice(0, 1).map(p => p.id), leader: '', leaderParty: free[0] ? free[0].id : '' }); break; }
+    case 'b-del': { if (E.blocs.length < 3) return; const b = E.blocs.splice(i, 1)[0]; if (E.blocA === b.id) E.blocA = E.blocs[0].id; if (E.blocB === b.id) E.blocB = (E.blocs[1] || E.blocs[0]).id; break; }
+    case 'b-photo': { const b = E.blocs[i]; if (!b) return; if (tpl.rkind !== 'blocvote' && tpl.rkind !== 'blocseats') switchTemplate('res_blocvote'); if (b.id !== E.blocA && b.id !== E.blocB && !rStyle().allBlocs){ setStyle('allBlocs', true); rebuildResults(); }
+      uploadTarget = 'rb_bl' + b.id + 'photo'; $('#file').click(); return; }
+    case 'live': if (rLive) rLiveStop(); else rLiveStart(); renderResultsPanel(); return;
+    case 'style-reset': delete E.style[tpl.rkind]; toast('Style reset to the defaults.'); break;
+    case 'edits-reset': rebuildResults({ reset: true }); commit(); toast('Edits made directly on the graphic were cleared.'); return;
+    case 'kind': switchTemplate('res_' + b.dataset.k); return;
+    case 'logo-up': uploadTarget = 'rb_logo'; $('#file').click(); return;
+    case 'csv-import': $('#csvfile').click(); return;
+    case 'csv-export': rDownload(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results.csv`, rCsvExport(E), 'text/csv'); return;
+    case 'csv-sample': rDownload('degv-results-template.csv', rCsvSample(), 'text/csv'); return;
+    case 'tpl-save': { const nm = ($('#rpanel [data-rk=tplname]') || {}).value || `${R_KINDS[tpl.rkind][0]} design`; const list = rSaved(); list.push({ id: rid('t'), name: nm.slice(0, 60), kind: tpl.rkind, style: rStyle(), branding: JSON.parse(JSON.stringify(E.branding)), fmt: Object.assign({}, E.fmt) }); rSaveList(list); toast(`Saved “${nm}”.`); break; }
+    case 'tpl-apply': { const s = rSaved().find(x => x.id === b.dataset.id); if (!s) return; E.style[s.kind] = Object.assign({}, s.style); E.branding = Object.assign({}, E.branding, s.branding, { logo: E.branding.logo }); E.fmt = Object.assign({}, E.fmt, s.fmt); if (tpl.rkind !== s.kind){ switchTemplate('res_' + s.kind); return; } toast(`Using “${s.name}”.`); break; }
+    case 'tpl-dup': { const list = rSaved(), s = list.find(x => x.id === b.dataset.id); if (!s) return; list.push(Object.assign(JSON.parse(JSON.stringify(s)), { id: rid('t'), name: s.name + ' copy' })); rSaveList(list); break; }
+    case 'tpl-del': rSaveList(rSaved().filter(x => x.id !== b.dataset.id)); break;
+    default: return;
+  }
+  rebuildResults(); renderResultsPanel(); commit();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-ract]'); if (b && !b.disabled){ rAct(b.dataset.ract, b); return; }
+  const n = e.target.closest('#rnav button'); if (n){ rTab = n.dataset.v; renderResultsPanel(); return; }
+  const o = e.target.closest('[data-act=res-open]'); if (o){ openResults(); return; }
+});
+function openResults(){
+  if (isResults()){ const back = lastVariant.__poster || 'leader'; switchTemplate(back); setLeftTab('content'); return; }
+  lastVariant.__poster = tpl.id;
+  switchTemplate(lastVariant.results || 'res_cand'); setLeftTab('results');
+}
+/* live count: adds votes in steps so the graphics update as you watch */
+function rLiveStart(){
+  const E = ensureElection(), el = curEl();
+  if (!el.candidates.length){ toast('Add candidates first.'); return; }
+  const share = el.candidates.map(k => { const kk = elCalc(el, E).cands.find(x => x.id === k.id); return Math.max(.5, kk && kk.pctUse != null ? kk.pctUse : 100/el.candidates.length); });
+  const st = share.reduce((t, v) => t + v, 0);
+  el.votesExpected = rnum(el.votesExpected) || 100000; el.boothsTotal = rnum(el.boothsTotal) || 50;
+  if (rnum(el.votesCounted) == null || el.votesCounted >= el.votesExpected){ el.votesCounted = 0; el.boothsCounted = 0; el.candidates.forEach(k => { k.votes = 0; k.pct = null; }); }
+  else el.candidates.forEach((k, i) => { if (rnum(k.votes) == null){ k.votes = Math.round(el.votesCounted*share[i]/st); k.pct = null; } });
+  rLive = setInterval(() => {
+    const step = Math.max(1, Math.round(el.votesExpected*(.02 + Math.random()*.03))), left = el.votesExpected - el.votesCounted, add = Math.min(step, left);
+    if (add <= 0){ rLiveStop(); el.status = el.status === 'counting' ? 'counting' : el.status; toast('Count complete.'); renderResultsPanel(); return; }
+    let given = 0; el.candidates.forEach((k, i) => { const v = i === el.candidates.length - 1 ? add - given : Math.round(add*(share[i]/st)*(.85 + Math.random()*.3)); const vv = Math.max(0, Math.min(v, add - given)); k.votes = (rnum(k.votes) || 0) + vv; given += vv; });
+    el.votesCounted += given; el.boothsCounted = Math.min(el.boothsTotal, Math.round(el.boothsTotal*el.votesCounted/el.votesExpected));
+    if (E.tppOn && el.countType === 'tpp' && el.tpp.a && el.tpp.b){ const a = el.candidates.filter(k => k.party === el.tpp.a).reduce((t, k) => t + k.votes, 0), b = el.candidates.filter(k => k.party === el.tpp.b).reduce((t, k) => t + k.votes, 0), rest = el.votesCounted - a - b; el.tpp.aVotes = Math.round(a + rest*.55); el.tpp.bVotes = el.votesCounted - el.tpp.aVotes; }
+    const d = new Date(); el.updated = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    rebuildResults({ keepInspector: true }); refreshResultsCalc(); rLiveSyncInputs(); commitSoon();
+  }, rLiveSpeed);
+}
+function rLiveStop(){ clearInterval(rLive); rLive = null; commit(); }
+function rLiveSyncInputs(){ const el = curEl(); document.querySelectorAll('#rpanel [data-rk]').forEach(n => { if (n === document.activeElement) return; const m = /^c\.(\d+)\.(votes|pct)$/.exec(n.dataset.rk) || /^el\.(votesCounted|boothsCounted|updated)$/.exec(n.dataset.rk);
+  if (!m) return; const v = m[2] ? el.candidates[+m[1]][m[2]] : el[m[1]]; n.value = v == null ? '' : v; }); }
+/* edits typed on the graphic itself go back into the data, so every linked number follows */
+const rParse = t => { const x = parseFloat(String(t).replace(/\s/g, '').replace(/,(\d{1,2})(?!\d)/, '.$1').replace(/[^\d.\-]/g, '')); return isFinite(x) ? x : null; };
+function rBindEdit(L){
+  const E = ensureElection(), el = curEl(), b = L.bind, t = String(L.text || '');
+  const cand = b.cid ? el.candidates.find(k => k.id === b.cid) : null;
+  switch (b.t){
+    case 'cname': if (cand){ if (E.system === 'list'){ const P = E.parties.find(p => p.id === cand.party); if (P) P.name = t; } else cand.name = t; } break;
+    case 'pabbr': { const P = E.parties.find(p => p.id === b.pid); if (P) P.abbr = t.toUpperCase().slice(0, 6); break; }
+    case 'cvotes': { const v = rParse(t.replace(/[,.\s](?=\d{3}\b)/g, '')); if (cand && v != null){ cand.votes = Math.max(0, Math.round(v)); cand.pct = null; } break; }
+    case 'cpct': { const v = rParse(t); if (!cand || v == null) return; const pct = clamp(v, 0, 99.9);
+      if (rnum(cand.votes) != null && el.denom === 'formal'){ const others = el.candidates.filter(k => k !== cand).reduce((tt, k) => tt + (rnum(k.votes) || 0), 0); cand.votes = Math.round(pct*others/(100 - pct)); }   // keep votes and % in step
+      else if (rnum(cand.votes) != null){ const c = elCalc(el, E); if (c.denom > 0) cand.votes = Math.round(pct/100*c.denom); }
+      else cand.pct = pct; break; }
+    case 'cmp': { const v = rParse(t), c = elCalc(el, E); if (v == null) return; if (c.useTpp){ el.tpp.aVotes = el.tpp.bVotes = null; el.tpp.aPct = clamp(b.side === 'A' ? v : 100 - v, 0, 100); } else { if (L.g0) L.text = L.g0.text; render(); toast('Bloc shares are the sum of their parties. Change the candidates’ votes or %.'); return; } break; }
+    case 'elname': el.name = t; break;
+    case 'elregion': el.region = t; break;
+    case 'blocname': { const B = E.blocs.find(x => x.id === b.bid); if (B) B.name = t; break; }
+    case 'leader': { const B = E.blocs.find(x => x.id === b.bid); if (B) B.leader = t.replace(/\s·\s\w+$/, ''); break; }
+    default: return;
+  }
+  rebuildResults({ keepInspector: true }); refreshResultsCalc(); rLiveSyncInputs();
+  if (['cname','pabbr','elname','elregion','blocname','leader'].includes(b.t) && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#rpanel'))) renderResultsPanel();
+}
+/* saved designs */
+function rSaved(){ try { return JSON.parse(localStorage.getItem('degv-results-designs') || '[]'); } catch { return rSaved.mem || []; } }
+function rSaveList(list){ rSaved.mem = list; try { localStorage.setItem('degv-results-designs', JSON.stringify(list)); } catch {} }
+/* downloads */
+async function rDownload(name, text, type){
+  const blob = new Blob([text], { type });
+  if (downloadsApi){ try { await downloadsApi.save({ filename: name, data: blob }); toast(`${name} saved.`); return; } catch (err){ if (err && err.code === 'declined'){ toast('Download cancelled.'); return; } } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast(`${name} saved.`);
+}
+/* ---------- CSV ---------- */
+const CSV_COLS = ['electorate','region','candidate','party','party_name','colour','votes','pct','prev_pct','swing','mp','status','tpp_side','tpp_votes','tpp_pct','prev_tpp_pct','booths_counted','booths_total','votes_counted','votes_expected','enrolled','informal','result_status','held_by','district_seats','prev_seats'];
+const csvCell = v => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+function rCsvExport(E){
+  const rows = [CSV_COLS.join(',')];
+  for (const el of E.electorates){ const c = elCalc(el, E);
+    el.candidates.forEach((k, i) => { const P = partyOf(E, k.party), side = el.tpp.a === k.party ? 'A' : el.tpp.b === k.party ? 'B' : '';
+      rows.push([el.name, el.region, k.name, P.abbr, P.name, P.color, k.votes, k.pct ?? (c.cands[i].pctUse != null ? c.cands[i].pctUse.toFixed(2) : ''), k.prevPct, k.swing, k.mp ? 'yes' : '', k.status, side,
+        side === 'A' ? el.tpp.aVotes : side === 'B' ? el.tpp.bVotes : '', side === 'A' ? (el.tpp.aPct ?? '') : side === 'B' && el.tpp.aPct != null ? (100 - el.tpp.aPct).toFixed(2) : '', side === 'A' ? el.tpp.prevAPct : side === 'B' && el.tpp.prevAPct != null ? (100 - el.tpp.prevAPct).toFixed(2) : '',
+        i ? '' : el.boothsCounted, i ? '' : el.boothsTotal, i ? '' : el.votesCounted, i ? '' : el.votesExpected, i ? '' : el.enrolled, i ? '' : el.informal, i ? '' : el.status, i ? '' : partyOf(E, el.prevParty).abbr.replace('?', ''), i ? '' : (el.seatsAvail ?? ''), k.prevSeats ?? ''].map(csvCell).join(',')); }); }
+  return rows.join('\n') + '\n';
+}
+function rCsvSample(){ return CSV_COLS.join(',') + '\nNorthgate,Eastern State,Leilani Fonoti,SOC,Social Democrats,#D8262E,11826,,33.1,,,,A,,53.3,50.4,19,52,30120,108300,121400,1210,projected,CON\nNorthgate,Eastern State,Hamish Whitfield,CON,Conservatives,#1E4FA8,10345,,38.6,,yes,,B,,,,,,,,,,,\n'; }
+function parseCsv(text){
+  const out = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++){ const ch = text[i];
+    if (q){ if (ch === '"'){ if (text[i + 1] === '"'){ cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true; else if (ch === ','){ row.push(cell); cell = ''; } else if (ch === '\n' || ch === '\r'){ if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cell); out.push(row); row = []; cell = ''; } else cell += ch; }
+  if (cell !== '' || row.length){ row.push(cell); out.push(row); }
+  return out.filter(r => r.some(x => String(x).trim() !== ''));
+}
+function rCsvImport(text){
+  const E = ensureElection(), rows = parseCsv(text); if (rows.length < 2) throw new UserError('That CSV has no data rows.');
+  const head = rows[0].map(h => h.trim().toLowerCase().replace(/[\s-]+/g, '_')), col = k => head.indexOf(k);
+  if (col('party') < 0) throw new UserError('The CSV needs at least a “party” column (and “candidate” for single-member seats). Download the CSV template to see the format.');
+  const get = (r, k) => { const i = col(k); return i < 0 ? '' : String(r[i] ?? '').trim(); }, n = v => rnum(String(v).replace(/[,%\s]/g, ''));
+  const palette = ['#D8262E','#1E4FA8','#4FA82A','#0C6B4E','#F07818','#65A1DC','#8A3FB0','#6E7179','#C2185B','#00838F'];
+  let made = 0, skipped = 0; const touched = new Map();
+  for (const r of rows.slice(1)){
+    const pab = get(r, 'party').toUpperCase(), cname = get(r, 'candidate') || (col('candidate') < 0 ? (get(r, 'party_name') || pab) : ''); if (!cname || !pab){ skipped++; continue; }
+    let P = E.parties.find(p => p.abbr.toUpperCase() === pab);
+    if (!P){ P = { id: rid('p'), abbr: pab.slice(0, 6), name: get(r, 'party_name') || pab, color: /^#[0-9a-f]{6}$/i.test(get(r, 'colour')) ? get(r, 'colour') : palette[E.parties.length % palette.length], color2: '', text: '', order: E.parties.length + 1 }; E.parties.push(P); }
+    else if (/^#[0-9a-f]{6}$/i.test(get(r, 'colour'))) P.color = get(r, 'colour');
+    const ename = get(r, 'electorate') || curEl().name;
+    let el = touched.get(ename);
+    if (!el){ el = E.electorates.find(e => e.name.toLowerCase() === ename.toLowerCase());
+      if (!el){ el = { id: rid('e'), name: ename, region: '', countType: 'primary', metric: 'booths', unitLabel: 'booths', boothsCounted: null, boothsTotal: null, votesCounted: null, votesExpected: null, enrolled: null, informal: null, denom: 'formal', denomCustom: null, status: 'counting', statusText: '', winner: '', prevParty: '', updated: '', candidates: [], tpp: { a: '', b: '', aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null } }; E.electorates.push(el); }
+      el.candidates = []; el.tpp = { a: '', b: '', aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null }; touched.set(ename, el); }
+    if (get(r, 'region')) el.region = get(r, 'region');
+    for (const [k, f] of [['booths_counted','boothsCounted'],['booths_total','boothsTotal'],['votes_counted','votesCounted'],['votes_expected','votesExpected'],['enrolled','enrolled'],['informal','informal']]) if (get(r, k) !== '') el[f] = n(get(r, k));
+    const rs = get(r, 'result_status').toLowerCase(); if (rs && EL_STATUS.some(s => s[0] === rs)) el.status = rs;
+    const held = get(r, 'held_by').toUpperCase(); if (held){ const HP = E.parties.find(p => p.abbr.toUpperCase() === held); if (HP) el.prevParty = HP.id; }
+    if (get(r, 'district_seats') !== ''){ el.seatsAvail = n(get(r, 'district_seats')); E.system = 'list'; }
+    el.candidates.push({ id: rid('c'), name: cname, prevSeats: n(get(r, 'prev_seats')), party: P.id, mp: /^(y|yes|true|1|mp)$/i.test(get(r, 'mp')), votes: n(get(r, 'votes')), pct: get(r, 'votes') === '' ? n(get(r, 'pct')) : null, prevPct: n(get(r, 'prev_pct')), swing: n(get(r, 'swing')), status: (get(r, 'status') || '').toLowerCase() });
+    const side = get(r, 'tpp_side').toUpperCase();
+    if (side === 'A' || side === 'B' || get(r, 'tpp_votes') !== '' || get(r, 'tpp_pct') !== ''){
+      const sd = side || (!el.tpp.a ? 'A' : 'B');
+      if (sd === 'A'){ el.tpp.a = P.id; if (get(r, 'tpp_votes') !== '') el.tpp.aVotes = n(get(r, 'tpp_votes')); if (get(r, 'tpp_pct') !== '') el.tpp.aPct = n(get(r, 'tpp_pct')); if (get(r, 'prev_tpp_pct') !== '') el.tpp.prevAPct = n(get(r, 'prev_tpp_pct')); }
+      else { el.tpp.b = P.id; if (get(r, 'tpp_votes') !== '') el.tpp.bVotes = n(get(r, 'tpp_votes')); if (get(r, 'tpp_pct') !== '' && el.tpp.aPct == null) el.tpp.aPct = 100 - n(get(r, 'tpp_pct')); if (get(r, 'prev_tpp_pct') !== '' && el.tpp.prevAPct == null) el.tpp.prevAPct = 100 - n(get(r, 'prev_tpp_pct')); }
+      if (el.tpp.a && el.tpp.b){ el.countType = 'tpp'; E.tppOn = true; }
+    }
+    made++;
+  }
+  if (!made) throw new UserError('No rows could be read. Each row needs a candidate and a party.');
+  const first = [...touched.values()][0]; if (first) E.current = first.id;
+  return { made, skipped, electorates: touched.size };
+}
+document.addEventListener('change', e => { const t = e.target; if (!t.dataset || !t.dataset.texck) return; const L = byId(t.dataset.texck); if (!L) return; L.tex = t.checked ? 'hatch' : ''; if (t.checked && L.texOp == null) L.texOp = 25; renderInspector(); render(); commit(); });
+$('#csvfile').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { const r = rCsvImport(await f.text()); rebuildResults(); renderResultsPanel(); commit(); toast(`Imported ${r.made} candidate${r.made === 1 ? '' : 's'} in ${r.electorates} electorate${r.electorates === 1 ? '' : 's'}${r.skipped ? `. ${r.skipped} row${r.skipped === 1 ? ' was' : 's were'} skipped (missing candidate or party)` : ''}. Check the warnings under Checks.`); }
+  catch (err){ toast(err instanceof UserError ? err.message : 'That file could not be read as CSV.'); }
+});
+if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (isResults()) rebuildResults({ keepInspector: true }); });
+/* random fictional results for the Shuffle button */
+function randomResults(){
+  const E = ensureElection(), el = curEl();
+  const total = 20000 + Math.round(Math.random()*70000);
+  let left = total; el.candidates.forEach((k, i) => { const share = i === el.candidates.length - 1 ? left : Math.round(left*(.15 + Math.random()*.45)); k.votes = share; left -= share; k.pct = null; });
+  el.boothsTotal = el.boothsTotal || 50; el.boothsCounted = Math.round(el.boothsTotal*(.2 + Math.random()*.8)); el.votesExpected = el.votesExpected || 100000; el.votesCounted = Math.min(el.votesExpected, total);
+  if (el.tpp.a && el.tpp.b){ el.tpp.aVotes = null; el.tpp.bVotes = null; el.tpp.aPct = +(44 + Math.random()*12).toFixed(1); }
+  const d = new Date(); el.updated = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+window.__degv = { assets, state, get tpl(){ return tpl; }, get project(){ return project; }, aabb, setSelection, alignSel, distributeSel, view, get selIds(){ return selIds; }, render, byId, imageReport, elCalc, seatCalc, blocCalc, nationalCalc, rBindEdit, rebuildResults, renderResultsPanel, rCsvImport, rCsvExport, get rTab(){ return rTab; }, switchTemplate, openResults, IMG, X, traceLogo, detectRegions, marchingSquares, picCache, applyEnh, pictureFor, SvgCtx, get canvasK(){ return canvasK; }, openExport, runExport, decodeImageBlob, makeSource };
 loadKits();
 (async () => { await loadMyFiles(); await loadProjects(); })();
 renderTemplates(); renderQuick(); updateTplChrome();
 $('#gallery').addEventListener('click', e => { if (e.target.id === 'gallery') closeGallery(); });
-try { const lt = localStorage.getItem('degv-ltab'); if (lt && ['layouts','content','party','files'].includes(lt)) setLeftTab(lt); } catch {}
+try { const lt = localStorage.getItem('degv-ltab'); if (lt && ['layouts','content','party','files','results'].includes(lt)) setLeftTab(lt); } catch {}
 state.layers = leaderTemplate();
 shuffle(true);
 renderLayers(); renderInspector(); render(); commit();
