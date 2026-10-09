@@ -727,7 +727,7 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
           <label class="ctl"><span class="ctl-head">Template font <output>all text</output></span>
             <select id="c-font" data-bind="state.font"></select></label>
           <button class="btn" data-act="upload-font">Upload a font file</button>
-          <p class="hint">Gotham isn't a free web font. Montserrat is the closest free match, or upload your licensed Gotham file (.otf, .ttf, .woff). Uploaded fonts last until you close the page.</p>
+          <p class="hint">Gotham and ABC Sans aren't free web fonts. Montserrat is the closest free match to Gotham. ABC Sans is used if it's installed on this computer; otherwise choose it and upload your licensed files (pick several weights at once). Uploaded fonts last until you close the page.</p>
         </section>
       </div>
     </aside>
@@ -917,7 +917,7 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 <input type="file" id="myfile-input" accept="image/*,.svg" multiple hidden>
 <input type="file" id="kitfile" accept=".json,application/json" hidden>
 <input type="file" id="csvfile" accept=".csv,.xlsx,.xlsm,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
-<input type="file" id="fontfile" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" hidden>
+<input type="file" id="fontfile" multiple accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" hidden>
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden>
   <div class="card">
@@ -1704,6 +1704,7 @@ const STYLES = ['short','short','receding','bob','long','buzz'];
 const ALLW = '100;200;300;400;500;600;700;800;900';
 const FONT_LIST = [
   { f:'Montserrat', q:'ital,wght@0,100..900;1,100..900', min:100, max:900, note:'Gotham alternative' },
+  { f:'ABC Sans', local:true, min:100, max:900 },      // licensed: used when installed on this computer, or from your uploaded files
   { f:'Poppins', q:ALLW, min:100, max:900 },
   { f:'Archivo', q:'ital,wght@0,100..900;1,100..900', min:100, max:900 },
   { f:'Archivo Black', q:null, min:400, max:400 },
@@ -1740,8 +1741,30 @@ function ensureFont(f, w, it){
   const k = f + '|' + w + (it ? 'i' : ''); if (fontsAsked.has(k) || !document.fonts) return; fontsAsked.add(k);
   document.fonts.load(`${it ? 'italic ' : ''}${w} 60px "${f}"`).then(list => { if (list && list.length) render(); }).catch(() => {});
 }
+/* licensed fonts listed by name: look for them on this computer under their usual names */
+const W_NAMES = [[100,'Thin'],[200,'ExtraLight'],[300,'Light'],[400,'Regular'],[500,'Medium'],[600,'SemiBold'],[700,'Bold'],[800,'ExtraBold'],[900,'Black']];
+async function findLocalFont(fi){
+  const fam = fi.f, flat = fam.replace(/ /g, ''); let any = false;
+  for (const [w, n] of W_NAMES) for (const it of [false, true]){
+    const nm = n + (it ? ' Italic' : ''), nmF = n + (it ? 'Italic' : '');
+    const src = [`${fam} ${nm}`, `${flat}-${nmF}`, `${flat} ${nm}`].concat(w === 400 && !it ? [fam, flat, `${flat}-Regular`] : []).map(x => `local("${x}")`).join(', ');
+    try { const ff = new FontFace(fam, src, { weight: String(w), style: it ? 'italic' : 'normal' }); await ff.load(); document.fonts.add(ff); any = true; } catch {} }
+  if (any){ fi.found = 'installed'; const c = $('#c-font'); if (c){ const v = c.value; c.innerHTML = fontOptions(); c.value = v; } render(); }
+}
+/* choosing a licensed font that isn't available asks for its files */
+let fontTarget = null;
+function needFontFile(name){
+  const fi = FONT_LIST.find(x => x.f === name); if (!fi || !fi.local || fi.found) return false;
+  fontTarget = name; toast(`${name} isn't installed on this computer. Choose your licensed ${name} font files (you can pick several weights at once).`);
+  setTimeout(() => $('#fontfile').click(), 0); return true;
+}
+/* weight and style from a font file name, e.g. ABCSans-BoldItalic.otf */
+function fontFileWeight(n){ const t = n.toLowerCase().replace(/[\s_-]+/g, '');
+  const w = /thin|hairline/.test(t) ? 100 : /(extra|ultra)light/.test(t) ? 200 : /light/.test(t) ? 300 : /semibold|demibold/.test(t) ? 600 : /(extra|ultra)bold/.test(t) ? 800 : /black|heavy/.test(t) ? 900 : /bold/.test(t) ? 700 : /medium/.test(t) ? 500 : 400;
+  return { weight: w, style: /italic|oblique/.test(t) ? 'italic' : 'normal' }; }
 function loadFontCss(){
   for (const fi of FONT_LIST){
+    if (fi.local){ findLocalFont(fi); continue; }
     if (fi.custom) continue;
     const l = document.createElement('link'); l.rel = 'stylesheet';
     l.href = `https://fonts.googleapis.com/css2?family=${fi.f.replace(/ /g,'+')}${fi.q ? (fi.q.includes('@') ? ':' + fi.q : ':wght@' + fi.q) : ''}&display=swap`;
@@ -4599,6 +4622,7 @@ function syncInputs(){
   });
 }
 function onValueChange(path, obj, key){
+  if ((path === 'state.font' || key === 'font' || key === 'emFont') && obj) needFontFile(path === 'state.font' ? state.font : obj[key]);
   if (obj && obj.rb && obj.bind && key === 'text' && typeof rBindEdit === 'function'){ rBindEdit(obj); }
   if (path === 'state.font'){
     for (const L of allLayers()) if (L.type === 'text' && !L.keepFont){ L.font = state.font; L.weight = clampWeight(L.font, L.weight); }
@@ -4674,7 +4698,7 @@ const ck = (path, label) => `<label class="check"><input type="checkbox" id="${i
 const seg = (path, label, opts) => `<div class="ctl">${label?`<span class="ctl-head">${label}</span>`:''}<div class="seg" data-seg="${path}">${opts.map(([v,t]) => `<button data-act="setv" data-path="${path}" data-v="${v}">${t}</button>`).join('')}</div></div>`;
 const colorCtl = (path, label) => `<div class="ctl"><span class="ctl-head">${label}</span><div class="tokrow" data-colorctl="${path}">${TOKENS.map(([k,n]) => `<button class="tok" data-act="setv" data-path="${path}" data-v="@${k}" data-tok="${k}" title="${n}" aria-label="${n}"></button>`).join('')}<label class="tok custom" title="Custom colour"><input type="color" id="cp-${idf(path)}" data-colorpick="${path}" aria-label="Custom colour"></label></div></div>`;
 const grp = (key, title, inner, meta='') => `<details class="grp" data-grp="${key}" ${openGroups.has(key)?'open':''}><summary>${title}${meta?`<em>${meta}</em>`:''}</summary><div class="in">${inner}</div></details>`;
-const fontOptions = () => FONT_LIST.map(f => `<option value="${esc(f.f)}" style="font-family:'${esc(f.f)}'">${esc(f.f)}${f.note?` (${f.note})`:''}${f.custom?' (uploaded)':''}</option>`).join('');
+const fontOptions = () => FONT_LIST.map(f => `<option value="${esc(f.f)}" style="font-family:'${esc(f.f)}'">${esc(f.f)}${f.note?` (${f.note})`:''}${f.custom || f.found === 'uploaded' ?' (uploaded)':''}${f.found === 'installed' ? ' (installed)' : ''}${f.local && !f.found ? ' (licensed: upload your file)' : ''}</option>`).join('');
 const weightOptions = f => { const i = fontInfo(f), names = {100:'Thin',200:'Extra light',300:'Light',400:'Regular',500:'Medium',600:'Semibold',700:'Bold',800:'Extra bold',900:'Black'}; let o=''; for (let w=i.min; w<=i.max; w+=100) o += `<option value="${w}">${w} ${names[w]}</option>`; return o; };
 
 function cutBox(L){
@@ -5669,19 +5693,32 @@ $('#file').addEventListener('cancel', () => dropEmptyLogo());
 function dropEmptyLogo(){ for (const id of ['logo','oppLogo']){ const L = byId(id); if (L && !assets[id] && !L.gen) state.layers = state.layers.filter(l => l !== L); } pendingLogo = null; renderLayers(); render(); }
 
 $('#fontfile').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  const name = f.name.replace(/\.(ttf|otf|woff2?)$/i, '').replace(/[^\w\- ]+/g, ' ').trim() || 'Uploaded font';
-  try {
-    const buf = await f.arrayBuffer();
-    const ff = new FontFace(name, buf); await ff.load(); document.fonts.add(ff);
-    fontFiles[name] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(null); fr.readAsDataURL(new Blob([buf], { type: f.type || 'font/ttf' })); });
-    if (!FONT_LIST.some(x => x.f === name)) FONT_LIST.unshift({ f:name, custom:true, min:100, max:900 });
-    $('#c-font').innerHTML = fontOptions();
-    const S = byId(state.selected);
-    if (S && S.type === 'text'){ S.font = name; toast(`${name} added and applied to ${S.name}.`); }
-    else toast(`${name} added. Pick it from any font list.`);
-    renderInspector(); render(); syncInputs(); commit();
-  } catch (err){ toast('That font file could not be read. Try a .ttf, .otf or .woff file.'); }
+  const files = [...e.target.files]; e.target.value = ''; const target = fontTarget; fontTarget = null; if (!files.length) return;
+  const added = new Set(); let bad = 0;
+  for (const f of files){
+    const base = f.name.replace(/\.(ttf|otf|woff2?)$/i, '');
+    // a licensed family listed by name (e.g. ABC Sans) takes its files under that name, one face per weight
+    const lic = FONT_LIST.find(x => x.local && (x.f === target || rNormHead(base).replace(/_/g, '').startsWith(rNormHead(x.f).replace(/_/g, ''))));
+    const name = lic ? lic.f : base.replace(/[^\w\- ]+/g, ' ').trim() || 'Uploaded font';
+    try {
+      const buf = await f.arrayBuffer();
+      const ff = new FontFace(name, buf, lic ? fontFileWeight(base) : {}); await ff.load(); document.fonts.add(ff);
+      if (!fontFiles[name] || (lic && fontFileWeight(base).weight === 400 && fontFileWeight(base).style === 'normal'))
+        fontFiles[name] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(null); fr.readAsDataURL(new Blob([buf], { type: f.type || 'font/ttf' })); });
+      if (lic) lic.found = lic.found || 'uploaded';
+      else if (!FONT_LIST.some(x => x.f === name)) FONT_LIST.unshift({ f:name, custom:true, min:100, max:900 });
+      added.add(name);
+    } catch { bad++; }
+  }
+  for (const k of [...fontsAsked]) if ([...added].some(n => k.startsWith(n + '|'))) fontsAsked.delete(k);
+  $('#c-font').innerHTML = fontOptions(); $('#c-font').value = state.font;
+  if (!added.size){ toast('That font file could not be read. Try a .ttf, .otf or .woff file.'); return; }
+  const nm = [...added].join(', '), S = byId(state.selected);
+  if (target && added.has(target)){ toast(`${target} added (${files.length - bad} file${files.length - bad === 1 ? '' : 's'}). It's ready in every font list.`); }
+  else if (S && S.type === 'text' && added.size === 1){ S.font = nm; toast(`${nm} added and applied to ${S.name}.`); }
+  else toast(`${nm} added. Pick it from any font list.`);
+  if (isResults()){ rebuildResults(); renderResultsPanel(); }
+  renderInspector(); render(); syncInputs(); commit();
 });
 
 const stage = $('#stage'), drop = $('#drop');
@@ -8177,7 +8214,7 @@ function blocCalc(E){
     const prev = P.length && P.every(p => nat[p.id].prev != null) ? P.reduce((t, p) => t + nat[p.id].prev, 0) : null;
     const rows = P.map(p => sc.list.find(r => r.P.id === p.id));
     const seats = rows.reduce((t, r) => t + (r ? r.seats : 0), 0), ahead = rows.reduce((t, r) => t + (r ? r.leading : 0), 0), prevSeats = rows.reduce((t, r) => t + (r ? r.prev : 0), 0);
-    return { B: b, P: blocParty(b), parties: P, share, prev, swing: share != null && prev != null ? share - prev : null, seats, ahead, prevSeats,
+    return { B: b, rows, P: blocParty(b), parties: P, share, prev, swing: share != null && prev != null ? share - prev : null, seats, ahead, prevSeats,
       segVote: P.map(p => ({ p, v: nat[p.id].pct || 0 })), segSeats: P.map((p, i) => ({ p, v: rows[i] ? rows[i].seats : 0 })), majority: sc.majority, total: sc.total };
   });
 }
@@ -8209,8 +8246,24 @@ function seatCalc(E){
   const warn = [];
   if (declared + projected + leading > total && total) warn.push(`Seats add up to ${declared + projected + leading}, more than the ${total} in parliament.`);
   if (majority > total && total) warn.push('The majority is larger than the number of seats.');
-  const top = list[0], majorityText = top && top.seats >= majority ? `${top.P.abbr} MAJORITY` : top && top.seats + top.leading >= majority ? `${top.P.abbr} ON TRACK FOR MAJORITY` : 'NO MAJORITY YET';
-  return { list, total, majority, declared, projected, leading, undecided: Math.max(0, total - declared - projected), warn, majorityText, top };
+  const top = list[0], mj = majorityStatus(E, list, total, majority, declared + projected + leading);
+  const majorityText = mj.text;
+  return { list, total, majority, declared, projected, leading, undecided: Math.max(0, total - declared - projected), warn, majorityText, top, mj };
+}
+/* who has a majority: a single party first, then a bloc (its parties' seats together).
+   Declared seats alone = MAJORITY; with projected seats = PROJECTED MAJORITY; with seats only ahead = ON TRACK. */
+function majorityStatus(E, list, total, majority, counted){
+  const row = id => list.find(r => r.P.id === id);
+  const cands = list.map(r => ({ kind: 'party', name: r.P.abbr, full: r.P.name, color: r.P.color, id: r.P.id, decl: r.declared, seats: r.seats, ahead: r.leading }));
+  for (const b of E.blocs || []){ const rs = b.parties.map(row).filter(Boolean); if (rs.length < 2) continue;
+    cands.push({ kind: 'bloc', name: (b.name || 'Bloc').toUpperCase(), full: b.name, color: b.color, id: b.id, decl: rs.reduce((t, r) => t + r.declared, 0), seats: rs.reduce((t, r) => t + r.seats, 0), ahead: rs.reduce((t, r) => t + r.leading, 0) }); }
+  const best = (f) => cands.filter(f).sort((a, b) => (a.kind === 'party' ? 0 : 1) - (b.kind === 'party' ? 0 : 1) || b.seats - a.seats)[0];
+  const m = majority || 1;
+  let c = best(x => x.decl >= m); if (c) return Object.assign({ status: 'majority', text: `${c.name} MAJORITY` }, c);
+  c = best(x => x.seats >= m); if (c) return Object.assign({ status: 'projected', text: `${c.name} PROJECTED MAJORITY` }, c);
+  c = best(x => x.seats + x.ahead >= m); if (c) return Object.assign({ status: 'ontrack', text: `${c.name} ON TRACK FOR MAJORITY` }, c);
+  const done = total && counted >= total;
+  return { status: done ? 'hung' : 'none', text: done ? 'HUNG PARLIAMENT · NO MAJORITY' : 'NO MAJORITY YET', kind: null };
 }
 /* style per graphic kind, with sensible broadcast defaults */
 const R_STYLE_DEF = { w: 1920, h: 1080, order: 'votes', scale: 'leader', scaleMax: 60, maxRows: 9, barH: 0, gap: 0, radius: 10, labelW: 0, namePos: 'left', pctPos: 'right',
@@ -8539,6 +8592,7 @@ function buildSeats(R){
   const by = ty + th + 90*u; rSeatBar(R, ord === 'seats' ? sc : Object.assign({}, sc, { list: all.filter(s => s.seats || s.leading) }), pad, by, W - pad*2, 44*u);
   R.text('seatcounts', `Declared ${sc.declared}  ·  Projected ${sc.projected}  ·  Ahead, not called ${sc.leading}  ·  Undecided ${Math.max(0, sc.total - sc.declared - sc.projected - sc.leading)}  ·  ${sc.total} seats`, pad, by + 82*u, 20*u, { name: 'Seat summary', weight: 500, color: R.sub, fitW: W - pad*2 });
   rLegend(R, pad, by + 118*u);
+  R.text('majstat', sc.majorityText, W - pad, by - 34*u, 22*u, { name: 'Majority status', align: 'right', weight: 900, color: R.ink, fitW: W*.4 });
   return sc;
 }
 /* ---------- N. parliament projection: semicircle in party order (left to right), seat cards below ---------- */
@@ -8565,9 +8619,11 @@ function buildParl(R){
   R.text('pmajl', 'MAJORITY', pad, ly, 26*u, { name: 'Majority label', weight: 700, color: R.ink, track: 1 });
   R.text('pmajv', String(sc.majority), pad, ly + 62*u, 76*u, { name: 'Majority figure', weight: 900, color: R.ink });
   const lead = rows.slice().sort((p, q) => val(q) - val(p))[0];
-  if (lead && val(lead)){ const st = val(lead) >= sc.majority ? `${lead.P.abbr} MAJORITY` : 'NO MAJORITY';
-    R.text('pstat', st, W - pad, ly, 26*u, { name: 'Majority status', align: 'right', weight: 800, color: R.ink });
-    R.text('pstat2', `${sc.declared} declared · ${sc.projected} projected${sc.leading ? ` · ${sc.leading} ahead` : ''}`, W - pad, ly + 40*u, 18*u, { name: 'Seat summary', align: 'right', weight: 500, color: R.sub, fitW: W*.22 }); }
+  if (lead && val(lead)){ const mj = sc.mj || {}, fitR = W - pad - (cx + r*.8) - 16*u;
+    const l1 = mj.kind ? mj.name : sc.majorityText, l2 = mj.kind ? sc.majorityText.slice(mj.name.length + 1) : '';
+    R.text('pstat', l1, W - pad, ly, 28*u, { name: 'Majority status', align: 'right', weight: 900, color: R.ink, fitW: fitR });
+    if (l2) R.text('pstat3', l2, W - pad, ly + 34*u, 22*u, { name: 'Majority status detail', align: 'right', weight: 800, color: R.ink, fitW: fitR });
+    R.text('pstat2', `${sc.declared} declared · ${sc.projected} projected${sc.leading ? ` · ${sc.leading} ahead` : ''}`, W - pad, ly + (l2 ? 70 : 40)*u, 18*u, { name: 'Seat summary', align: 'right', weight: 500, color: R.sub, fitW: fitR }); }
   // seat cards
   const shown = rows.filter(x => val(x) || S.parlAll), n = Math.max(1, shown.length), gap = 12*u, cw = Math.min(210*u, (W - pad*2 - gap*(n - 1))/n), x0 = (W - (cw*n + gap*(n - 1)))/2, topH = cardsH*.6, lineH = 7*u;
   shown.forEach((x, i) => { const cx0 = x0 + i*(cw + gap), k = 'pc' + i;
@@ -8709,9 +8765,11 @@ function buildParty(R){
   // status tag
   let tag = '';
   if (scope === 'district'){ if (d.c.status !== 'counting') tag = d.c.statusText; }
-  else tag = d.seats >= d.majority ? 'MAJORITY' : d.ahead ? `+${d.ahead} AHEAD, NOT CALLED` : `${d.majority} FOR A MAJORITY`;
-  if (tag){ const tw0 = tw(tag, 20*u, 800, R.F) + 34*u; R.rect('tagbg', rx + rw - tw0, cy - 56*u, tw0, 38*u, d.seats >= d.majority && scope !== 'district' ? '#15171C' : '#FFFFFF', { name: 'Status tag', radius: 19*u, opacity: 95 });
-    R.text('tag', tag, rx + rw - tw0/2, cy - 37*u, 20*u, { name: 'Status tag text', align: 'center', weight: 800, color: d.seats >= d.majority && scope !== 'district' ? '#FFFFFF' : '#15171C' }); }
+  else { const mj = seatCalc(E).mj, inBloc = mj.kind === 'bloc' && (E.blocs.find(b => b.id === mj.id) || { parties: [] }).parties.includes(P.id);
+    tag = mj.kind === 'party' && mj.id === P.id || inBloc ? mj.text : d.ahead ? `+${d.ahead} AHEAD, NOT CALLED` : `${d.majority} FOR A MAJORITY`; }
+  if (tag){ const tw0 = tw(tag, 20*u, 800, R.F) + 34*u; const tagDark = scope !== 'district' && /MAJORITY$/.test(tag) && !/FOR A MAJORITY|ON TRACK/.test(tag);
+    R.rect('tagbg', rx + rw - tw0, cy - 56*u, tw0, 38*u, tagDark ? '#15171C' : '#FFFFFF', { name: 'Status tag', radius: 19*u, opacity: 95 });
+    R.text('tag', tag, rx + rw - tw0/2, cy - 37*u, 20*u, { name: 'Status tag text', align: 'center', weight: 800, color: tagDark ? '#FFFFFF' : '#15171C' }); }
   return d;
 }
 /* ---------- H. primary vote breakdown ---------- */
@@ -8871,7 +8929,7 @@ function buildBlocLeaders(R, mode){
       R.text(key + 'name', (b.B.name || '').toUpperCase(), x + colW/2, cardY + cardH + 34*u, 26*u, { bind: { t: 'blocname', bid: b.B.id }, name: `${b.B.name} name`, align: 'center', weight: 900, color: onBg, fitW: colW });
       if (b.B.leader) R.text(key + 'leader', `${b.B.leader}${leadP ? ' · ' + leadP.abbr : ''}`, x + colW/2, cardY + cardH + 66*u, 20*u, { bind: { t: 'leader', bid: b.B.id }, name: `${b.B.name} leader`, align: 'center', weight: 500, color: onBg, opacity: 90, fitW: colW });
     }
-    const extra = mode === 'seats' ? (v >= b.majority ? 'MAJORITY' : b.ahead ? `+${b.ahead} AHEAD` : '') : b.swing != null && S.showSwing !== false ? fmtSwing(b.swing, Object.assign({}, F, { word: false })) : '';
+    const extra = mode === 'seats' ? (v >= b.majority ? (b.rows && b.rows.reduce((t, r) => t + (r ? r.declared : 0), 0) >= b.majority ? 'MAJORITY' : 'PROJECTED MAJORITY') : v + b.ahead >= b.majority ? 'ON TRACK FOR MAJORITY' : b.ahead ? `+${b.ahead} AHEAD` : '') : b.swing != null && S.showSwing !== false ? fmtSwing(b.swing, Object.assign({}, F, { word: false })) : '';
     if (extra){ const ew = tw(extra, 20*u, 800, R.F) + 30*u; R.rect(key + 'tagbg', x + colW - ew - 10*u, cardY - 44*u, ew, 34*u, mode === 'seats' && v >= b.majority ? '#15171C' : '#FFFFFF', { name: `${b.B.name} tag`, radius: 17*u, opacity: 95 });
       R.text(key + 'tag', extra, x + colW - ew/2 - 10*u, cardY - 27*u, 20*u, { name: `${b.B.name} tag text`, align: 'center', weight: 800, color: mode === 'seats' && v >= b.majority ? '#FFFFFF' : '#15171C' }); }
   });
@@ -9105,10 +9163,10 @@ function rSet(path, raw, el0){
   else if (p[0] === 'el'){ el[p[1]] = v; if (['denom', 'status', 'name', 'metric'].includes(p[1])) structural = p[1] !== 'name'; if (p[1] === 'name') structural = 'soft'; }
   else if (p[0] === 'c'){ const k = el.candidates[+p[1]]; if (!k) return; k[p[2]] = v; if (p[2] === 'party') structural = true; }
   else if (p[0] === 'p'){ const P = E.parties[+p[1]]; if (!P) return; P[p[2]] = p[2] === 'abbr' ? String(v).toUpperCase().slice(0, 6) : v; if (p[2] === 'abbr' || p[2] === 'name' || p[2] === 'leader') structural = 'soft'; }
-  else if (p[0] === 'S'){ setStyle(p[1], v); if (['scale', 'order', 'tppLayout', 'declLayout'].includes(p[1])) structural = true; }
+  else if (p[0] === 'S'){ if (p[1] === 'font') needFontFile(v); setStyle(p[1], v); if (['scale', 'order', 'tppLayout', 'declLayout'].includes(p[1])) structural = true; }
   else if (p[0] === 'size'){ if (v !== 'custom'){ const [w, h] = v.split('x').map(Number); setStyle('w', w); setStyle('h', h); rCustomSize = false; } else rCustomSize = true; structural = true; }
   else if (p[0] === 'F'){ E.fmt[p[1]] = p[1] === 'dp' ? +v : p[1] === 'pp' ? !!v : v; if (p[1] === 'comma') structural = true; }
-  else if (p[0] === 'B'){ E.branding[p[1]] = v; if (p[1] === 'font'){ for (const k of Object.keys(E.style || {})) if (E.style[k]) delete E.style[k].font; } if (p[1] === 'logo') structural = true; }
+  else if (p[0] === 'B'){ if (p[1] === 'font') needFontFile(v); E.branding[p[1]] = v; if (p[1] === 'font'){ for (const k of Object.keys(E.style || {})) if (E.style[k]) delete E.style[k].font; } if (p[1] === 'logo') structural = true; }
   else if (p[0] === 'seat'){ E.seats[p[1]] = p[1] === 'source' ? v : rnum(v); }
   else if (p[0] === 'sr'){ const r = E.seats.rows[+p[1]]; if (!r) return; r[p[2]] = p[2] === 'party' ? v : rnum(v); if (p[2] === 'party') structural = true; }
   else if (p[0] === 'b'){ const b = E.blocs[+p[1]]; if (!b) return; b[p[2]] = p[2] === 'short' ? String(v).toUpperCase().slice(0, 12) : v; if (p[2] === 'name') structural = 'soft'; }
