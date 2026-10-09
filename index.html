@@ -531,6 +531,10 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 .crow3 small{color:var(--muted);font-size:11.5px;margin-left:auto}
 .csw{display:inline-block;width:10px;height:28px;border-radius:3px;flex:none}
 .srows{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.prrows{display:flex;flex-direction:column;gap:6px;margin:6px 0 8px}
+.prrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:end;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2)}
+.prrow .check{align-self:center;font-weight:700}.prrow .ctl-head{font-size:11px}
+h3.sub{font-size:12.5px;margin:12px 0 4px}
 .ownlist{display:flex;flex-direction:column;gap:6px;margin:8px 0}
 .ownrow{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2)}
 .ownrow .kit-sw{width:34px;height:34px;border-radius:6px;display:grid;place-items:center;overflow:hidden}.ownrow .kit-sw img{width:100%;height:100%;object-fit:contain;background:#fff}
@@ -8702,6 +8706,8 @@ function buildOutcome(R, declared){
   return c;
 }
 /* ---------- G2. party result: leader, seats, votes and share with changes ---------- */
+const prKey = (scope, pid) => `${scope || 'national'}:${pid}`;
+const prOverride = (E, scope, pid) => ((E.prOv || {})[prKey(scope, pid)]) || {};
 const partyLeader = (E, P) => (P.leader || '').trim() || ((E.blocs || []).find(b => b.leaderParty === P.id) || {}).leader || '';
 function partyResult(E, scope, pid){
   if (scope === 'district'){
@@ -8729,6 +8735,7 @@ function buildParty(R){
   if (S.declLayout === 'candidate') return buildOutcome(R, true);
   const scope = S.scope || 'national', d = partyResult(E, scope, S.party);
   if (!d){ rFrame(R, E.region, E.name); R.text('none', 'Add parties and results first', W/2, H/2, 36*u, { name: 'Empty state', align: 'center', weight: 600, color: R.sub }); return null; }
+  const ov = prOverride(E, scope, d.P.id); for (const k of ['seats', 'seatCh', 'votes', 'votesCh', 'pct', 'swing']) if (ov[k] != null) d[k] = ov[k];
   const P = d.P, bgc = S.bgMode === 'brand' ? (Bd.bg === 'dark' ? '#0B1220' : Bd.accent || '#14284B') : S.bgMode === 'light' ? '#ECEEF2' : P.color, onBg = lum(bgc) > .62 ? '#111418' : '#FFFFFF';
   if (Bd.bg !== 'transparent') R.rect('bg', 0, 0, W, H, bgc, { name: 'Background', locked: true });
   R.rect('glow', W*.05, H*.1, W*.9, H*.9, '#FFFFFF', { name: 'Background glow', opacity: 10, radius: H*.45 });
@@ -8745,22 +8752,20 @@ function buildParty(R){
   const ld = partyLeader(E, P);
   R.text('pleader', ld || 'Party leader', cx, cardY + stripH + (cardH - stripH)*.7, 24*u, { bind: { t: 'pleader', pid: P.id }, name: 'Leader name', align: 'center', weight: 500, color: '#4A4F5C', opacity: ld ? 100 : 60, fitW: colW - 40*u });
   // three result cards
-  const rx = x + colW + 60*u, rw = W - pad - rx, cg = 28*u, cw = (rw - cg*2)/3, cy = H*.3, ch = cardY + cardH - cy;
-  const vfmt = v => Math.round(v).toLocaleString('en-AU');
+  const vfmt = v => Math.round(v).toLocaleString('en-AU'), showChg = S.prChg !== false;
   const stats = [
-    ['SEATS', String(d.seats ?? '–'), d.seatCh, v => String(v), d.seatsOf ? `OF ${d.seatsOf} ${d.seatsOf === 1 ? 'SEAT' : 'SEATS'}` : ''],
-    ['VOTES', d.votes != null ? vfmt(d.votes) : '–', d.votesCh, vfmt, d.votesCh == null && d.votes != null ? 'VOTES COUNTED' : ''],
-    ['SHARE', d.pct != null ? `${fmtNum(d.pct, F.dp ?? 1)}%` : '–', d.swing, v => fmtSwing(v, Object.assign({}, F, { word: false }), { noSign: true }), 'OF THE VOTE'],
-  ];
-  stats.forEach(([lab, big, ch0, fmt, sub], i) => { const sx = rx + i*(cw + cg), k = 'ps' + i, scx = sx + cw/2;
+    S.prSeats !== false && ['SEATS', String(d.seats ?? '–'), d.seatCh, v => String(v)],
+    S.prVotes !== false && ['VOTES', d.votes != null ? vfmt(d.votes) : '–', d.votesCh, vfmt],
+    S.prShare !== false && ['SHARE', d.pct != null ? `${fmtNum(d.pct, F.dp ?? 1)}%` : '–', d.swing, v => fmtSwing(v, Object.assign({}, F, { word: false }), { noSign: true })],
+  ].filter(Boolean);
+  const nC = Math.max(1, stats.length), rx = x + colW + 60*u, rw = W - pad - rx, cg = 28*u, cw = Math.min((rw - cg*(nC - 1))/nC, 420*u), cy = H*.3, ch = cardY + cardH - cy, sx0 = rx + (rw - (cw*nC + cg*(nC - 1)))/2;
+  stats.forEach(([lab, big, ch0, fmt], i) => { const sx = sx0 + i*(cw + cg), k = 'ps' + i, scx = sx + cw/2, hasC = showChg && ch0 != null, nfs = Math.min(150*u, ch*.34, cw*.42);
     R.rect(k + 'card', sx, cy, cw, ch, '#FFFFFF', { name: `${lab} card`, radius: 4*u });
     R.rect(k + 'strip', sx, cy, cw, stripH, P.color, { name: `${lab} strip` });
-    R.text(k + 'lab', lab, scx, cy + stripH + 44*u, 24*u, { name: `${lab} label`, align: 'center', weight: 800, color: '#4A4F5C', track: 2 });
-    R.text(k + 'num', big, scx, cy + ch*.44, Math.min(130*u, ch*.3), { name: `${lab} figure`, align: 'center', weight: 800, color: '#15171C', fitW: cw - 36*u });
-    if (sub) R.text(k + 'sub', sub, scx, cy + ch*.44 + Math.min(130*u, ch*.3)*.72, 18*u, { name: `${lab} detail`, align: 'center', weight: 600, color: '#6B7080', fitW: cw - 36*u });
-    if (ch0 != null){ const arrow = ch0 > 0 ? '▲ ' : ch0 < 0 ? '▼ ' : '';
-      R.text(k + 'chg', arrow + rChg(ch0, fmt), scx, cy + ch - 74*u, 36*u, { name: `${lab} change`, align: 'center', weight: 800, color: rChgCol(ch0), fitW: cw - 36*u });
-      R.text(k + 'chgl', scope === 'district' && !d.c.isList && lab === 'SEATS' ? 'ON LAST ELECTION' : 'ON LAST ELECTION', scx, cy + ch - 36*u, 16*u, { name: `${lab} change label`, align: 'center', weight: 600, color: '#6B7080' }); }
+    R.text(k + 'lab', lab, scx, cy + stripH + 46*u, 26*u, { name: `${lab} label`, align: 'center', weight: 800, color: '#4A4F5C', track: 2 });
+    R.text(k + 'num', big, scx, cy + (hasC ? ch*.48 : ch*.56), nfs, { name: `${lab} figure`, align: 'center', weight: 800, color: '#15171C', fitW: cw - 30*u });
+    if (hasC){ const arrow = ch0 > 0 ? '▲ ' : ch0 < 0 ? '▼ ' : '';
+      R.text(k + 'chg', arrow + rChg(ch0, fmt), scx, cy + ch - 62*u, 44*u, { name: `${lab} change`, align: 'center', weight: 800, color: rChgCol(ch0), fitW: cw - 30*u }); }
   });
   // status tag
   let tag = '';
@@ -9103,7 +9108,12 @@ function renderResultsPanel(){
     if (k === 'decl') h += `<section class="rsec"><h3>Party result</h3>${rfield('Layout', rsel('S.declLayout', [['party','Party: leader, seats, votes and share'],['candidate','Declared candidate (one electorate)']], S.declLayout || 'party'))}
       ${S.declLayout === 'candidate' ? '' : `<div class="grid2">${rfield('Results for', rsel('S.scope', [['national','Nationwide'],['district', E.system === 'list' ? 'This district' : 'This electorate']], S.scope || 'national'))}${rfield('Party', rsel('S.party', partyList(E, 'Auto (most seats)'), S.party || ''))}</div>
       ${rfield('Background', rsel('S.bgMode', [['lead','Party colour'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}${rfield('Title', rin('S.title', S.title, { ph: 'PARTY RESULT' }))}
-      <p class="hint">Changes are against last election: seats from Seats last time, share from Last time %, votes from the nationwide sheet’s previous votes. Gains show in green, losses in red. Add each party’s leader and photo in the Parties tab.</p>`}</section>`;
+      ${(() => { const sc0 = S.scope || 'national', d0 = partyResult(E, sc0, S.party); if (!d0) return ''; const o = prOverride(E, sc0, d0.P.id), ph = v => v == null ? '–' : String(+(+v).toFixed(2));
+        const row = (lab, show, vk, ck) => `<div class="prrow">${rck('S.' + show, S[show] !== false, lab)}${rfield('Figure', rin('pr.' + vk, o[vk], { num: 1, ph: ph(d0[vk]), label: lab + ' figure' }))}${rfield('Change', rin('pr.' + ck, o[ck], { num: 1, ph: ph(d0[ck]), label: lab + ' change' }))}</div>`;
+        return `<h3 class="sub">Figures for ${esc(d0.P.name)}</h3><div class="prrows">${row('Seats', 'prSeats', 'seats', 'seatCh')}${row('Votes', 'prVotes', 'votes', 'votesCh')}${row('Share %', 'prShare', 'pct', 'swing')}</div>
+        ${rck('S.prChg', S.prChg !== false, 'Show changes (green gain, red loss)')}
+        <div class="rrow"><button class="btn sm" data-ract="pr-reset" ${Object.values(o).some(v => v != null) ? '' : 'disabled'}>Use calculated figures</button></div>
+        <p class="hint">Leave a box empty to use the figure worked out from the results (shown greyed). Typed figures are kept for this party only. Add each party’s leader and photo in the Parties tab.</p>`; })()}`}</section>`;
     if (k === 'blocvote' || k === 'blocseats') h += `<section class="rsec"><h3>Leaders layout</h3>${rfield('Background', rsel('S.bgMode', [['lead','Colour of the leading bloc'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}
       ${rfield('Title', rin('S.title', S.title, { ph: k === 'blocseats' ? 'SEATS' : 'SHARE OF THE VOTE' }))}
       <div class="grid2">${rck('S.allBlocs', S.allBlocs ?? true, 'Show every bloc with parties (off: only the two compared)')}${rck('S.showNames', S.showNames !== false, 'Bloc and leader names')}</div>${k === 'blocvote' ? rck('S.showSwing', S.showSwing !== false, 'Swing tag') : ''}
@@ -9157,13 +9167,14 @@ function rSet(path, raw, el0){
   let structural = false;
   if (p[0] === 'E'){ E[p[1]] = p[1] === 'year' ? rnum(v) : v; if (['tppOn', 'blocA', 'blocB'].includes(p[1])) structural = true; }
   else if (p[0] === 'cur'){ E.current = v; structural = true; }
+  else if (p[0] === 'pr'){ const S0 = rStyle('decl'), d0 = partyResult(E, S0.scope || 'national', S0.party); if (!d0) return; const k = prKey(S0.scope, d0.P.id); E.prOv = E.prOv || {}; E.prOv[k] = Object.assign({}, E.prOv[k], { [p[1]]: rnum(String(raw).replace(/[,\s]/g, '').replace('−', '-')) }); structural = 'soft'; }
   else if (p[0] === 'own'){ E.autoOwn = !!v; structural = true; }
   else if (p[0] === 'L'){ E.list[p[1]] = p[1] === 'threshold' ? rnum(v) : v; }
   else if (p[0] === 'el' && p[1] === 'tpp') el.tpp[p[2]] = ['a', 'b'].includes(p[2]) ? v : rnum(v);
   else if (p[0] === 'el'){ el[p[1]] = v; if (['denom', 'status', 'name', 'metric'].includes(p[1])) structural = p[1] !== 'name'; if (p[1] === 'name') structural = 'soft'; }
   else if (p[0] === 'c'){ const k = el.candidates[+p[1]]; if (!k) return; k[p[2]] = v; if (p[2] === 'party') structural = true; }
   else if (p[0] === 'p'){ const P = E.parties[+p[1]]; if (!P) return; P[p[2]] = p[2] === 'abbr' ? String(v).toUpperCase().slice(0, 6) : v; if (p[2] === 'abbr' || p[2] === 'name' || p[2] === 'leader') structural = 'soft'; }
-  else if (p[0] === 'S'){ if (p[1] === 'font') needFontFile(v); setStyle(p[1], v); if (['scale', 'order', 'tppLayout', 'declLayout'].includes(p[1])) structural = true; }
+  else if (p[0] === 'S'){ if (p[1] === 'font') needFontFile(v); setStyle(p[1], v); if (['scale', 'order', 'tppLayout', 'declLayout', 'scope', 'party'].includes(p[1])) structural = true; }
   else if (p[0] === 'size'){ if (v !== 'custom'){ const [w, h] = v.split('x').map(Number); setStyle('w', w); setStyle('h', h); rCustomSize = false; } else rCustomSize = true; structural = true; }
   else if (p[0] === 'F'){ E.fmt[p[1]] = p[1] === 'dp' ? +v : p[1] === 'pp' ? !!v : v; if (p[1] === 'comma') structural = true; }
   else if (p[0] === 'B'){ if (p[1] === 'font') needFontFile(v); E.branding[p[1]] = v; if (p[1] === 'font'){ for (const k of Object.keys(E.style || {})) if (E.style[k]) delete E.style[k].font; } if (p[1] === 'logo') structural = true; }
@@ -9211,6 +9222,7 @@ function rAct(a, b){
       uploadTarget = 'rb_bl' + b.id + 'photo'; $('#file').click(); return; }
     case 'own-add': { const pt = ownParties()[i]; if (!pt) return; const P = rAddOwn(E, pt); toast(`${P.name} added to the results.`); break; }
     case 'own-all': { const n = ownParties().filter(pt => !E.parties.some(p => p.own === ownKey(pt))).map(pt => rAddOwn(E, pt).name); toast(n.length ? `${n.join(', ')} added to the results.` : 'All your parties are already in the results.'); break; }
+    case 'pr-reset': { const S0 = rStyle('decl'), d0 = partyResult(E, S0.scope || 'national', S0.party); if (d0 && E.prOv) delete E.prOv[prKey(S0.scope, d0.P.id)]; toast('Back to the calculated figures.'); break; }
     case 'p-photo': { const P = E.parties[i]; if (!P) return; if (tpl.rkind !== 'decl') switchTemplate('res_decl'); setStyle('party', P.id, 'decl'); setStyle('declLayout', 'party', 'decl'); rebuildResults(); renderResultsPanel();
       uploadTarget = 'rb_pr' + P.id + 'photo'; $('#file').click(); return; }
     case 'live': if (rLive) rLiveStop(); else rLiveStart(); renderResultsPanel(); return;
