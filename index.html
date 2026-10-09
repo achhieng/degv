@@ -527,6 +527,18 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 .crow3 select{width:auto;flex:0 0 auto}
 .crow3 small{color:var(--muted);font-size:11.5px;margin-left:auto}
 .csw{display:inline-block;width:10px;height:28px;border-radius:3px;flex:none}
+.srows{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.ownlist{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.ownrow{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2)}
+.ownrow .kit-sw{width:34px;height:34px;border-radius:6px;display:grid;place-items:center;overflow:hidden}.ownrow .kit-sw img{width:100%;height:100%;object-fit:contain;background:#fff}
+.ownname{display:flex;flex-direction:column;min-width:0}.ownname b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ownname small{color:var(--muted);font-size:11.5px}
+.ownok{color:var(--accent);font-weight:800;padding:0 6px}
+.srow{border:1px solid var(--line);border-radius:var(--r);padding:8px;display:flex;flex-direction:column;gap:6px;background:var(--panel-2)}
+.srow1{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:8px;align-items:center}
+.srow2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.srow2 .ctl{margin:0;min-width:0}.srow2 .ctl-head{font-size:11px}.srow2 input{width:100%;min-width:0}
+@media (max-width:380px){.srow2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pldr{grid-column:1 / -1;display:flex;gap:6px;align-items:center}.pldr input{flex:1;min-width:0}
 .listrow .crow1{grid-template-columns:10px minmax(0,1fr) auto}
 .crow3 .ps{display:flex;align-items:center;gap:6px;margin:0}.crow3 .ps input{width:64px}
 .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -537,16 +549,12 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 .cbtns{display:flex;gap:2px}
 .cbtns .ib{width:26px;height:26px;font-size:13px}
 .ib.arm{color:var(--danger);font-weight:800}
-.prow{display:grid;grid-template-columns:34px 62px minmax(0,1fr);gap:6px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line)}
-.prow > select{grid-column:2 / span 2}
-.prow .cbtns{grid-column:1 / span 1;grid-row:2}
+.prow{display:grid;grid-template-columns:34px 62px minmax(0,1fr) auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.prow > select{grid-column:1 / -1}
+.prow .cbtns{grid-column:4;grid-row:1;display:flex;gap:2px}
 .prow .p2{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between}
 .prow input[type=color],.rsec input[type=color]{width:34px;height:30px;padding:0 2px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}
 .prow .abbr{text-transform:uppercase;font-weight:700}
-.srows{display:flex;flex-direction:column;gap:5px}
-.srow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr)) 26px;gap:5px;align-items:center}
-.srow.sh{font-size:11px;font-weight:700;color:var(--muted)}
-.srow input{padding-left:6px;padding-right:4px}
 .stot{display:flex;flex-direction:column;gap:4px;font-size:12.5px}
 .stot div{display:flex;align-items:center;gap:7px}
 .stot .csw{height:14px}
@@ -905,7 +913,7 @@ dl.info dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
 <input type="file" id="projfile" accept=".json,application/json" hidden>
 <input type="file" id="myfile-input" accept="image/*,.svg" multiple hidden>
 <input type="file" id="kitfile" accept=".json,application/json" hidden>
-<input type="file" id="csvfile" accept=".csv,text/csv,text/plain" hidden>
+<input type="file" id="csvfile" accept=".csv,.xlsx,.xlsm,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
 <input type="file" id="fontfile" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" hidden>
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden>
@@ -5170,6 +5178,7 @@ async function loadKits(){
   list.sort((a, b) => String(a.saved).localeCompare(String(b.saved)));
   for (const rec of list){ kits.set(rec.id, rec); await hydrateKit(rec); }
   updateKitNote(); renderParties();
+  if (typeof isResults === 'function' && isResults()){ rebuildResults(); renderResultsPanel(); }
 }
 /* custom parties: saved in this browser only */
 const CP_KEY = 'degv-custom-parties';
@@ -5402,7 +5411,7 @@ function resetLayout(){
 /* ---------- template browsing: family layouts (left) + full gallery ---------- */
 const famOf = t => t.group || t.id;
 /* Election Results graphics: one template per kind (layers come from the election data) */
-for (const [k, nm] of [['cand','Candidate results'],['tpp','Bloc comparison'],['count','Count progress'],['seats','Seat ticker'],['change','Seat change'],['proj','Projected result'],['decl','Declared result'],['primary','Primary vote breakdown'],['detail','Detailed electorate result'],['summary','Election summary'],['blocvote','Bloc vote with leaders'],['blocseats','Bloc seats with leaders'],['alloc','District seat allocation']]) TEMPLATES.push({ id: 'res_' + k, rkind: k, group: 'results', name: 'Election Results', varName: nm, fmt: '16:9 broadcast',
+for (const [k, nm] of [['cand','Candidate results'],['tpp','Bloc comparison'],['count','Count progress'],['seats','Seat ticker'],['change','Seat change'],['proj','Projected result'],['decl','Party result'],['primary','Primary vote breakdown'],['detail','Detailed electorate result'],['summary','Election summary'],['blocvote','Bloc vote with leaders'],['blocseats','Bloc seats with leaders'],['alloc','District seat allocation']]) TEMPLATES.push({ id: 'res_' + k, rkind: k, group: 'results', name: 'Election Results', varName: nm, fmt: '16:9 broadcast',
   sub: `Election Results · ${nm}`, w: 1920, h: 1080, sides: 1, sel: null, custom: true, quick: [], uploads: [], hint: '',
   thumb: `<span class="thumb wide" style="background:#ECEEF2"><i style="top:0;left:0;right:0;height:17%;background:#fff"></i><i style="top:30%;left:6%;right:${k === 'tpp' ? 60 : 8}%;height:12%;background:#D8262E"></i><i style="top:46%;left:6%;right:${k === 'tpp' ? 60 : 30}%;height:12%;background:#1E4FA8"></i><i style="top:62%;left:6%;right:${k === 'tpp' ? 60 : 55}%;height:12%;background:#4FA82A"></i></span>`,
   build: () => buildResultsLayers(k) });
@@ -8282,13 +8291,18 @@ function buildCand(R, opts = {}){
   const showBanner = S.showStatus && c.status !== 'counting' && !opts.noBanner, bottom = H - (showBanner ? 104*u : 40*u), top = hh + 18*u;
   const gap = S.gap || 7*u, barH = S.barH || Math.min(80*u, (bottom - top - gap*(n - 1) - thrGap)/n), x0 = pad*.82, fullW = W - x0*2, labelW = S.labelW || 150*u;
   const maxP = Math.max(...list.map(k => k.pctUse ?? 0), 0.0001), F = E.fmt || {};
+  const seatW = c.isList && S.showMP ? (S.seatColW || 110*u) : 0, labW = labelW + seatW;     // party lists: a seats-won cell beside the abbreviation
   list.forEach((k, i) => {
     const P = k.P, y = top + i*(barH + gap) + (i >= T.nA ? thrGap : 0), txt = pText(P), base = 'c' + i, nm = k.name || 'Candidate';
     R.rect(base + 'bg', x0, y, fullW, barH, pDark(P), Object.assign({ name: `${nm}: bar track`, radius: S.radius }, hatch(S)));
-    const fw = labelW + rScale(S, k.pctUse, maxP)*(fullW - labelW);
+    const fw = labW + rScale(S, k.pctUse, maxP)*(fullW - labW);
     const fill = R.rect(base + 'fill', x0, y, fw, barH, P.color, { name: `${nm}: vote bar`, radius: S.radius }); fill.dk = ['w', 'x'];
     if (S.dividers) R.rect(base + 'div', x0 + labelW - 1*u, y, 2*u, barH, '#FFFFFF', { name: `${nm}: divider`, opacity: 22 });
     const fs = barH*.42*(S.labelSize || 1);
+    if (seatW){
+      if (S.dividers) R.rect(base + 'div2', x0 + labW - 1*u, y, 2*u, barH, '#FFFFFF', { name: `${nm}: divider`, opacity: 22 });
+      R.text(base + 'seats', String(k.seatsWon ?? 0), x0 + labelW + seatW/2, y + barH/2, fs*1.05, { name: `${nm}: seats won`, align: 'center', weight: 900, color: txt, fitW: seatW - 14*u });
+    }
     R.text(base + 'abbr', P.abbr, x0 + labelW/2, y + barH/2, fs, { bind: { t: 'pabbr', pid: P.id }, name: `${nm}: party`, align: 'center', weight: 900, color: txt, fitW: labelW - 16*u });
     const pctRight = x0 + fullW - barH*.55, pctSign = tw('%', fs*.62, 800, R.F);
     R.text(base + 'pct', fmtNum(k.pctUse, F.dp ?? 1), pctRight - pctSign - 2*u, y + barH/2, fs*1.02, { bind: { t: 'cpct', cid: k.id }, name: `${nm}: percentage`, align: 'right', weight: 800, color: txt });
@@ -8296,17 +8310,23 @@ function buildCand(R, opts = {}){
     let rightEdge = pctRight - pctSign - tw(fmtNum(k.pctUse, F.dp ?? 1), fs*1.02, 800, R.F) - 26*u;
     if (S.showSwing && k.swingUse != null){ const t = (k.swingUse > 0 ? '▲ ' : k.swingUse < 0 ? '▼ ' : '') + fmtSwing(k.swingUse, F, { word: false, noSign: true }); R.text(base + 'sw', t, rightEdge, y + barH/2, fs*.6, { name: `${nm}: swing`, align: 'right', weight: 700, color: txt, opacity: 90 }); rightEdge -= tw(t, fs*.6, 700, R.F) + 22*u; }
     if (S.showVotes && rnum(k.votes) != null){ const t = Math.round(k.votes).toLocaleString('en-AU'); R.text(base + 'votes', t, rightEdge, y + barH/2, fs*.6, { bind: { t: 'cvotes', cid: k.id }, name: `${nm}: votes`, align: 'right', weight: 500, color: txt, opacity: 88 }); rightEdge -= tw(t, fs*.6, 500, R.F) + 22*u; }
-    const nx = x0 + labelW + barH*.55, nfs = fs*.98;
-    const lb = c.isList && S.showMP ? (k.below ? 'BELOW THRESHOLD' : k.seatsWon ? `${k.seatsWon} SEAT${k.seatsWon > 1 ? 'S' : ''}` : '') : '';
-    const badges = (S.showMP && k.mp ? tw('MP', nfs*.55, 800, R.F) + 40*u : 0) + (S.showStatus && k.status ? tw(k.status.toUpperCase(), nfs*.5, 800, R.F) + 50*u : 0) + (lb ? tw(lb, nfs*.5, 800, R.F) + 50*u : 0);
+    const nx = x0 + labW + barH*.55, nfs = fs*.98;
+    // party lists: the seat change sits next to the name (green gain, red loss); the threshold badge only when the line is hidden
+    const dSeat = c.isList && S.showMP && c.hasPrevSeats && (k.seatsWon || k.prevSeatsP) ? (k.seatsWon || 0) - (k.prevSeatsP || 0) : null;
+    const lb = c.isList && S.showMP ? (k.below && !T.on ? 'BELOW THRESHOLD' : dSeat != null ? rChg(dSeat) : '') : '';
+    const badges = (S.showMP && k.mp ? tw('MP', nfs*.55, 800, R.F) + 40*u : 0) + (S.showStatus && k.status ? tw(k.status.toUpperCase(), nfs*.5, 800, R.F) + 50*u : 0) + (lb ? tw(lb, nfs*.74, 900, R.F) + 52*u : 0);
     const nameW = Math.min(tw(nm, nfs, S.nameWeight, R.F), Math.max(60*u, rightEdge - nx - badges));
     R.text(base + 'name', nm, nx, y + barH/2, nfs, { bind: { t: 'cname', cid: k.id }, name: `${nm}: name`, weight: S.nameWeight, color: txt, fitW: Math.max(60*u, rightEdge - nx - badges), track: .5 });
     let bxp = nx + nameW + 14*u;
     if (S.showMP && k.mp){ const bw = tw('MP', nfs*.55, 800, R.F) + 16*u, bh = nfs*.82; R.rect(base + 'mpb', bxp, y + barH/2 - bh/2, bw, bh, txt, { name: `${nm}: MP badge`, radius: 5*u }); R.text(base + 'mp', 'MP', bxp + bw/2, y + barH/2, nfs*.55, { name: `${nm}: MP`, align: 'center', weight: 800, color: P.color }); bxp += bw + 12*u; }
     if (lb){ const bw = tw(lb, nfs*.5, 800, R.F) + 18*u, bh = nfs*.82;
-      if (k.below) R.rect(base + 'lsb', bxp, y + barH/2 - bh/2, bw, bh, 'rgba(0,0,0,0)', { name: `${nm}: threshold`, radius: bh/2, fillOn: false, strokeOn: true, strokeW: 2*u, stroke: txt });
-      else R.rect(base + 'lsb', bxp, y + barH/2 - bh/2, bw, bh, txt, { name: `${nm}: seats badge`, radius: 5*u });
-      R.text(base + 'ls', lb, bxp + bw/2, y + barH/2, nfs*.5, { name: `${nm}: seats won`, align: 'center', weight: 800, color: k.below ? txt : P.color }); bxp += bw + 12*u; }
+      const isThr = lb === 'BELOW THRESHOLD';
+      if (isThr){ R.rect(base + 'lsb', bxp, y + barH/2 - bh/2, bw, bh, 'rgba(0,0,0,0)', { name: `${nm}: threshold`, radius: bh/2, fillOn: false, strokeOn: true, strokeW: 2*u, stroke: txt });
+        R.text(base + 'ls', lb, bxp + bw/2, y + barH/2, nfs*.5, { name: `${nm}: threshold text`, align: 'center', weight: 800, color: txt }); }
+      else { const cw = tw(lb, nfs*.74, 900, R.F) + 26*u, bh2 = Math.min(barH*.78, nfs*1.05);
+        R.rect(base + 'lsb', bxp, y + barH/2 - bh2/2, cw, bh2, dSeat === 0 ? '#5B6170' : rChgCol(dSeat), { name: `${nm}: seat change badge`, radius: 6*u, strokeOn: true, strokeW: 2*u, stroke: '#FFFFFF' });
+        R.text(base + 'ls', lb, bxp + cw/2, y + barH/2, nfs*.74, { name: `${nm}: seat change`, align: 'center', weight: 900, color: '#FFFFFF' }); }
+      bxp += bw + 12*u; }
     if (S.showStatus && k.status){ const t = (k.status === 'elected' ? '✓ ' : '') + k.status.toUpperCase(), bw = tw(t, nfs*.5, 800, R.F) + 18*u, bh = nfs*.78;
       R.rect(base + 'stb', bxp, y + barH/2 - bh/2, bw, bh, 'rgba(0,0,0,0)', { name: `${nm}: status`, radius: bh/2, fillOn: false, strokeOn: true, strokeW: 2*u, stroke: txt }); R.text(base + 'st', t, bxp + bw/2, y + barH/2, nfs*.5, { name: `${nm}: status text`, align: 'center', weight: 800, color: txt }); }
   });
@@ -8314,6 +8334,44 @@ function buildCand(R, opts = {}){
   if (showBanner) rBanner(R, c, pad*.82, H - 86*u, W - pad*1.64, 58*u);
   return c;
 }
+/* ---------- your parties (from Layouts › Your parties) in the results ---------- */
+const ownParties = () => PARTIES.filter(p => p.custom && p.name);
+const ownKey = pt => String(pt.kit || pt.name).toLowerCase();
+const ownFor = P => P && P.own ? ownParties().find(pt => ownKey(pt) === P.own) || ownParties().find(pt => pt.name.toLowerCase() === P.name.toLowerCase()) : null;
+const personName = pr => pr && pr.label && !/^(person|photo|image|candidate|leader|people)( \d+)?$/i.test(pr.label.trim()) ? pr.label.trim() : '';
+function ownAbbr(E, name){
+  const w = name.replace(/[^\p{L}\p{N} ]/gu, ' ').trim().split(/\s+/).filter(x => !/^(the|of|and|for|party|de|la|du)$/i.test(x) || name.split(/\s+/).length < 2);
+  let a = (w.length > 1 ? w.map(x => x[0]).join('') : (w[0] || name).slice(0, 3)).toUpperCase().slice(0, 5) || 'PTY';
+  const used = new Set(E.parties.map(p => p.abbr.toUpperCase())); let b = a, n = 2; while (used.has(b)) b = a.slice(0, 4) + n++; return b;
+}
+/* add a party from your parties to the election: party list, nationwide table and a row in every electorate */
+function rAddOwn(E, pt){
+  let P = E.parties.find(p => p.own === ownKey(pt)) || E.parties.find(p => p.name.toLowerCase() === pt.name.toLowerCase());
+  const lead = personName((pt.people || [])[0]);
+  if (!P){ P = { id: rid('p'), abbr: ownAbbr(E, pt.name), name: pt.name, color: pt.hex, color2: '', text: '', order: E.parties.length + 1, leader: lead }; E.parties.push(P); }
+  else if (!P.leader && lead) P.leader = lead;
+  P.own = ownKey(pt); P.ownHex = pt.hex;
+  E.ownRemoved = (E.ownRemoved || []).filter(k => k !== P.own);
+  for (const el of E.electorates){ if (el.candidates.some(k => k.party === P.id)) continue; const hasVotes = el.candidates.some(k => rnum(k.votes) != null);
+    el.candidates.push({ id: rid('c'), name: E.system === 'list' ? '' : (lead || `${rand(FIRST)} ${rand(LAST)}`), party: P.id, mp: false, votes: hasVotes ? 0 : null, pct: hasVotes ? null : 0, prevPct: null, swing: null, status: '' }); }
+  return P;
+}
+/* keeps your parties in the results: new ones are added, colour changes follow; parties you removed from the results stay out */
+function rSyncOwnParties(E){
+  if (!E || E.autoOwn === false) return [];
+  const added = [];
+  for (const pt of ownParties()){ const key = ownKey(pt);
+    if ((E.ownRemoved || []).includes(key)) continue;
+    const P = E.parties.find(p => p.own === key);
+    if (P){ if (P.ownHex !== pt.hex){ if (P.color === P.ownHex) P.color = pt.hex; P.ownHex = pt.hex; } if (P.name !== pt.name && P.ownName === P.name) P.name = pt.name; P.ownName = pt.name; continue; }
+    added.push(rAddOwn(E, pt).name); E.parties.find(p => p.own === key).ownName = pt.name; }
+  return added;
+}
+/* the leader photo of one of your parties: the first person saved with it */
+function ownPhoto(P, layerId){ if (assets[layerId]) return; const pt = ownFor(P), pr = pt && (pt.people || [])[0]; if (pr && pr.src) assets[layerId] = pr.src; }
+/* changes: signed, and green for a gain, red for a loss */
+const rChg = (d, fmt) => d == null ? '' : `${d > 0 ? '+' : d < 0 ? '−' : '±'}${fmt ? fmt(Math.abs(d)) : Math.abs(d)}`;
+const rChgCol = (d, R) => d > 0 ? '#1F7A3A' : d < 0 ? '#B42318' : (R ? R.sub : '#6B7080');
 /* party-list threshold: parties at or above it first, then a dashed line, then those below it, largest first */
 function rThrSplit(R, c, max){
   const { E, S } = R, thr = rnum((E.list || {}).threshold), on = !!(c.isList && S.thrLine !== false && thr > 0);
@@ -8535,6 +8593,75 @@ function buildOutcome(R, declared){
   if (c.provisional) R.text('pnote', c.status === 'counting' ? 'Counting continues. No result has been called.' : 'This is a projection, not a declared result.', W/2, ky + 170*u, 20*u, { name: 'Projection note', align: 'center', weight: 500, color: R.sub });
   return c;
 }
+/* ---------- G2. party result: leader, seats, votes and share with changes ---------- */
+const partyLeader = (E, P) => (P.leader || '').trim() || ((E.blocs || []).find(b => b.leaderParty === P.id) || {}).leader || '';
+function partyResult(E, scope, pid){
+  if (scope === 'district'){
+    const el = curEl(), c = elCalc(el, E), P = (pid && E.parties.find(p => p.id === pid)) || c.winner || c.lead; if (!P) return null;
+    const rows = c.cands.filter(k => k.party === P.id);
+    const votes = rows.some(k => rnum(k.votes) != null) ? rows.reduce((t, k) => t + (rnum(k.votes) || 0), 0) : null;
+    const pct = rows.some(k => k.pctUse != null) ? rows.reduce((t, k) => t + (k.pctUse || 0), 0) : null;
+    const prev = rows.length && rows.every(k => rnum(k.prevPct) != null) ? rows.reduce((t, k) => t + rnum(k.prevPct), 0) : null;
+    let seats, seatCh = null, seatsOf;
+    if (c.isList){ const a = (c.alloc || []).find(x => x.pid === P.id); seats = a ? a.seats : 0; seatCh = c.hasPrevSeats ? seats - (a ? a.prev : 0) : null; seatsOf = c.seatsAvail; }
+    else { seats = c.winner && c.winner.id === P.id ? 1 : 0; seatsOf = 1; seatCh = el.prevParty && c.winner ? seats - (el.prevParty === P.id ? 1 : 0) : null; }
+    return { P, where: el.name, votes, votesCh: null, pct, swing: pct != null && prev != null ? pct - prev : rows.length === 1 ? rows[0].swingUse : null, seats, seatCh, seatsOf, c, counted: c.progMain };
+  }
+  const sc = seatCalc(E), nat = nationalCalc(E);
+  const P = (pid && E.parties.find(p => p.id === pid)) || (sc.top && sc.top.seats ? sc.top.P : E.parties.slice().sort((a, b) => ((nat[b.id] || {}).pct ?? -1) - ((nat[a.id] || {}).pct ?? -1))[0]); if (!P) return null;
+  const r = sc.list.find(x => x.P.id === P.id), n = nat[P.id] || {}, m = (E.national || {})[P.id] || {};
+  let votes = rnum(m.votes);
+  if (votes == null){ let t = 0, any = false; for (const e of E.electorates) for (const k of e.candidates) if (k.party === P.id && rnum(k.votes) != null){ t += rnum(k.votes); any = true; } votes = any ? t : null; }
+  const pv = rnum(m.prevVotes), ec = electionCounted(E);
+  return { P, where: 'NATIONWIDE', votes, votesCh: votes != null && pv != null ? votes - pv : null, pct: n.pct, swing: n.pct != null && n.prev != null ? n.pct - n.prev : null,
+    seats: r ? r.seats : 0, seatCh: r && (r.prev || r.seats) ? r.net : null, seatsOf: sc.total, ahead: r ? r.leading : 0, majority: sc.majority, counted: ec.votesPct != null ? `${decC(ec.votesPct.toFixed(1))}% COUNTED` : '' };
+}
+function buildParty(R){
+  const { E, S, W, H, u, Bd } = R, F = E.fmt || {};
+  if (S.declLayout === 'candidate') return buildOutcome(R, true);
+  const scope = S.scope || 'national', d = partyResult(E, scope, S.party);
+  if (!d){ rFrame(R, E.region, E.name); R.text('none', 'Add parties and results first', W/2, H/2, 36*u, { name: 'Empty state', align: 'center', weight: 600, color: R.sub }); return null; }
+  const P = d.P, bgc = S.bgMode === 'brand' ? (Bd.bg === 'dark' ? '#0B1220' : Bd.accent || '#14284B') : S.bgMode === 'light' ? '#ECEEF2' : P.color, onBg = lum(bgc) > .62 ? '#111418' : '#FFFFFF';
+  if (Bd.bg !== 'transparent') R.rect('bg', 0, 0, W, H, bgc, { name: 'Background', locked: true });
+  R.rect('glow', W*.05, H*.1, W*.9, H*.9, '#FFFFFF', { name: 'Background glow', opacity: 10, radius: H*.45 });
+  const pad = (R.wide ? 64 : 48)*u;
+  R.text('ttl', (S.title || 'PARTY RESULT').toUpperCase(), pad, 60*u, 30*u, { name: 'Title', weight: 900, color: onBg, fitW: W*.6 });
+  R.text('ttl2', `${scope === 'district' ? d.where : 'NATIONWIDE'} · ${E.name || ''} ${E.year || ''}`.trim().toUpperCase(), pad, 96*u, 20*u, { bind: scope === 'district' ? { t: 'elname' } : null, name: 'Subtitle', weight: 500, color: onBg, opacity: 85, fitW: W*.6 });
+  if (d.counted) R.text('note', d.counted, W - pad, 60*u, 22*u, { name: 'Count note', align: 'right', weight: 700, color: onBg });
+  // leader standing on the party card
+  const colW = Math.min(470*u, W*.3), x = pad + 10*u, cardY = H*.62, cardH = H - cardY - 64*u, stripH = 12*u, cx = x + colW/2, ph = cardY - 140*u;
+  R.image('pr' + P.id + 'photo', cx, cardY - ph/2, colW*.8, ph, { name: `${P.name} leader photo`, gen: 'politician' }); ownPhoto(P, 'rb_pr' + P.id + 'photo');
+  R.rect('pcard', x, cardY, colW, cardH, '#FFFFFF', { name: 'Party card', radius: 4*u });
+  R.rect('pstrip', x, cardY, colW, stripH, P.color, { name: 'Party colour strip' });
+  R.text('pname', P.name.toUpperCase(), cx, cardY + stripH + (cardH - stripH)*.38, 40*u, { bind: { t: 'pname', pid: P.id }, name: 'Party name', align: 'center', weight: 900, color: '#15171C', fitW: colW - 40*u });
+  const ld = partyLeader(E, P);
+  R.text('pleader', ld || 'Party leader', cx, cardY + stripH + (cardH - stripH)*.7, 24*u, { bind: { t: 'pleader', pid: P.id }, name: 'Leader name', align: 'center', weight: 500, color: '#4A4F5C', opacity: ld ? 100 : 60, fitW: colW - 40*u });
+  // three result cards
+  const rx = x + colW + 60*u, rw = W - pad - rx, cg = 28*u, cw = (rw - cg*2)/3, cy = H*.3, ch = cardY + cardH - cy;
+  const vfmt = v => Math.round(v).toLocaleString('en-AU');
+  const stats = [
+    ['SEATS', String(d.seats ?? '–'), d.seatCh, v => String(v), d.seatsOf ? `OF ${d.seatsOf} ${d.seatsOf === 1 ? 'SEAT' : 'SEATS'}` : ''],
+    ['VOTES', d.votes != null ? vfmt(d.votes) : '–', d.votesCh, vfmt, d.votesCh == null && d.votes != null ? 'VOTES COUNTED' : ''],
+    ['SHARE', d.pct != null ? `${fmtNum(d.pct, F.dp ?? 1)}%` : '–', d.swing, v => fmtSwing(v, Object.assign({}, F, { word: false }), { noSign: true }), 'OF THE VOTE'],
+  ];
+  stats.forEach(([lab, big, ch0, fmt, sub], i) => { const sx = rx + i*(cw + cg), k = 'ps' + i, scx = sx + cw/2;
+    R.rect(k + 'card', sx, cy, cw, ch, '#FFFFFF', { name: `${lab} card`, radius: 4*u });
+    R.rect(k + 'strip', sx, cy, cw, stripH, P.color, { name: `${lab} strip` });
+    R.text(k + 'lab', lab, scx, cy + stripH + 44*u, 24*u, { name: `${lab} label`, align: 'center', weight: 800, color: '#4A4F5C', track: 2 });
+    R.text(k + 'num', big, scx, cy + ch*.44, Math.min(130*u, ch*.3), { name: `${lab} figure`, align: 'center', weight: 800, color: '#15171C', fitW: cw - 36*u });
+    if (sub) R.text(k + 'sub', sub, scx, cy + ch*.44 + Math.min(130*u, ch*.3)*.72, 18*u, { name: `${lab} detail`, align: 'center', weight: 600, color: '#6B7080', fitW: cw - 36*u });
+    if (ch0 != null){ const arrow = ch0 > 0 ? '▲ ' : ch0 < 0 ? '▼ ' : '';
+      R.text(k + 'chg', arrow + rChg(ch0, fmt), scx, cy + ch - 74*u, 36*u, { name: `${lab} change`, align: 'center', weight: 800, color: rChgCol(ch0), fitW: cw - 36*u });
+      R.text(k + 'chgl', scope === 'district' && !d.c.isList && lab === 'SEATS' ? 'ON LAST ELECTION' : 'ON LAST ELECTION', scx, cy + ch - 36*u, 16*u, { name: `${lab} change label`, align: 'center', weight: 600, color: '#6B7080' }); }
+  });
+  // status tag
+  let tag = '';
+  if (scope === 'district'){ if (d.c.status !== 'counting') tag = d.c.statusText; }
+  else tag = d.seats >= d.majority ? 'MAJORITY' : d.ahead ? `+${d.ahead} AHEAD, NOT CALLED` : `${d.majority} FOR A MAJORITY`;
+  if (tag){ const tw0 = tw(tag, 20*u, 800, R.F) + 34*u; R.rect('tagbg', rx + rw - tw0, cy - 56*u, tw0, 38*u, d.seats >= d.majority && scope !== 'district' ? '#15171C' : '#FFFFFF', { name: 'Status tag', radius: 19*u, opacity: 95 });
+    R.text('tag', tag, rx + rw - tw0/2, cy - 37*u, 20*u, { name: 'Status tag text', align: 'center', weight: 800, color: d.seats >= d.majority && scope !== 'district' ? '#FFFFFF' : '#15171C' }); }
+  return d;
+}
 /* ---------- H. primary vote breakdown ---------- */
 function buildPrimary(R){
   const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
@@ -8572,7 +8699,10 @@ function buildDetail(R){
     R.text('rn' + i, `${k.name}${k.mp ? '  MP' : ''}${k.status ? `  ·  ${k.status.toUpperCase()}` : ''}`, tx + tw1*.15, y + rh/2, rh*.34, { name: `${k.name} name`, weight: 600, color: R.ink, fitW: tw1*.5 });
     R.text('rv' + i, rnum(k.votes) != null ? Math.round(k.votes).toLocaleString('en-AU') : '–', tx + tw1*.7, y + rh/2, rh*.32, { bind: { t: 'cvotes', cid: k.id }, name: `${k.name} votes`, align: 'right', weight: 500, color: R.ink });
     R.text('rp' + i, `${fmtNum(k.pctUse, F.dp ?? 1)}%`, tx + tw1*.83, y + rh/2, rh*.36, { bind: { t: 'cpct', cid: k.id }, name: `${k.name} %`, align: 'right', weight: 900, color: R.ink });
-    if (c.isList){ const d = k.seatsWon - (k.prevSeatsP || 0); R.text('rs' + i, k.below ? '—' : `${k.seatsWon}${c.hasPrevSeats ? ` (${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)})` : ''}`, tx + tw1 - 12*u, y + rh/2, rh*.34, { name: `${k.name} seats`, align: 'right', weight: 900, color: k.below ? R.sub : R.ink }); return; }
+    if (c.isList){ const d = k.seatsWon - (k.prevSeatsP || 0), showD = c.hasPrevSeats && !k.below;
+      R.text('rs' + i, k.below ? '—' : String(k.seatsWon), tx + tw1 - (showD ? 62*u : 12*u), y + rh/2, rh*.34, { name: `${k.name} seats`, align: 'right', weight: 900, color: k.below ? R.sub : R.ink });
+      if (showD) R.text('rsd' + i, rChg(d), tx + tw1 - 12*u, y + rh/2, rh*.3, { name: `${k.name} seat change`, align: 'right', weight: 800, color: rChgCol(d, R) });
+      return; }
     R.text('rs' + i, k.swingUse != null ? fmtSwing(k.swingUse, Object.assign({}, F, { word: false })) + (k.swingSrc === 'manual' ? '*' : '') : '–', tx + tw1 - 12*u, y + rh/2, rh*.3, { name: `${k.name} swing`, align: 'right', weight: 700, color: k.swingUse == null ? R.sub : k.swingUse >= 0 ? '#1F7A3A' : '#B42318' });
   });
   if (T.on) rThrLine(R, T, tx, tw1, top + (T.nA + 1)*rh + thrGap/2);
@@ -8593,6 +8723,8 @@ function buildDetail(R){
   }
   return c;
 }
+/* left-to-right position of each party: the order of the party list in the Parties tab */
+function rPolOrder(E){ return pid => { const pi = E.parties.findIndex(p => p.id === pid); return pi < 0 ? 999 : pi; }; }
 /* ---------- M. district seat allocation (party lists) ---------- */
 function buildAlloc(R){
   const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E), F = E.fmt || {};
@@ -8603,24 +8735,26 @@ function buildAlloc(R){
   if (LS.threshold && c.isList) R.text('athr', `${decC(String(LS.threshold))}% ${LS.scope === 'national' ? 'NATIONWIDE ' : ''}THRESHOLD`, W - pad, hh + 48*u, 20*u, { name: 'Threshold', align: 'right', weight: 700, color: R.sub });
   if (!c.isList || !N){ R.text('anone', c.isList ? 'Enter how many seats this district elects' : 'Set the voting system to party lists to share out seats', W/2, (hh + H)/2, 34*u, { name: 'Empty state', align: 'center', weight: 600, color: R.sub }); return c; }
   const showBanner = S.showStatus && c.status !== 'counting';
-  const gy = hh + 84*u, gh = (H - gy)*.42, gw = W - pad*2;
+  const legH = 64*u + (c.hasPrevSeats ? 140*u : 112*u), gy = hh + 84*u, gh = Math.max(80*u, H - gy - legH - 40*u - (showBanner ? 104*u : 30*u)), gw = W - pad*2;
   let cols = N, rows = 1, best = 0;
   for (let r = 1; r <= N; r++){ const cc = Math.ceil(N/r), rr = Math.ceil(N/cc), sz = Math.min(gw/cc, gh/rr, 150*u); if (sz > best + .5){ best = sz; cols = cc; rows = rr; } }
   const cell = Math.min(gw/cols, gh/rows, 150*u), tile = cell*.86, x0 = pad + (gw - cell*cols)/2, y0 = gy + (gh - cell*rows)/2;
-  const seq = []; (c.alloc || []).forEach(a => { for (let i = 0; i < a.seats; i++) seq.push(a.P); });
+  // left to right in the order of the Parties tab list
+  const pos = rPolOrder(E), pol = (c.alloc || []).slice().sort((a, b) => pos(a.pid) - pos(b.pid));
+  const seq = []; pol.forEach(a => { for (let i = 0; i < a.seats; i++) seq.push(a.P); });
   const tex = c.provisional ? { tex: 'hatch', texOp: 18 } : {};
-  for (let i = 0; i < N; i++){ const P = seq[i], cx = x0 + (i % cols)*cell + (cell - tile)/2, cy = y0 + Math.floor(i/cols)*cell + (cell - tile)/2;
+  for (let i = 0; i < N; i++){ const P = seq[i], col = Math.floor(i/rows), inCol = Math.min(rows, N - col*rows), row = i % rows;      // fill column by column so the left of the grid is the left of the chamber
+    const cx = x0 + col*cell + (cell - tile)/2, cy = y0 + (rows - inCol)*cell/2 + row*cell + (cell - tile)/2;
     R.rect('as' + i, cx, cy, tile, tile, P ? P.color : (R.dark ? '#1F2A40' : '#D3D6DC'), Object.assign({ name: P ? `${P.abbr} seat` : 'Seat not given out', radius: tile*.16 }, P ? tex : {})); }
-  const list = (c.alloc || []).filter(a => a.seats || a.pct >= .5).slice(0, S.maxRows || 8), lc = list.length > 4 ? 2 : 1, lr = Math.ceil(list.length/lc);
-  const ly = gy + gh + 30*u, lbot = H - (showBanner ? 110*u : 36*u), lh = Math.min(70*u, (lbot - ly)/Math.max(1, lr)), cw = (gw - (lc - 1)*40*u)/lc;
-  list.forEach((a, i) => { const col = Math.floor(i/lr), row = i % lr, x = pad + col*(cw + 40*u), y = ly + row*lh + lh/2, k = c.cands.find(q => q.party === a.pid);
-    R.rect('asw' + i, x, y - lh*.36, lh*.72, lh*.72, a.P.color, { name: `${a.P.abbr} swatch`, radius: 6*u });
-    R.text('aab' + i, a.P.abbr, x + lh*.36, y, lh*.28, { bind: { t: 'pabbr', pid: a.pid }, name: `${a.P.abbr} label`, align: 'center', weight: 900, color: pText(a.P), fitW: lh*.66 });
-    R.text('anm' + i, a.P.name, x + lh*.92, y - lh*.12, lh*.34, { bind: k ? { t: 'cname', cid: k.id } : null, name: `${a.P.abbr} name`, weight: 700, color: R.ink, fitW: cw - lh*.92 - 150*u });
-    R.text('apc' + i, a.below ? `${fmtNum(a.pct, F.dp ?? 1)}% · below threshold` : `${fmtNum(a.pct, F.dp ?? 1)}% of the vote`, x + lh*.92, y + lh*.24, lh*.24, { name: `${a.P.abbr} %`, weight: 500, color: R.sub, fitW: cw - lh*.92 - 150*u });
-    const d = a.seats - a.prev, showD = c.hasPrevSeats;
-    R.text('ase' + i, String(a.seats), x + cw - (showD ? 70*u : 0), y, lh*.56, { name: `${a.P.abbr} seats`, align: 'right', weight: 900, color: a.below ? R.sub : R.ink });
-    if (showD) R.text('asd' + i, `${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)}`, x + cw, y, lh*.3, { name: `${a.P.abbr} change`, align: 'right', weight: 700, color: d > 0 ? '#1F7A3A' : d < 0 ? '#B42318' : R.sub }); });
+  // legend: one centred row in the same order
+  const list = pol.filter(a => a.seats || a.pct >= .5).slice(0, S.maxRows || 9), n = Math.max(1, list.length);
+  const ew = Math.min(230*u, gw/n), lx0 = pad + (gw - ew*n)/2, ly = gy + gh + 36*u, showD = c.hasPrevSeats;
+  list.forEach((a, i) => { const x = lx0 + i*ew, cxm = x + ew/2, k = c.cands.find(q => q.party === a.pid), op = a.below ? 45 : 100, sw = Math.min(64*u, ew*.5);
+    R.rect('asw' + i, cxm - sw/2, ly, sw, sw, a.P.color, { name: `${a.P.abbr} swatch`, radius: 8*u, opacity: op });
+    R.text('aab' + i, a.P.abbr, cxm, ly + sw/2, sw*.34, { bind: { t: 'pabbr', pid: a.pid }, name: `${a.P.abbr} label`, align: 'center', weight: 900, color: pText(a.P), fitW: sw*.9, opacity: op });
+    R.text('ase' + i, String(a.seats), cxm, ly + sw + 46*u, 60*u, { name: `${a.P.abbr} seats`, align: 'center', weight: 900, color: a.below ? R.sub : R.ink });
+    if (showD && (a.seats || a.prev)) R.text('asd' + i, rChg(a.seats - a.prev), cxm, ly + sw + 92*u, 22*u, { name: `${a.P.abbr} change`, align: 'center', weight: 800, color: rChgCol(a.seats - a.prev, R) });
+    R.text('apc' + i, `${fmtNum(a.pct, F.dp ?? 1)}%`, cxm, ly + sw + (showD ? 122*u : 96*u), 20*u, { bind: k ? { t: 'cpct', cid: k.id } : null, name: `${a.P.abbr} %`, align: 'center', weight: 600, color: R.sub }); });
   if (showBanner) rBanner(R, c, pad, H - 92*u, gw, 58*u);
   return c;
 }
@@ -8673,7 +8807,7 @@ function buildBlocLeaders(R, mode){
   list.forEach((b, i) => {
     const x = x0 + i*(colW + gap), key = 'bl' + b.B.id, leadP = E.parties.find(p => p.id === b.B.leaderParty) || b.parties[0];
     const ph = cardY - 120*u, pw = colW*.78;
-    R.image(key + 'photo', x + colW/2, cardY - ph/2, pw, ph, { name: `${b.B.name} leader photo`, gen: 'politician' });
+    R.image(key + 'photo', x + colW/2, cardY - ph/2, pw, ph, { name: `${b.B.name} leader photo`, gen: 'politician' }); if (leadP) ownPhoto(leadP, 'rb_' + key + 'photo');
     R.rect(key + 'card', x, cardY, colW, cardH, '#FFFFFF', { name: `${b.B.name} card`, radius: 4*u });
     const segs = (mode === 'seats' ? b.segSeats : b.segVote).filter(sg => sg.v > 0), tot = segs.reduce((t, sg) => t + sg.v, 0);
     let sx = x;
@@ -8693,7 +8827,7 @@ function buildBlocLeaders(R, mode){
 }
 const R_KINDS = {
   cand: ['Candidate results', buildCand], tpp: ['Bloc comparison', buildTpp], count: ['Count progress', buildCount], seats: ['Seat ticker', buildSeats],
-  change: ['Seat change', buildChange], proj: ['Projected result', R => buildOutcome(R, false)], decl: ['Declared result', R => buildOutcome(R, true)],
+  change: ['Seat change', buildChange], proj: ['Projected result', R => buildOutcome(R, false)], decl: ['Party result', buildParty],
   primary: ['Primary vote breakdown', buildPrimary], detail: ['Detailed electorate result', buildDetail], summary: ['Election summary', buildSummary],
   blocvote: ['Bloc vote with leaders', R => buildBlocLeaders(R, 'vote')], blocseats: ['Bloc seats with leaders', R => buildBlocLeaders(R, 'seats')],
   alloc: ['District seat allocation', buildAlloc],
@@ -8708,6 +8842,7 @@ function rebuildResults(opts = {}){
   if (!isResults() || rBuilding) return;
   rBuilding = true;
   try {
+    const own = rSyncOwnParties(ensureElection()); if (own.length){ toast(`${own.join(', ')} added to the results from your parties.`); setTimeout(() => renderResultsPanel(), 0); }
     const S = rStyle(); if (W !== S.w || H !== S.h){ tpl.w = W = S.w; tpl.h = H = S.h; sizeCanvas(); updateTplChrome && updateTplChrome(); }
     const fresh = buildResultsLayers(tpl.rkind), old = new Map(state.layers.filter(l => l.rb).map(l => [l.id, l]));
     for (const L of fresh){
@@ -8788,15 +8923,24 @@ function renderResultsPanel(){
       <div class="grid3">${rfield('A % (if no votes)', rin('el.tpp.aPct', el.tpp.aPct, { num: 1 }))}${rfield('A % last time', rin('el.tpp.prevAPct', el.tpp.prevAPct, { num: 1 }))}${rfield('Swing (manual)', rin('el.tpp.swing', el.tpp.swing, { num: 1, ph: c.tppSwingSrc === 'calc' ? c.tppSwingA.toFixed(2) : '' }))}</div>
       <p class="hint" data-rcalc="tpp">${esc(rTppText(c, F))}</p></section>` : ''}
     <section class="rsec"><h3>Checks</h3><div data-rcalc="warn">${rWarnHtml(c)}</div>
-      <div class="rrow"><button class="btn sm" data-ract="csv-import">Import CSV</button><button class="btn sm" data-ract="csv-export">Export results CSV</button><button class="btn sm" data-ract="csv-sample">CSV template</button></div></section>`;
+      <div class="rrow"><button class="btn sm" data-ract="csv-import">Import Excel or CSV</button><button class="btn sm" data-ract="xlsx-export">Download as Excel</button><button class="btn sm" data-ract="csv-export">Export CSV</button><button class="btn sm" data-ract="csv-sample">CSV template</button></div>
+      <p class="hint">An Excel workbook can hold results by region (a row per party, or a column per party), a Nationwide sheet with each party’s vote, seats and leader, and a Settings sheet. A row named Total counts as the nationwide result. Download as Excel gives you the layout filled with these results.</p></section>`;
   }
   if (rTab === 'parties'){
-    h += `<section class="rsec"><h3>Parties</h3><div class="parties-r">${E.parties.map((p, i) => `<div class="prow"><input type="color" data-rk="p.${i}.color" value="${esc(p.color)}" aria-label="${esc(p.abbr)} colour">${rin(`p.${i}.abbr`, p.abbr, { label: 'Abbreviation', cls: 'abbr' })}${rin(`p.${i}.name`, p.name, { label: 'Party name' })}
+    const own = ownParties();
+    h += `<section class="rsec"><h3>Your parties</h3>
+      ${rck('own.auto', E.autoOwn !== false, 'Add my parties to the results automatically')}
+      ${own.length ? `<div class="ownlist">${own.map((pt, i) => { const P = E.parties.find(p => p.own === ownKey(pt)); return `<div class="ownrow"><span class="kit-sw" style="background:${pt.hex}">${pt.logoData ? `<img src="${pt.logoData}" alt="">` : ''}</span><span class="ownname"><b>${esc(pt.name)}</b><small>${P ? `In the results as ${esc(P.abbr)}${P.leader ? ' · ' + esc(P.leader) : ''}` : (E.ownRemoved || []).includes(ownKey(pt)) ? 'Removed from the results' : 'Not in the results yet'}</small></span>${P ? '<span class="ownok">✓</span>' : `<button class="btn sm" data-ract="own-add" data-i="${i}">Add</button>`}</div>`; }).join('')}</div>
+      ${own.some(pt => !E.parties.some(p => p.own === ownKey(pt))) ? '<button class="btn sm" data-ract="own-all">Add all my parties</button>' : ''}
+      <p class="hint">Each of your parties joins the results with its colour, a row in every electorate (votes start at 0) and, when it has photos of people, the first person as its leader on the party result and bloc graphics. Put it in a bloc under the Blocs tab.</p>`
+      : '<p class="hint">Parties you add under Layouts › Your parties appear here and join the results automatically, with their colours and leader photo.</p>'}</section>
+    <section class="rsec"><h3>Parties</h3><div class="parties-r">${E.parties.map((p, i) => `<div class="prow"><input type="color" data-rk="p.${i}.color" value="${esc(p.color)}" aria-label="${esc(p.abbr)} colour">${rin(`p.${i}.abbr`, p.abbr, { label: 'Abbreviation', cls: 'abbr' })}${rin(`p.${i}.name`, p.name, { label: 'Party name' })}
       ${rsel(`p.${i}.text`, [['', 'Auto text'], ['#FFFFFF', 'White text'], ['#111418', 'Dark text']], p.text, 'Text colour')}
       <span class="cbtns"><button class="ib" data-ract="p-up" data-i="${i}" ${i ? '' : 'disabled'} aria-label="Move up">↑</button><button class="ib" data-ract="p-down" data-i="${i}" ${i < E.parties.length - 1 ? '' : 'disabled'} aria-label="Move down">↓</button><button class="ib" data-ract="p-del" data-i="${i}" aria-label="Remove party">✕</button></span>
-      <label class="ctl p2"><span class="ctl-head">Second colour</span><input type="color" data-rk="p.${i}.color2" value="${esc(p.color2 || pDark(p))}" aria-label="${esc(p.abbr)} second colour"></label></div>`).join('')}</div>
+      <label class="ctl p2"><span class="ctl-head">Second colour</span><input type="color" data-rk="p.${i}.color2" value="${esc(p.color2 || pDark(p))}" aria-label="${esc(p.abbr)} second colour"></label>
+      <div class="pldr">${rin(`p.${i}.leader`, p.leader || '', { label: `${p.abbr} leader`, ph: partyLeader(E, p) || 'Leader name' })}<button class="btn sm" data-ract="p-photo" data-i="${i}">Leader photo…</button></div></div>`).join('')}</div>
       <button class="btn sm" data-ract="p-add">+ Add party</button>
-      <p class="hint">Colours and names update every results graphic. Party order is used when candidates are ordered by party. Use made-up parties and colours for fictional elections.</p></section>`;
+      <p class="hint">Top to bottom here is left to right in the seat allocation. Colours and names update every results graphic. Party order is used when candidates are ordered by party. Use made-up parties and colours for fictional elections.</p></section>`;
   }
   if (rTab === 'blocs'){
     const bl = blocCalc(E), nat = nationalCalc(E);
@@ -8817,7 +8961,8 @@ function renderResultsPanel(){
     const sc = seatCalc(E);
     h += `<section class="rsec"><h3>Parliament</h3><div class="grid3">${rfield('Total seats', rin('seat.total', E.seats.total, { num: 1 }))}${rfield('Majority', rin('seat.majority', E.seats.majority, { num: 1, ph: String(Math.floor((E.seats.total || 0)/2) + 1) }))}${rfield('Count from', rsel('seat.source', [['both','Electorates + table'],['electorates','Electorates only'],['manual','Table only']], E.seats.source))}</div>
       <p class="hint">Electorates count as declared or projected only when their status says so. A candidate who is just ahead is shown as “ahead, not called”. Use the table for seats you haven't entered as electorates.</p></section>
-    <section class="rsec"><h3>Seats entered by hand</h3><div class="srows"><div class="srow sh"><span>Party</span><span>Declared</span><span>Projected</span><span>Ahead</span><span>Last time</span></div>${(E.seats.rows || []).map((r, i) => `<div class="srow">${rsel(`sr.${i}.party`, partyList(E), r.party, 'Party')}${rin(`sr.${i}.declared`, r.declared, { num: 1, label: 'Declared' })}${rin(`sr.${i}.projected`, r.projected, { num: 1, label: 'Projected' })}${rin(`sr.${i}.leading`, r.leading, { num: 1, label: 'Ahead' })}${rin(`sr.${i}.prev`, r.prev, { num: 1, label: 'Previous' })}<button class="ib" data-ract="sr-del" data-i="${i}" aria-label="Remove row">✕</button></div>`).join('')}</div>
+    <section class="rsec"><h3>Seats entered by hand</h3><div class="srows">${(E.seats.rows || []).map((r, i) => `<div class="srow"><div class="srow1"><span class="csw" style="background:${partyOf(E, r.party).color}"></span>${rsel(`sr.${i}.party`, partyList(E), r.party, 'Party')}<button class="ib" data-ract="sr-del" data-i="${i}" aria-label="Remove row" title="Remove">✕</button></div>
+      <div class="srow2">${rfield('Declared', rin(`sr.${i}.declared`, r.declared, { num: 1, label: 'Declared' }))}${rfield('Projected', rin(`sr.${i}.projected`, r.projected, { num: 1, label: 'Projected' }))}${rfield('Ahead', rin(`sr.${i}.leading`, r.leading, { num: 1, label: 'Ahead' }))}${rfield('Last time', rin(`sr.${i}.prev`, r.prev, { num: 1, label: 'Last time' }))}</div></div>`).join('')}</div>
       <button class="btn sm" data-ract="sr-add">+ Add party row</button></section>
     <section class="rsec"><h3>Totals</h3><div data-rcalc="seats">${rSeatHtml(sc)}</div></section>`;
   }
@@ -8835,13 +8980,17 @@ function renderResultsPanel(){
       <div class="grid2">${rfield('Corner radius', rin('S.radius', S.radius, { num: 1 }))}${rfield('Party label width', rin('S.labelW', S.labelW, { num: 1, ph: 'auto' }))}</div>
       <div class="grid2">${rfield('Label size ×', rin('S.labelSize', S.labelSize, { num: 1 }))}${rfield('Name weight', rsel('S.nameWeight', [[400,'Regular'],[500,'Medium'],[600,'Semibold'],[700,'Bold']], S.nameWeight))}</div>
       <div class="grid2">${rck('S.dividers', S.dividers, 'Dividers')}${rck('S.tex', S.tex, 'Bar texture')}</div>${rfield('Texture strength %', rin('S.texOp', S.texOp, { num: 1 }))}
-      <div class="grid2">${rck('S.showVotes', S.showVotes, 'Vote counts')}${rck('S.showSwing', S.showSwing, 'Swing')}</div><div class="grid2">${rck('S.showMP', S.showMP, E.system === 'list' ? 'Seats won badge' : 'MP badge')}${rck('S.showStatus', S.showStatus, 'Status and banner')}</div>${E.system === 'list' ? `<div class="grid2">${rck('S.thrLine', S.thrLine, 'Threshold line')}</div>` : ''}` : ''}</section>`;
+      <div class="grid2">${rck('S.showVotes', S.showVotes, 'Vote counts')}${rck('S.showSwing', S.showSwing, 'Swing')}</div><div class="grid2">${rck('S.showMP', S.showMP, E.system === 'list' ? 'Seats won and change' : 'MP badge')}${rck('S.showStatus', S.showStatus, 'Status and banner')}</div>${E.system === 'list' ? `<div class="grid2">${rck('S.thrLine', S.thrLine, 'Threshold line')}</div>` : ''}` : ''}</section>`;
     if (isTpp || k === 'proj') h += `<section class="rsec"><h3>Comparison</h3>${isTpp ? rfield('Layout', rsel('S.tppLayout', [['semi','Semicircle'],['circle','Full circle'],['rect','Split bar']], S.tppLayout)) : ''}
       <div class="grid2">${rfield('Separator', rin('S.sep', S.sep, { num: 1 }))}${rfield('Border', rin('S.border', S.border, { num: 1 }))}</div>
       <div class="grid2">${rck('S.segTex', S.segTex, 'Segment texture')}${rfield('Inner opacity', rin('S.segOp', S.segOp, { num: 1 }))}</div>
       <div class="grid2">${rck('S.arcLabels', S.arcLabels, '% on segments')}${rfield('Label size ×', rin('S.labelSize', S.labelSize, { num: 1 }))}</div>
       <div class="grid2">${rck('S.banner', S.banner, 'Result banner')}${rck('S.projBanner', S.projBanner, 'Source label')}</div>
       ${isTpp ? `<div class="grid2">${rfield('Bar scale', rsel('S.scale', [['leader','Relative to leader'],['formal','Share of 100%'],['custom','Custom maximum']], S.scale))}${rck('S.tex', S.tex, 'Bar texture')}</div>` : ''}</section>`;
+    if (k === 'decl') h += `<section class="rsec"><h3>Party result</h3>${rfield('Layout', rsel('S.declLayout', [['party','Party: leader, seats, votes and share'],['candidate','Declared candidate (one electorate)']], S.declLayout || 'party'))}
+      ${S.declLayout === 'candidate' ? '' : `<div class="grid2">${rfield('Results for', rsel('S.scope', [['national','Nationwide'],['district', E.system === 'list' ? 'This district' : 'This electorate']], S.scope || 'national'))}${rfield('Party', rsel('S.party', partyList(E, 'Auto (most seats)'), S.party || ''))}</div>
+      ${rfield('Background', rsel('S.bgMode', [['lead','Party colour'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}${rfield('Title', rin('S.title', S.title, { ph: 'PARTY RESULT' }))}
+      <p class="hint">Changes are against last election: seats from Seats last time, share from Last time %, votes from the nationwide sheet’s previous votes. Gains show in green, losses in red. Add each party’s leader and photo in the Parties tab.</p>`}</section>`;
     if (k === 'blocvote' || k === 'blocseats') h += `<section class="rsec"><h3>Leaders layout</h3>${rfield('Background', rsel('S.bgMode', [['lead','Colour of the leading bloc'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}
       ${rfield('Title', rin('S.title', S.title, { ph: k === 'blocseats' ? 'SEATS' : 'SHARE OF THE VOTE' }))}
       <div class="grid2">${rck('S.allBlocs', S.allBlocs, 'Show every bloc')}${rck('S.showNames', S.showNames !== false, 'Bloc and leader names')}</div>${k === 'blocvote' ? rck('S.showSwing', S.showSwing !== false, 'Swing tag') : ''}
@@ -8895,17 +9044,18 @@ function rSet(path, raw, el0){
   let structural = false;
   if (p[0] === 'E'){ E[p[1]] = p[1] === 'year' ? rnum(v) : v; if (['tppOn', 'blocA', 'blocB'].includes(p[1])) structural = true; }
   else if (p[0] === 'cur'){ E.current = v; structural = true; }
+  else if (p[0] === 'own'){ E.autoOwn = !!v; structural = true; }
   else if (p[0] === 'L'){ E.list[p[1]] = p[1] === 'threshold' ? rnum(v) : v; }
   else if (p[0] === 'el' && p[1] === 'tpp') el.tpp[p[2]] = ['a', 'b'].includes(p[2]) ? v : rnum(v);
   else if (p[0] === 'el'){ el[p[1]] = v; if (['denom', 'status', 'name', 'metric'].includes(p[1])) structural = p[1] !== 'name'; if (p[1] === 'name') structural = 'soft'; }
   else if (p[0] === 'c'){ const k = el.candidates[+p[1]]; if (!k) return; k[p[2]] = v; if (p[2] === 'party') structural = true; }
-  else if (p[0] === 'p'){ const P = E.parties[+p[1]]; if (!P) return; P[p[2]] = p[2] === 'abbr' ? String(v).toUpperCase().slice(0, 6) : v; if (p[2] === 'abbr' || p[2] === 'name') structural = 'soft'; }
-  else if (p[0] === 'S'){ setStyle(p[1], v); if (['scale', 'order', 'tppLayout'].includes(p[1])) structural = true; }
+  else if (p[0] === 'p'){ const P = E.parties[+p[1]]; if (!P) return; P[p[2]] = p[2] === 'abbr' ? String(v).toUpperCase().slice(0, 6) : v; if (p[2] === 'abbr' || p[2] === 'name' || p[2] === 'leader') structural = 'soft'; }
+  else if (p[0] === 'S'){ setStyle(p[1], v); if (['scale', 'order', 'tppLayout', 'declLayout'].includes(p[1])) structural = true; }
   else if (p[0] === 'size'){ if (v !== 'custom'){ const [w, h] = v.split('x').map(Number); setStyle('w', w); setStyle('h', h); rCustomSize = false; } else rCustomSize = true; structural = true; }
   else if (p[0] === 'F'){ E.fmt[p[1]] = p[1] === 'dp' ? +v : p[1] === 'pp' ? !!v : v; if (p[1] === 'comma') structural = true; }
   else if (p[0] === 'B'){ E.branding[p[1]] = v; if (p[1] === 'font'){ for (const k of Object.keys(E.style || {})) if (E.style[k]) delete E.style[k].font; } if (p[1] === 'logo') structural = true; }
   else if (p[0] === 'seat'){ E.seats[p[1]] = p[1] === 'source' ? v : rnum(v); }
-  else if (p[0] === 'sr'){ const r = E.seats.rows[+p[1]]; if (!r) return; r[p[2]] = p[2] === 'party' ? v : rnum(v); }
+  else if (p[0] === 'sr'){ const r = E.seats.rows[+p[1]]; if (!r) return; r[p[2]] = p[2] === 'party' ? v : rnum(v); if (p[2] === 'party') structural = true; }
   else if (p[0] === 'b'){ const b = E.blocs[+p[1]]; if (!b) return; b[p[2]] = p[2] === 'short' ? String(v).toUpperCase().slice(0, 12) : v; if (p[2] === 'name') structural = 'soft'; }
   else if (p[0] === 'bm'){ const b = E.blocs[+p[1]], pid = p[2]; if (!b) return; for (const o of E.blocs) o.parties = o.parties.filter(x => x !== pid); if (v) b.parties.push(pid); if (b.leaderParty && !b.parties.includes(b.leaderParty)) b.leaderParty = b.parties[0] || ''; structural = true; }
   else if (p[0] === 'nat'){ E.national[p[1]] = Object.assign({}, E.national[p[1]] || {}, { [p[2]]: rnum(v) }); }
@@ -8935,7 +9085,9 @@ function rAct(a, b){
     case 'c-up': mv(el.candidates, i, -1); setStyle('order', 'manual'); break;
     case 'c-down': mv(el.candidates, i, 1); setStyle('order', 'manual'); break;
     case 'p-add': { const used = new Set(E.parties.map(p => p.abbr)); let n = 1; while (used.has('PTY' + n)) n++; E.parties.push({ id: rid('p'), abbr: 'PTY' + n, name: 'New party', color: '#8A3FB0', color2: '', text: '', order: E.parties.length + 1 }); break; }
-    case 'p-del': { const P = E.parties[i]; const used = E.electorates.some(e => e.candidates.some(k => k.party === P.id) || e.tpp.a === P.id || e.tpp.b === P.id); if (used && !b.classList.contains('arm')){ b.classList.add('arm'); b.textContent = '?'; b.title = 'This party has candidates. Click again to remove it anyway.'; return; } E.parties.splice(i, 1); break; }
+    case 'p-del': { const P = E.parties[i]; const used = E.electorates.some(e => e.candidates.some(k => k.party === P.id) || e.tpp.a === P.id || e.tpp.b === P.id); if (used && !b.classList.contains('arm')){ b.classList.add('arm'); b.textContent = '?'; b.title = 'This party has candidates. Click again to remove it anyway.'; return; } E.parties.splice(i, 1);
+      if (P.own) E.ownRemoved = [...new Set((E.ownRemoved || []).concat(P.own))];
+      for (const e of E.electorates) e.candidates = e.candidates.filter(k => k.party !== P.id); for (const bl of E.blocs || []) bl.parties = bl.parties.filter(x => x !== P.id); break; }
     case 'p-up': mv(E.parties, i, -1); E.parties.forEach((p, j) => p.order = j + 1); break;
     case 'p-down': mv(E.parties, i, 1); E.parties.forEach((p, j) => p.order = j + 1); break;
     case 'sr-add': E.seats.rows.push({ party: (E.parties.find(p => !E.seats.rows.some(r => r.party === p.id)) || E.parties[0]).id, declared: 0, projected: 0, leading: 0, prev: 0 }); break;
@@ -8944,6 +9096,10 @@ function rAct(a, b){
     case 'b-del': { if (E.blocs.length < 3) return; const b = E.blocs.splice(i, 1)[0]; if (E.blocA === b.id) E.blocA = E.blocs[0].id; if (E.blocB === b.id) E.blocB = (E.blocs[1] || E.blocs[0]).id; break; }
     case 'b-photo': { const b = E.blocs[i]; if (!b) return; if (tpl.rkind !== 'blocvote' && tpl.rkind !== 'blocseats') switchTemplate('res_blocvote'); if (b.id !== E.blocA && b.id !== E.blocB && !rStyle().allBlocs){ setStyle('allBlocs', true); rebuildResults(); }
       uploadTarget = 'rb_bl' + b.id + 'photo'; $('#file').click(); return; }
+    case 'own-add': { const pt = ownParties()[i]; if (!pt) return; const P = rAddOwn(E, pt); toast(`${P.name} added to the results.`); break; }
+    case 'own-all': { const n = ownParties().filter(pt => !E.parties.some(p => p.own === ownKey(pt))).map(pt => rAddOwn(E, pt).name); toast(n.length ? `${n.join(', ')} added to the results.` : 'All your parties are already in the results.'); break; }
+    case 'p-photo': { const P = E.parties[i]; if (!P) return; if (tpl.rkind !== 'decl') switchTemplate('res_decl'); setStyle('party', P.id, 'decl'); setStyle('declLayout', 'party', 'decl'); rebuildResults(); renderResultsPanel();
+      uploadTarget = 'rb_pr' + P.id + 'photo'; $('#file').click(); return; }
     case 'live': if (rLive) rLiveStop(); else rLiveStart(); renderResultsPanel(); return;
     case 'style-reset': delete E.style[tpl.rkind]; toast('Style reset to the defaults.'); break;
     case 'edits-reset': rebuildResults({ reset: true }); commit(); toast('Edits made directly on the graphic were cleared.'); return;
@@ -8951,6 +9107,7 @@ function rAct(a, b){
     case 'logo-up': uploadTarget = 'rb_logo'; $('#file').click(); return;
     case 'csv-import': $('#csvfile').click(); return;
     case 'csv-export': rDownload(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results.csv`, rCsvExport(E), 'text/csv'); return;
+    case 'xlsx-export': rDownloadBlob(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results.xlsx`, rWorkbook(E)); return;
     case 'csv-sample': rDownload('degv-results-template.csv', rCsvSample(), 'text/csv'); return;
     case 'tpl-save': { const nm = ($('#rpanel [data-rk=tplname]') || {}).value || `${R_KINDS[tpl.rkind][0]} design`; const list = rSaved(); list.push({ id: rid('t'), name: nm.slice(0, 60), kind: tpl.rkind, style: rStyle(), branding: JSON.parse(JSON.stringify(E.branding)), fmt: Object.assign({}, E.fmt) }); rSaveList(list); toast(`Saved “${nm}”.`); break; }
     case 'tpl-apply': { const s = rSaved().find(x => x.id === b.dataset.id); if (!s) return; E.style[s.kind] = Object.assign({}, s.style); E.branding = Object.assign({}, E.branding, s.branding, { logo: E.branding.logo }); E.fmt = Object.assign({}, E.fmt, s.fmt); if (tpl.rkind !== s.kind){ switchTemplate('res_' + s.kind); return; } toast(`Using “${s.name}”.`); break; }
@@ -9006,6 +9163,8 @@ function rBindEdit(L){
       else if (rnum(cand.votes) != null){ const c = elCalc(el, E); if (c.denom > 0) cand.votes = Math.round(pct/100*c.denom); }
       else cand.pct = pct; break; }
     case 'cmp': { const v = rParse(t), c = elCalc(el, E); if (v == null) return; if (c.useTpp){ el.tpp.aVotes = el.tpp.bVotes = null; el.tpp.aPct = clamp(b.side === 'A' ? v : 100 - v, 0, 100); } else { if (L.g0) L.text = L.g0.text; render(); toast('Bloc shares are the sum of their parties. Change the candidates’ votes or %.'); return; } break; }
+    case 'pname': { const P = E.parties.find(p => p.id === b.pid); if (P) P.name = t; break; }
+    case 'pleader': { const P = E.parties.find(p => p.id === b.pid); if (P) P.leader = t; break; }
     case 'elname': el.name = t; break;
     case 'elregion': el.region = t; break;
     case 'blocname': { const B = E.blocs.find(x => x.id === b.bid); if (B) B.name = t; break; }
@@ -9013,14 +9172,14 @@ function rBindEdit(L){
     default: return;
   }
   rebuildResults({ keepInspector: true }); refreshResultsCalc(); rLiveSyncInputs();
-  if (['cname','pabbr','elname','elregion','blocname','leader'].includes(b.t) && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#rpanel'))) renderResultsPanel();
+  if (['cname','pabbr','pname','pleader','elname','elregion','blocname','leader'].includes(b.t) && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#rpanel'))) renderResultsPanel();
 }
 /* saved designs */
 function rSaved(){ try { return JSON.parse(localStorage.getItem('degv-results-designs') || '[]'); } catch { return rSaved.mem || []; } }
 function rSaveList(list){ rSaved.mem = list; try { localStorage.setItem('degv-results-designs', JSON.stringify(list)); } catch {} }
 /* downloads */
-async function rDownload(name, text, type){
-  const blob = new Blob([text], { type });
+async function rDownload(name, text, type){ return rDownloadBlob(name, new Blob([text], { type })); }
+async function rDownloadBlob(name, blob){
   if (downloadsApi){ try { await downloadsApi.save({ filename: name, data: blob }); toast(`${name} saved.`); return; } catch (err){ if (err && err.code === 'declined'){ toast('Download cancelled.'); return; } } }
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast(`${name} saved.`);
 }
@@ -9045,16 +9204,18 @@ function parseCsv(text){
   if (cell !== '' || row.length){ row.push(cell); out.push(row); }
   return out.filter(r => r.some(x => String(x).trim() !== ''));
 }
-function rCsvImport(text){
-  const E = ensureElection(), rows = parseCsv(text); if (rows.length < 2) throw new UserError('That CSV has no data rows.');
-  const head = rows[0].map(h => h.trim().toLowerCase().replace(/[\s-]+/g, '_')), col = k => head.indexOf(k);
+function rCsvImport(text){ return rImportTable(parseCsv(text)); }
+/* one results table (CSV or a spreadsheet sheet): long (a row per party or candidate) or wide (a column per party) */
+function rImportTable(rows0, opts = {}){
+  const E = ensureElection(), rows = rTableRows(E, rows0); if (rows.length < 2 && !rows.national) throw new UserError('That table has no data rows.');
+  const head = rows[0], col = k => head.indexOf(k);
   if (col('party') < 0) throw new UserError('The CSV needs at least a “party” column (and “candidate” for single-member seats). Download the CSV template to see the format.');
   const get = (r, k) => { const i = col(k); return i < 0 ? '' : String(r[i] ?? '').trim(); }, n = v => rnum(String(v).replace(/[,%\s]/g, ''));
   const palette = ['#D8262E','#1E4FA8','#4FA82A','#0C6B4E','#F07818','#65A1DC','#8A3FB0','#6E7179','#C2185B','#00838F'];
   let made = 0, skipped = 0; const touched = new Map();
   for (const r of rows.slice(1)){
     const pab = get(r, 'party').toUpperCase(), cname = get(r, 'candidate') || (col('candidate') < 0 ? (get(r, 'party_name') || pab) : ''); if (!cname || !pab){ skipped++; continue; }
-    let P = E.parties.find(p => p.abbr.toUpperCase() === pab);
+    let P = E.parties.find(p => p.abbr.toUpperCase() === pab || p.name.toUpperCase() === pab);
     if (!P){ P = { id: rid('p'), abbr: pab.slice(0, 6), name: get(r, 'party_name') || pab, color: /^#[0-9a-f]{6}$/i.test(get(r, 'colour')) ? get(r, 'colour') : palette[E.parties.length % palette.length], color2: '', text: '', order: E.parties.length + 1 }; E.parties.push(P); }
     else if (/^#[0-9a-f]{6}$/i.test(get(r, 'colour'))) P.color = get(r, 'colour');
     const ename = get(r, 'electorate') || curEl().name;
@@ -9077,14 +9238,213 @@ function rCsvImport(text){
     }
     made++;
   }
-  if (!made) throw new UserError('No rows could be read. Each row needs a candidate and a party.');
+  if (!made && !rows.national) throw new UserError('No rows could be read. Each row needs a party (and a candidate for single-member seats).');
+  if (rows.national) rApplyNational(E, rows.national);
   const first = [...touched.values()][0]; if (first) E.current = first.id;
-  return { made, skipped, electorates: touched.size };
+  return { made, skipped, electorates: touched.size, national: !!rows.national };
+}
+/* ---------- spreadsheet import ---------- */
+const R_ALIAS = { electorate: ['electorate','district','constituency','division','seat','riding','county','municipality','area'], region: ['region','state','province'], candidate: ['candidate','candidate_name','name_of_candidate'],
+  party: ['party','party_abbr','abbr','abbreviation','party_code','code','list'], party_name: ['party_name','full_name','party_full_name'], colour: ['colour','color','party_colour','party_color'],
+  votes: ['votes','vote','primary_votes','first_preference_votes','first_preferences','vote_count','count'], pct: ['pct','vote_pct','percent','percentage','share','vote_share','share_pct','votes_pct'],
+  prev_pct: ['prev_pct','last_pct','previous_pct','pct_last_time','last_time_pct','prev_vote_pct','previous_share','last_time','prev_share'], swing: ['swing','change','change_pct'],
+  district_seats: ['district_seats','seats_available','magnitude','seats_in_district','seats_to_fill'], prev_seats: ['prev_seats','seats_last_time','previous_seats','last_seats'],
+  seats: ['seats','seats_won','won'], booths_counted: ['booths_counted','counted_booths','reporting','precincts_reporting'], booths_total: ['booths_total','total_booths','precincts','booths'],
+  votes_counted: ['votes_counted','total_votes','counted'], votes_expected: ['votes_expected','expected_votes','expected'], enrolled: ['enrolled','enrolment','enrollment','electors','registered'],
+  informal: ['informal','invalid','invalid_votes'], result_status: ['result_status','status_of_result','declared','result'], held_by: ['held_by','incumbent_party','previous_holder','prev_party'], mp: ['mp','sitting','incumbent'],
+  leader: ['leader','party_leader'], prev_votes: ['prev_votes','votes_last_time','previous_votes'], seats_declared: ['seats_declared'], seats_projected: ['seats_projected'], seats_ahead: ['seats_ahead','seats_leading'], seats_last_time: ['seats_last_time_total'] };
+const R_ALIAS_MAP = (() => { const m = {}; for (const [k, list] of Object.entries(R_ALIAS)) for (const a of list) if (!m[a]) m[a] = k; return m; })();
+const rNormHead = h => String(h ?? '').trim().toLowerCase().replace(/%/g, ' pct').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+const R_TOTAL_RE = /^(total|totals|grand_total|national|nationwide|nation|overall|all|country|whole_country)$/;
+const rNumCell = v => { if (typeof v === 'number') return v; const t = String(v ?? '').replace(/[\s,%]/g, ''); return t !== '' && isFinite(+t) ? +t : null; };
+/* headers to canonical names; a wide table (one column per party) becomes one row per party; a Total row becomes the nationwide result */
+function rTableRows(E, rows0){
+  let hi = rows0.findIndex(r => r.filter(x => String(x ?? '').trim() !== '' && rNumCell(x) == null).length >= 2); if (hi < 0) hi = 0;
+  const raw = rows0[hi].map(rNormHead), data = rows0.slice(hi + 1).filter(r => r.some(x => String(x ?? '').trim() !== ''));
+  let head = raw.map(h => R_ALIAS_MAP[h] || h);
+  if (!head.includes('electorate') && head.includes('region')) head = head.map(h => h === 'region' ? 'electorate' : h);
+  const pidFor = h => { const P = E.parties.find(p => rNormHead(p.abbr) === h || rNormHead(p.name) === h); return P; };
+  let out;
+  if (!head.includes('party')){
+    // wide: every column that is not a known field and holds numbers is a party
+    const known = new Set(Object.keys(R_ALIAS).concat(['formal','turnout','total','total_votes','valid','valid_votes','id','code','no','number']));
+    const pcols = head.map((h, i) => ({ h, i, raw: String(rows0[hi][i] ?? '').trim() })).filter(c => c.raw && !known.has(c.h) && data.some(r => rNumCell(r[c.i]) != null));
+    if (!pcols.length) return [head].concat(data);
+    const asPct = pcols.some(c => /pct/.test(c.h)) || data.every(r => { const v = pcols.map(c => rNumCell(r[c.i]) || 0), t = v.reduce((a, b) => a + b, 0); return t > 95 && t < 105 && v.some(x => x % 1); });
+    const keep = head.map((h, i) => ({ h, i })).filter(c => known.has(c.h) && c.h !== 'electorate');
+    out = [['electorate', 'party', 'party_name', asPct ? 'pct' : 'votes'].concat(keep.map(c => c.h))];
+    for (const r of data){ pcols.forEach((c, j) => { const name = c.raw.replace(/\s*\(?%\)?\s*$/, ''), P = pidFor(rNormHead(name)); const v = rNumCell(r[c.i]);
+      out.push([r[head.indexOf('electorate')] ?? '', P ? P.abbr : name.toUpperCase().slice(0, 6), P ? P.name : name, v == null ? '' : v].concat(j === 0 ? keep.map(k => r[k.i] ?? '') : keep.map(() => ''))); }); }
+    head = out[0];
+  } else out = [head].concat(data);
+  // rows named Total / Nationwide are the nationwide result, not an electorate
+  const ei = head.indexOf('electorate'), national = [];
+  const body = out.slice(1).filter(r => { if (ei >= 0 && R_TOTAL_RE.test(rNormHead(r[ei]))){ national.push(r); return false; } return true; });
+  const res = [head].concat(body.map(r => r.map(x => x == null ? '' : String(x))));
+  if (national.length) res.national = { head, rows: national };
+  return res;
+}
+/* nationwide sheet (or Total rows): vote %, votes, last time, seat totals, leaders */
+function rApplyNational(E, T){
+  const head = T.head, col = k => head.indexOf(k), get = (r, k) => { const i = col(k); return i < 0 ? '' : r[i]; };
+  const recs = []; let vt = 0;
+  for (const r of T.rows){ const key = String(get(r, 'party') || get(r, 'party_name') || '').trim(); if (!key) continue;
+    let P = E.parties.find(p => p.abbr.toUpperCase() === key.toUpperCase() || p.name.toUpperCase() === key.toUpperCase());
+    if (!P){ P = { id: rid('p'), abbr: key.toUpperCase().slice(0, 6), name: String(get(r, 'party_name') || key), color: /^#[0-9a-f]{6}$/i.test(String(get(r, 'colour'))) ? String(get(r, 'colour')) : '#8A3FB0', color2: '', text: '', order: E.parties.length + 1 }; E.parties.push(P); }
+    const votes = rNumCell(get(r, 'votes')); if (votes != null) vt += votes;
+    recs.push({ P, r, votes }); }
+  let seatRows = null;
+  for (const { P, r, votes } of recs){
+    const m = Object.assign({}, E.national[P.id] || {}), pct = rNumCell(get(r, 'pct'));
+    if (pct != null) m.pct = pct; else if (votes != null && vt > 0) m.pct = +(votes/vt*100).toFixed(2);
+    if (votes != null) m.votes = votes; const pp = rNumCell(get(r, 'prev_pct')), pv = rNumCell(get(r, 'prev_votes')); if (pp != null) m.prevPct = pp; if (pv != null) m.prevVotes = pv;
+    E.national[P.id] = m;
+    if (String(get(r, 'leader')).trim()) P.leader = String(get(r, 'leader')).trim();
+    if (/^#[0-9a-f]{6}$/i.test(String(get(r, 'colour')))) P.color = String(get(r, 'colour'));
+    const sd = rNumCell(get(r, 'seats_declared')), sw = rNumCell(get(r, 'seats')), sp = rNumCell(get(r, 'seats_projected')), sa = rNumCell(get(r, 'seats_ahead')), sl = rNumCell(get(r, 'prev_seats')) ?? rNumCell(get(r, 'seats_last_time'));
+    if (sd != null || sw != null || sp != null || sa != null){ seatRows = seatRows || [];
+      seatRows.push({ party: P.id, declared: sd ?? sw ?? 0, projected: sp ?? 0, leading: sa ?? 0, prev: sl ?? 0, gains: null, losses: null }); }
+  }
+  if (seatRows){ E.seats.rows = seatRows; E.seats.source = 'manual'; }
+  return recs.length;
+}
+function rApplySettings(E, rows){
+  let n = 0;
+  for (const r of rows){ const k = rNormHead(r[0]), v = String(r[1] ?? '').trim(); if (!k || v === '') continue; n++;
+    if (['name','election','election_name','title'].includes(k)) E.name = v;
+    else if (k === 'year') E.year = rnum(v);
+    else if (['region','country','state'].includes(k)) E.region = v;
+    else if (['type','election_type','house','chamber'].includes(k)) E.type = v;
+    else if (['system','voting_system','electoral_system'].includes(k)) E.system = /list|pr|propor|party/i.test(v) ? 'list' : 'fptp';
+    else if (['total_seats','seats','seats_total','parliament_seats'].includes(k)) E.seats.total = rnum(v);
+    else if (['majority','seats_for_majority'].includes(k)) E.seats.majority = rnum(v);
+    else if (['threshold','threshold_pct','electoral_threshold'].includes(k)) E.list.threshold = rNumCell(v);
+    else if (['threshold_scope','threshold_of'].includes(k)) E.list.scope = /dist|local|region/i.test(v) ? 'district' : 'national';
+    else if (['method','seat_formula','formula','allocation'].includes(k)) E.list.method = /hare|remainder/i.test(v) ? 'hare' : /1\.4|modif/i.test(v) ? 'sainte14' : /sainte|webster|lagu/i.test(v) ? 'sainte' : 'dhondt';
+    else if (['status','overall_status'].includes(k) && EL_STATUS.some(s => s[0] === v.toLowerCase())) E.status = v.toLowerCase();
+    else n--; }
+  return n;
+}
+/* a whole workbook: results sheets, a nationwide sheet and a settings sheet, recognised by their headings or names */
+function rImportWorkbook(sheets){
+  const E = ensureElection(), done = { results: 0, made: 0, electorates: 0, national: false, settings: 0, skipped: 0, sheets: [] };
+  const kind = sh => { const rows = sh.rows.filter(r => r.some(x => String(x ?? '').trim() !== '')); if (!rows.length) return 'empty';
+    const nm = rNormHead(sh.name), first = rows[0].map(rNormHead).map(h => R_ALIAS_MAP[h] || h);
+    if (/setting|config|election_info|^info$|^election$|^details$/.test(nm) || (first.length >= 2 && ['setting','key','field','item'].includes(first[0]) && /value/.test(first[1] || ''))) return 'settings';
+    if (/nation|^total|overall|summary|country/.test(nm) && !first.includes('electorate') && !first.includes('region')) return 'national';
+    if (first.includes('party') && !first.includes('electorate') && !first.includes('region') && !first.includes('candidate')) return 'national';
+    return 'results'; };
+  // settings first (voting system changes how results are read), then results, then nationwide
+  const order = { settings: 0, results: 1, national: 2, empty: 3 }, list = sheets.map(sh => Object.assign({ k: kind(sh) }, sh)).sort((a, b) => order[a.k] - order[b.k]);
+  for (const sh of list){
+    if (sh.k === 'settings'){ const rows = sh.rows.filter(r => r.some(x => String(x ?? '').trim() !== '')); const hdr = ['setting','key','field','item'].includes(rNormHead(rows[0][0])) ? 1 : 0; done.settings += rApplySettings(E, rows.slice(hdr)); done.sheets.push(sh.name); }
+    else if (sh.k === 'national'){ const T = rTableRows(E, sh.rows); rApplyNational(E, { head: T[0], rows: (T.national ? T.national.rows : []).concat(T.slice(1)) }); done.national = true; done.sheets.push(sh.name); }
+    else if (sh.k === 'results'){ try { const r = rImportTable(sh.rows); done.results++; done.made += r.made; done.electorates += r.electorates; done.skipped += r.skipped; if (r.national) done.national = true; done.sheets.push(sh.name); } catch (err){ if (!(err instanceof UserError)) throw err; } }
+  }
+  if (!done.results && !done.national && !done.settings) throw new UserError('No results were found in that workbook. Download the Excel template to see the layout it reads.');
+  if (done.electorates && E.electorates.some(e => rnum(e.seatsAvail) != null) && list.some(sh => sh.k === 'results' && sh.rows.some(r => r.some(x => /district_seats|seats_available|magnitude/.test(rNormHead(x)))))) E.system = 'list';
+  return done;
+}
+/* ---------- .xlsx reading and writing (zip + XML, no library) ---------- */
+async function unzipEntries(buf){
+  const dv = new DataView(buf), u8 = new Uint8Array(buf); let eo = -1;
+  for (let i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) if (dv.getUint32(i, true) === 0x06054b50){ eo = i; break; }
+  if (eo < 0) throw new UserError('That file is not an Excel .xlsx workbook. In Excel, use Save As › Excel Workbook (.xlsx), or save as CSV.');
+  const cnt = dv.getUint16(eo + 10, true); let p = dv.getUint32(eo + 16, true); const out = {}, td = new TextDecoder();
+  for (let i = 0; i < cnt; i++){
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true), lo = dv.getUint32(p + 42, true);
+    const name = td.decode(u8.subarray(p + 46, p + 46 + nlen)); p += 46 + nlen + xlen + clen;
+    out[name] = { method, start: lo + 30 + dv.getUint16(lo + 26, true) + dv.getUint16(lo + 28, true), csize };
+  }
+  const read = async name => { const e = out[name]; if (!e) return null; const data = u8.subarray(e.start, e.start + e.csize);
+    if (e.method === 0) return td.decode(data);
+    if (e.method !== 8 || typeof DecompressionStream === 'undefined') throw new UserError('This browser can’t open that workbook. Save it as CSV and import that instead.');
+    const ds = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw')); return await new Response(ds).text(); };
+  return { names: Object.keys(out), read };
+}
+async function readXlsx(buf){
+  const z = await unzipEntries(buf), xml = t => new DOMParser().parseFromString(t, 'application/xml'), tags = (d, n) => [...d.getElementsByTagNameNS('*', n)];
+  const wbT = await z.read('xl/workbook.xml'); if (!wbT) throw new UserError('That workbook has no sheets I can read. Save it as .xlsx or CSV.');
+  const relT = await z.read('xl/_rels/workbook.xml.rels'), rels = {};
+  if (relT) tags(xml(relT), 'Relationship').forEach(r => rels[r.getAttribute('Id')] = r.getAttribute('Target'));
+  const ssT = await z.read('xl/sharedStrings.xml'), ss = ssT ? tags(xml(ssT), 'si').map(si => tags(si, 't').map(t => t.textContent).join('')) : [];
+  const colIdx = ref => { let n = 0; for (const ch of ref.replace(/\d+/g, '')) n = n*26 + ch.charCodeAt(0) - 64; return n - 1; };
+  const sheets = [];
+  for (const sh of tags(xml(wbT), 'sheet')){
+    const rid0 = sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id') || sh.getAttribute('r:id');
+    let target = rels[rid0] || ''; target = target.replace(/^\//, ''); if (!target.startsWith('xl/')) target = 'xl/' + target;
+    const t = await z.read(target); if (!t) continue;
+    const rows = [];
+    for (const row of tags(xml(t), 'row')){
+      const ri = (+row.getAttribute('r') || rows.length + 1) - 1, arr = rows[ri] = rows[ri] || [];
+      let ci = 0;
+      for (const c of tags(row, 'c')){ const ref = c.getAttribute('r'); if (ref) ci = colIdx(ref);
+        const ty = c.getAttribute('t'), v = tags(c, 'v')[0];
+        let val = '';
+        if (ty === 's') val = v ? ss[+v.textContent] ?? '' : '';
+        else if (ty === 'inlineStr') val = tags(c, 't').map(x => x.textContent).join('');
+        else if (ty === 'b') val = v ? (v.textContent === '1' ? 'TRUE' : 'FALSE') : '';
+        else if (ty === 'str' || ty === 'e') val = v ? v.textContent : '';
+        else val = v ? (isFinite(+v.textContent) ? +v.textContent : v.textContent) : '';
+        arr[ci++] = val; } }
+    for (let i = 0; i < rows.length; i++){ rows[i] = rows[i] || []; for (let j = 0; j < rows[i].length; j++) if (rows[i][j] === undefined) rows[i][j] = ''; }
+    sheets.push({ name: sh.getAttribute('name') || `Sheet${sheets.length + 1}`, rows });
+  }
+  return sheets;
+}
+function zipStore(files){
+  const te = new TextEncoder(), parts = [], cen = []; let off = 0;
+  for (const [name, text] of files){ const nb = te.encode(name), db = te.encode(text), crc = crc32(db);
+    const lh = new DataView(new ArrayBuffer(30)); lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(8, 0, true); lh.setUint32(14, crc, true); lh.setUint32(18, db.length, true); lh.setUint32(22, db.length, true); lh.setUint16(26, nb.length, true);
+    parts.push(new Uint8Array(lh.buffer), nb, db);
+    const ch = new DataView(new ArrayBuffer(46)); ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint32(16, crc, true); ch.setUint32(20, db.length, true); ch.setUint32(24, db.length, true); ch.setUint16(28, nb.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), nb); off += 30 + nb.length + db.length; }
+  const csize = cen.reduce((t, a) => t + a.length, 0), end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, csize, true); end.setUint32(16, off, true);
+  return new Blob(parts.concat(cen, [new Uint8Array(end.buffer)]), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+function writeXlsx(sheets){
+  const x = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const colL = i => { let s = ''; i++; while (i){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1)/26); } return s; };
+  const sheetXml = rows => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${rows[0].map((h, i) => `<col min="${i + 1}" max="${i + 1}" width="${Math.max(10, Math.min(28, String(h).length + 4))}" customWidth="1"/>`).join('')}</cols><sheetData>${rows.map((r, ri) => `<row r="${ri + 1}">${r.map((v, ci) => v === '' || v == null ? '' : typeof v === 'number' && isFinite(v) ? `<c r="${colL(ci)}${ri + 1}"${ri ? '' : ' s="1"'}><v>${v}</v></c>` : `<c r="${colL(ci)}${ri + 1}" t="inlineStr"${ri ? '' : ' s="1"'}><is><t>${x(v)}</t></is></c>`).join('')}</row>`).join('')}</sheetData></worksheet>`;
+  const files = [
+    ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((s, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`],
+    ['_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+    ['xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${x(s.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets></workbook>`],
+    ['xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((s, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+    ['xl/styles.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`],
+  ].concat(sheets.map((s, i) => [`xl/worksheets/sheet${i + 1}.xml`, sheetXml(s.rows)]));
+  return zipStore(files);
+}
+/* the current election as a workbook: results by region, nationwide totals, settings */
+function rWorkbook(E){
+  const nat = nationalCalc(E), sc = seatCalc(E), list = E.system === 'list';
+  const res = [['region', 'state', ...(list ? [] : ['candidate']), 'party', 'party_name', 'votes', 'prev_pct', ...(list ? ['district_seats', 'prev_seats'] : ['mp']), 'booths_counted', 'booths_total', 'votes_counted', 'votes_expected', 'result_status']];
+  for (const el of E.electorates) el.candidates.forEach((k, i) => { const P = partyOf(E, k.party);
+    res.push([el.name, el.region || '', ...(list ? [] : [k.name]), P.abbr, P.name, rnum(k.votes) ?? '', rnum(k.prevPct) ?? '', ...(list ? [i ? '' : (rnum(el.seatsAvail) ?? ''), rnum(k.prevSeats) ?? ''] : [k.mp ? 'yes' : '']),
+      i ? '' : rnum(el.boothsCounted) ?? '', i ? '' : rnum(el.boothsTotal) ?? '', i ? '' : rnum(el.votesCounted) ?? '', i ? '' : rnum(el.votesExpected) ?? '', i ? '' : el.status]); });
+  const natRows = [['party', 'party_name', 'colour', 'leader', 'vote_pct', 'prev_pct', 'votes', 'prev_votes', 'seats_declared', 'seats_projected', 'seats_ahead', 'seats_last_time']];
+  for (const P of E.parties){ const n = nat[P.id] || {}, m = E.national[P.id] || {}, r = sc.list.find(x => x.P.id === P.id) || {};
+    natRows.push([P.abbr, P.name, P.color, P.leader || partyLeader(E, P), n.pct != null ? +n.pct.toFixed(2) : '', n.prev ?? '', m.votes ?? '', m.prevVotes ?? '', r.declared ?? 0, r.projected ?? 0, r.leading ?? 0, r.prev ?? 0]); }
+  const set = [['setting', 'value'], ['name', E.name], ['year', E.year ?? ''], ['region', E.region || ''], ['type', E.type || ''], ['system', list ? 'party lists' : 'candidates'], ['total_seats', E.seats.total ?? ''], ['majority', E.seats.majority ?? ''],
+    ['method', listMethodName(E.list.method)], ['threshold', E.list.threshold ?? ''], ['threshold_scope', E.list.scope === 'district' ? 'district' : 'nationwide'], ['status', E.status || 'counting']];
+  return writeXlsx([{ name: 'Results by region', rows: res }, { name: 'Nationwide', rows: natRows }, { name: 'Settings', rows: set }]);
+}
+async function rImportFile(f){
+  const isX = /\.(xlsx|xlsm)$/i.test(f.name) || /spreadsheetml/.test(f.type);
+  if (/\.(xls|numbers|ods)$/i.test(f.name)) throw new UserError('Save the spreadsheet as Excel Workbook (.xlsx) or CSV, then import it.');
+  if (!isX) return Object.assign({ kind: 'csv' }, rCsvImport(await f.text()));
+  return Object.assign({ kind: 'xlsx' }, rImportWorkbook(await readXlsx(await f.arrayBuffer())));
 }
 document.addEventListener('change', e => { const t = e.target; if (!t.dataset || !t.dataset.texck) return; const L = byId(t.dataset.texck); if (!L) return; L.tex = t.checked ? 'hatch' : ''; if (t.checked && L.texOp == null) L.texOp = 25; renderInspector(); render(); commit(); });
 $('#csvfile').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try { const r = rCsvImport(await f.text()); rebuildResults(); renderResultsPanel(); commit(); toast(`Imported ${r.made} candidate${r.made === 1 ? '' : 's'} in ${r.electorates} electorate${r.electorates === 1 ? '' : 's'}${r.skipped ? `. ${r.skipped} row${r.skipped === 1 ? ' was' : 's were'} skipped (missing candidate or party)` : ''}. Check the warnings under Checks.`); }
+  try { const r = await rImportFile(f); rebuildResults(); renderResultsPanel(); commit();
+    const E = ensureElection(), unit = E.system === 'list' ? ['party result', 'district'] : ['candidate', 'electorate'], parts = [];
+    if (r.made) parts.push(`${r.made} ${unit[0]}${r.made === 1 ? '' : 's'} in ${r.electorates} ${unit[1]}${r.electorates === 1 ? '' : 's'}`);
+    if (r.national) parts.push('nationwide totals'); if (r.settings) parts.push(`${r.settings} setting${r.settings === 1 ? '' : 's'}`);
+    toast(`Imported ${parts.join(', ') || 'nothing new'}${r.skipped ? `. ${r.skipped} row${r.skipped === 1 ? ' was' : 's were'} skipped` : ''}. Check the warnings under Checks.`); }
   catch (err){ toast(err instanceof UserError ? err.message : 'That file could not be read as CSV.'); }
 });
 if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (isResults()) rebuildResults({ keepInspector: true }); });
@@ -9098,7 +9458,7 @@ function randomResults(){
   const d = new Date(); el.updated = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-window.__degv = { assets, state, get tpl(){ return tpl; }, get project(){ return project; }, aabb, setSelection, alignSel, distributeSel, view, get selIds(){ return selIds; }, render, byId, imageReport, elCalc, seatCalc, blocCalc, nationalCalc, rBindEdit, rebuildResults, renderResultsPanel, rCsvImport, rCsvExport, get rTab(){ return rTab; }, switchTemplate, openResults, IMG, X, traceLogo, detectRegions, marchingSquares, picCache, applyEnh, pictureFor, SvgCtx, get canvasK(){ return canvasK; }, openExport, runExport, decodeImageBlob, makeSource };
+window.__degv = { PARTIES, rSyncOwnParties, readXlsx, rImportWorkbook, rWorkbook, rImportFile, assets, state, get tpl(){ return tpl; }, get project(){ return project; }, aabb, setSelection, alignSel, distributeSel, view, get selIds(){ return selIds; }, render, byId, imageReport, elCalc, seatCalc, blocCalc, nationalCalc, rBindEdit, rebuildResults, renderResultsPanel, rCsvImport, rCsvExport, get rTab(){ return rTab; }, switchTemplate, openResults, IMG, X, traceLogo, detectRegions, marchingSquares, picCache, applyEnh, pictureFor, SvgCtx, get canvasK(){ return canvasK; }, openExport, runExport, decodeImageBlob, makeSource };
 loadKits();
 (async () => { await loadMyFiles(); await loadProjects(); })();
 renderTemplates(); renderQuick(); updateTplChrome();
