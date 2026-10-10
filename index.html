@@ -5442,10 +5442,11 @@ function resetLayout(){
 /* ---------- template browsing: family layouts (left) + full gallery ---------- */
 const famOf = t => t.group || t.id;
 /* Election Results graphics: one template per kind (layers come from the election data) */
-for (const [k, nm] of [['cand','Candidate results'],['tpp','Bloc comparison'],['count','Count progress'],['seats','Seat ticker'],['change','Seat change'],['proj','Projected result'],['decl','Party result'],['primary','Primary vote breakdown'],['detail','Detailed electorate result'],['summary','Election summary'],['blocvote','Bloc vote with leaders'],['blocseats','Bloc seats with leaders'],['alloc','District seat allocation'],['parl','Parliament projection']]) TEMPLATES.push({ id: 'res_' + k, rkind: k, group: 'results', name: 'Election Results', varName: nm, fmt: '16:9 broadcast',
+for (const [k, nm] of [['cand','Candidate results'],['tpp','Bloc comparison'],['count','Count progress'],['seats','Seat ticker'],['change','Seat change'],['proj','Projected result'],['decl','Party result'],['primary','Primary vote breakdown'],['detail','Detailed electorate result'],['summary','Election summary'],['blocvote','Bloc vote with leaders'],['blocseats','Bloc seats with leaders'],['alloc','District seat allocation'],['parl','Parliament projection'],['contest','Candidate contest']]) TEMPLATES.push({ id: 'res_' + k, rkind: k, group: 'results', name: 'Election Results', varName: nm, fmt: '16:9 broadcast',
   sub: `Election Results · ${nm}`, w: 1920, h: 1080, sides: 1, sel: null, custom: true, quick: [], uploads: [], hint: '',
   thumb: `<span class="thumb wide" style="background:#ECEEF2"><i style="top:0;left:0;right:0;height:17%;background:#fff"></i><i style="top:30%;left:6%;right:${k === 'tpp' ? 60 : 8}%;height:12%;background:#D8262E"></i><i style="top:46%;left:6%;right:${k === 'tpp' ? 60 : 30}%;height:12%;background:#1E4FA8"></i><i style="top:62%;left:6%;right:${k === 'tpp' ? 60 : 55}%;height:12%;background:#4FA82A"></i></span>`,
   build: () => buildResultsLayers(k) });
+{ const T = TEMPLATES.find(t => t.id === 'res_contest'); if (T) Object.assign(T, { pages: 2, fixedPages: true, pageNames: ['Setup', 'Projection'], rpages: 2, fmt: '16:9 broadcast · 2 slides', build: () => [buildResultsLayers('contest', 0), buildResultsLayers('contest', 1)] }); }
 const FAMILIES = (() => { const out = [], seen = new Set(); for (const t of TEMPLATES){ const f = famOf(t); if (!seen.has(f)){ seen.add(f); out.push({ id:f, name:t.name, items:TEMPLATES.filter(y => famOf(y) === f) }); } } return out; })();
 const varTitle = t => t.varName || (t.subName ? t.subName : t.fmt);
 const varSub = t => [t.subName && t.varName ? t.subName : null, t.fmt].filter(Boolean).join(', ');
@@ -6929,6 +6930,7 @@ async function placeFile(id, asNew, opts = {}){
 }
 /* put a source into an existing image layer, fitting frames and breakout copies */
 function placeSourceInto(src, L, img, maskBlob){
+  { const m = /^rb_c([sp])(.+)ph$/.exec(L.id); if (m) assets[`rb_c${m[1] === 's' ? 'p' : 's'}${m[2]}ph`] = src; }   // a contest photo goes on both slides
   const Fc = containerOf(L); if (Fc){ assets[L.id] = src; fitContent(Fc, L, 'fill'); return; }
   assets[L.id] = src; L.scale = L.fit === 'cover' ? 1 : (L.id === 'photo' ? 1 : L.scale);
   const linkedSub = state.layers.find(l => l.type === 'image' && l.linkTo === L.id);
@@ -8130,6 +8132,7 @@ function elCalc(el, E){
     if (agg.size < cands.filter(k => k.party && k.pctUse != null).length) info.push('A party is listed more than once; its rows are added together.');
     const rows = [...agg].map(([pid, v]) => { const sh = nat ? nat[pid] && nat[pid].pct : v; return { pid, v, below: thr > 0 && sh != null && sh < thr }; });
     const m = listAlloc(rows.filter(r => !r.below), seatsAvail, LS.method || 'dhondt');
+    if (cands.some(k => rnum(k.seatsFixed) != null)){ m.clear(); for (const k of cands) if (k.party) m.set(k.party, (m.get(k.party) || 0) + (rnum(k.seatsFixed) || 0)); for (const r of rows) r.below = r.below && !(m.get(r.pid) > 0); }   // seats entered in the spreadsheet
     alloc = rows.map(r => ({ P: partyOf(E, r.pid), pid: r.pid, pct: r.v, below: r.below, seats: m.get(r.pid) || 0, prev: prevS.get(r.pid) || 0 })).sort((a, b) => b.seats - a.seats || b.pct - a.pct);
     for (const k of cands){ const a = alloc.find(x => x.pid === k.party); k.seatsWon = a ? a.seats : 0; k.below = a ? a.below : false; k.prevSeatsP = a ? a.prev : 0; }
     if (seatsAvail == null) warn.push('Enter how many seats this district elects, so they can be shared out.');
@@ -8304,6 +8307,7 @@ function RB(kind){
     text: (k, t, x, y, size, o = {}) => add(textLayer(Object.assign({ id: 'rb_' + k, name: k, text: String(t), x, y, size: Math.max(6, size), font: F, weight: 800, color: ink, align: 'left', vmid: true, track: 0, gap: 1, width: 0, emFont: null, emItalic: false, emWeight: 900, emOn: true, marks: false }, o))),
     arc: (k, cx, cy, r, a0, a1, fill, o = {}) => add(shapeLayer('arc', Object.assign({ id: 'rb_' + k, name: k, x: cx, y: o.semi === false ? cy : cy - r/2, w: r*2, h: o.semi === false ? r*2 : r, a0, a1, ir: 0, semi: o.semi !== false, fill, strokeW: 0, strokeOn: false, shade: 0 }, o))),
     line: (k, x1, x2, y, color, o = {}) => add(shapeLayer('poly', Object.assign({ id: 'rb_' + k, name: k, x: (x1 + x2)/2, y, w: Math.max(1, x2 - x1), h: 1, closed: false, fillOn: false, fill: color, stroke: color, strokeW: 3*u, strokeOn: true, strokeDash: 'dash', pts: [[-.5, 0], [.5, 0]] }, o))),
+    poly: (k, x, y, w, h, pts, fill, o = {}) => add(shapeLayer('poly', Object.assign({ id: 'rb_' + k, name: k, x, y, w: Math.max(1, w), h: Math.max(1, h), closed: true, fill, pts, strokeW: 0, strokeOn: false }, o))),
     icon: (k, icon, x, y, size, color, o = {}) => add(iconLayer(Object.assign({ id: 'rb_' + k, name: k, icon, x, y, size, color }, o))),
     image: (k, x, y, w, h, o = {}) => add(imageLayer(Object.assign({ id: 'rb_' + k, name: k, x, y, box: [w, h], scale: 1 }, o))),
   };
@@ -8589,9 +8593,9 @@ function buildSeats(R){
     R.rect('tb' + i, x, ty + th*.62, tw0, th*.38, pDark(P), Object.assign({ name: `${P.abbr} tile base`, radius: 14*u }, hatch(S)));
     R.text('ta' + i, P.abbr, x + tw0/2, ty + th*.14, Math.min(th*.11, tw0*.3), { name: `${P.abbr} name`, align: 'center', weight: 800, color: tc, fitW: tw0 - 16*u });
     R.text('tn' + i, String(s.seats), x + tw0/2, ty + th*.4, Math.min(th*.34, tw0*.62), { name: `${P.abbr} seats`, align: 'center', weight: 900, color: tc, fitW: tw0 - 16*u });
-    const ch = s.net > 0 ? `▲ ${s.net}` : s.net < 0 ? `▼ ${-s.net}` : 'NO CHANGE';
-    R.text('tc' + i, ch, x + tw0/2, ty + th*.74, Math.min(th*.09, tw0*.17), { name: `${P.abbr} net change`, align: 'center', weight: 800, color: tc, fitW: tw0 - 14*u });
-    R.text('tg' + i, `+${s.gains} / −${s.losses}${s.leading ? `  ·  ${s.leading} ahead` : ''}`, x + tw0/2, ty + th*.88, th*.065, { name: `${P.abbr} gains and losses`, align: 'center', weight: 500, color: tc, fitW: tw0 - 16*u });
+    const ch = s.net > 0 ? `▲ ${s.net}` : s.net < 0 ? `▼ ${-s.net}` : '—', gl = S.tickGL !== false;
+    R.text('tc' + i, ch, x + tw0/2, ty + th*(gl ? .74 : .81), Math.min(th*(gl ? .09 : .12), tw0*(s.net ? .17 : .3)), { name: `${P.abbr} net change`, align: 'center', weight: 800, color: tc, fitW: tw0 - 14*u });
+    if (gl) R.text('tg' + i, `+${s.gains} / −${s.losses}${s.leading ? `  ·  ${s.leading} ahead` : ''}`, x + tw0/2, ty + th*.88, th*.065, { name: `${P.abbr} gains and losses`, align: 'center', weight: 500, color: tc, fitW: tw0 - 16*u });
   });
   const by = ty + th + 90*u; rSeatBar(R, ord === 'seats' ? sc : Object.assign({}, sc, { list: all.filter(s => s.seats || s.leading) }), pad, by, W - pad*2, 44*u);
   R.text('seatcounts', `Declared ${sc.declared}  ·  Projected ${sc.projected}  ·  Ahead, not called ${sc.leading}  ·  Undecided ${Math.max(0, sc.total - sc.declared - sc.projected - sc.leading)}  ·  ${sc.total} seats`, pad, by + 82*u, 20*u, { name: 'Seat summary', weight: 500, color: R.sub, fitW: W - pad*2 });
@@ -8637,6 +8641,98 @@ function buildParl(R){
     R.rect(k + 'bot', cx0, cardsY + topH + lineH, cw, cardsH - topH - lineH, '#E4E7EC', { name: `${x.P.abbr} label strip` });
     R.text(k + 'ab', x.P.abbr, cx0 + cw/2, cardsY + topH + lineH + (cardsH - topH - lineH)/2, (cardsH - topH - lineH)*.5, { bind: { t: 'pabbr', pid: x.P.id }, name: `${x.P.abbr} label`, align: 'center', weight: 700, color: '#15171C', fitW: cw - 16*u }); });
   return sc;
+}
+/* ---------- O. candidate contest (mayoral, popular vote): setup and projection slides ---------- */
+function contestPicks(E, el, c, S){
+  const n = S.cN === 3 ? 3 : 2, byVote = c.cands.slice().sort((a, b) => (b.pctUse ?? -1) - (a.pctUse ?? -1) || a.i - b.i);
+  const out = [];
+  for (let i = 0; i < n; i++){ const id = (S.cPick || [])[i], k = id && c.cands.find(x => x.id === id && !out.includes(x)); out.push(k || byVote.find(x => !out.includes(x))); }
+  return out.filter(Boolean);
+}
+const splitName = nm => { const w = String(nm || '').trim().split(/\s+/); return w.length > 1 ? [w.slice(0, -1).join(' '), w[w.length - 1]] : ['', w[0] || '']; };
+function contestMargin(E, el, c, S){
+  if (S.cMargin != null && String(S.cMargin).trim() !== '') return { P: partyOf(E, S.cMarginParty || el.prevParty), txt: String(S.cMargin).replace(/%$/, '') };
+  const H0 = el.prevParty ? partyOf(E, el.prevParty) : null; if (!H0 || !H0.id) return null;
+  const T = el.tpp || {}, pa = rnum(T.prevAPct);
+  if (pa != null && (T.a === H0.id || T.b === H0.id)) return { P: H0, txt: fmtNum(Math.abs((T.a === H0.id ? pa : 100 - pa) - 50), 1) };
+  const prev = c.cands.filter(k => rnum(k.prevPct) != null).sort((a, b) => rnum(b.prevPct) - rnum(a.prevPct)), h = prev.find(k => k.party === H0.id), o = prev.find(k => k.party !== H0.id);
+  return h && o ? { P: H0, txt: fmtNum(Math.abs(rnum(h.prevPct) - rnum(o.prevPct)), 1) } : null;
+}
+/* each candidate's photo is shared by both slides */
+function contestPhoto(cid, page){ const a = 'rb_cs' + cid + 'ph', b = 'rb_cp' + cid + 'ph'; if (!assets[a] && assets[b]) assets[a] = assets[b]; if (!assets[b] && assets[a]) assets[b] = assets[a]; return page ? b : a; }
+function rTick(R, k, x, y, s, color){ R.poly(k, x, y, s, s, [[-.32, .02], [-.08, .26], [.34, -.24]], color, { name: 'Tick', closed: false, fillOn: false, strokeOn: true, strokeW: s*.16, stroke: color }); }
+function rCross(R, k, x, y, s, color){ R.poly(k + 'a', x, y, s, s, [[-.28, -.28], [.28, .28]], color, { name: 'Cross', closed: false, fillOn: false, strokeOn: true, strokeW: s*.15, stroke: color });
+  R.poly(k + 'b', x, y, s, s, [[.28, -.28], [-.28, .28]], color, { name: 'Cross', closed: false, fillOn: false, strokeOn: true, strokeW: s*.15, stroke: color }); }
+function rMPBadge(R, k, x, y, h, P){ const w = h*1.45; R.rect(k + 'bg', x, y, w, h, '#FFFFFF', { name: 'MP badge', radius: h*.18 }); R.text(k, 'MP', x + w/2, y + h/2 + h*.02, h*.62, { name: 'MP', align: 'center', weight: 900, color: P.color }); return w; }
+function buildContestSetup(R){
+  const { E, S, W, H, u } = R, el = curEl(), c = elCalc(el, E);
+  const { hh } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - (R.wide ? 64 : 48)*u - 250*u, hh*.42);
+  const list = contestPicks(E, el, c, S), n = Math.max(1, list.length), y0 = hh, y1 = H - 56*u, mw = S.cMap === false ? 0 : W*.48;
+  // map panel: draw a simple coast and highlight in the holder's colour; an uploaded map image covers it
+  if (mw){ const M = contestMargin(E, el, c, S), hold = el.prevParty ? partyOf(E, el.prevParty) : (M && M.P) || { color: '#7A808C' };
+    R.rect('csmapbg', 0, y0, mw, y1 - y0, '#5A6270', { name: 'Map panel' });
+    R.poly('csland', mw*.42, (y0 + y1)/2, mw*.84, y1 - y0, [[-.5,-.5],[.36,-.5],[.3,-.3],[.42,-.12],[.3,.06],[.38,.24],[.22,.38],[.16,.5],[-.5,.5]], '#E6E5E0', { name: 'Map land' });
+    R.poly('csregion', mw*.4, y0 + (y1 - y0)*.56, mw*.26, (y1 - y0)*.26, [[-.4,-.1],[-.1,-.5],[.25,-.38],[.5,-.05],[.3,.42],[-.05,.5],[-.45,.25]], hold.color || '#7A808C', { name: 'Map area' });
+    R.image('csmap', mw/2, (y0 + y1)/2, mw, y1 - y0, { name: 'Map image (upload your map)', clipTo: 'rb_csmapbg' });
+    if (M && S.cMarginOn !== false){ const bw = 270*u, bh = 104*u, bx = 40*u, by = y0 + 20*u;
+      R.rect('csmgbg', bx, by, bw, bh, M.P.color || '#5B6170', { name: 'Margin box' });
+      R.text('csmgl', 'Margin', bx + 14*u, by + 26*u, 24*u, { name: 'Margin label', weight: 600, color: pText(M.P) });
+      R.text('csmgv', `${M.P.abbr} ${decC(M.txt)}%`, bx + 14*u, by + 70*u, 44*u, { name: 'Margin', weight: 900, color: pText(M.P), fitW: bw - 24*u }); } }
+  // candidate rows
+  const rx = mw, rw = W - mw, rh = (y1 - y0)/n;
+  list.forEach((k, i) => { const P = k.P, y = y0 + i*rh, key = 'cs' + k.id, txt = pText(P), [fn, ln] = splitName(k.cname || k.name), pad = 60*u;
+    R.rect(key + 'bg', rx, y, rw, rh, P.color, { name: `${k.name} panel` });
+    R.image(key + 'ph', rx + rw - rh*.62, y + rh/2, rh*1.15, rh*1.04, { name: `${k.name} photo`, gen: 'politician', clipTo: 'rb_' + key + 'bg' }); contestPhoto(k.id, 0);
+    // stack top to bottom: MP badge, first name, surname, party; centred in the row
+    const big = Math.min(rh*.3, 96*u), fsz = big*.62, psz = big*.4, mph = k.mp ? Math.min(big*.5, 44*u) : 0, g1 = 8*u;
+    const parts = [mph ? mph + g1 : 0, fn ? fsz*1.1 : 0, big*1.02, P.id ? psz*1.3 : 0], tot = parts.reduce((t, v) => t + v, 0);
+    let yy = y + (rh - tot)/2; const fw0 = rw - rh*1.1 - pad;
+    if (mph){ rMPBadge(R, key + 'mp', rx + pad, yy, mph, P); yy += mph + g1; }
+    if (fn){ R.text(key + 'fn', fn, rx + pad, yy + fsz*.55, fsz, { bind: { t: 'cfirst', cid: k.id }, name: `${k.name} first name`, weight: 300, color: txt, fitW: fw0 }); yy += fsz*1.1; }
+    R.text(key + 'ln', ln, rx + pad - 2*u, yy + big*.5, big, { bind: { t: 'clast', cid: k.id }, name: `${k.name} surname`, weight: 800, color: txt, fitW: fw0, track: -1 }); yy += big*1.02;
+    if (P.id) R.text(key + 'pa', P.abbr, rx + pad, yy + psz*.65, psz, { bind: { t: 'pabbr', pid: P.id }, name: `${k.name} party`, weight: 700, color: txt });
+  });
+  return c;
+}
+function buildContestProj(R){
+  const { E, S, W, H, u, Bd } = R, el = curEl(), c = elCalc(el, E);
+  const { hh } = rFrame(R, el.region, el.name, { bindEl: true });
+  rProgress(R, c, W - (R.wide ? 64 : 48)*u - 250*u, hh*.42);
+  const list = contestPicks(E, el, c, S), n = Math.max(1, list.length), bannerH = 56*u, subH = 52*u, yB = H - bannerH - subH - 16*u, y0 = hh, colW = W/n;
+  const Wp = c.winner || (c.status !== 'counting' ? c.lead : null), called = !!(Wp && (c.status === 'projected' || c.status === 'projres' || c.status === 'declared' || c.status === 'final'));
+  const wk = Wp ? list.find(k => k.party === Wp.id) || c.cands.filter(k => k.party === Wp.id).sort((a, b) => (b.pctUse ?? 0) - (a.pctUse ?? 0))[0] : null;
+  list.forEach((k, i) => { const P = k.P, x = i*colW, key = 'cp' + k.id, txt = pText(P), [fn, ln] = splitName(k.cname || k.name);
+    R.rect(key + 'bg', x, y0, colW, yB - y0, pDark(P), { name: `${k.name} column` });
+    if (i) R.rect(key + 'sep', x - 1*u, y0, 2*u, yB - y0, '#FFFFFF', { name: 'Column divider', opacity: 25 });
+    const cardH = Math.min(150*u, (yB - y0)*.27), cm = (n === 2 ? 46 : 0)*u, cardY = yB - cardH - (n === 2 ? 26*u : 0), cardX = x + cm, cardW = colW - cm*2;
+    const phH = cardY - y0 - 10*u;
+    R.image(key + 'ph', x + colW/2, y0 + 10*u + phH/2, Math.min(colW*.9, phH*1.1), phH, { name: `${k.name} photo`, gen: 'politician', clipTo: 'rb_' + key + 'bg' }); contestPhoto(k.id, 1);
+    R.rect(key + 'card', cardX, cardY, cardW, cardH, P.color, { name: `${k.name} name card`, radius: n === 2 ? 14*u : 0 });
+    const big = Math.min(cardH*(n === 2 ? .38 : .32), 64*u), tx = cardX + (n === 2 ? 30 : 46)*u;
+    if (fn) R.text(key + 'fn', fn, tx, cardY + cardH*(n === 2 ? .32 : .24), big*.78, { bind: { t: 'cfirst', cid: k.id }, name: `${k.name} first name`, weight: 300, color: txt, fitW: cardW - 120*u });
+    R.text(key + 'ln', ln, tx - 2*u, cardY + (fn ? cardH*(n === 2 ? .66 : .52) : cardH*.45), big, { bind: { t: 'clast', cid: k.id }, name: `${k.name} surname`, weight: 800, color: txt, fitW: cardW - 120*u });
+    if (P.id){ if (n === 2) R.text(key + 'pa', P.abbr, cardX + cardW - 24*u, cardY + 34*u, big*.5, { bind: { t: 'pabbr', pid: P.id }, name: `${k.name} party`, align: 'right', weight: 700, color: txt });
+      else R.text(key + 'pa', P.abbr, tx, cardY + cardH*.8, big*.48, { bind: { t: 'pabbr', pid: P.id }, name: `${k.name} party`, weight: 700, color: txt }); }
+    // badges at the right of the photo: MP, then the result
+    const bs = Math.min(80*u, colW*.13), bx = x + colW - bs - (n === 2 ? 44 : 22)*u, by = cardY - bs - 26*u, marks = called && S.cMarks !== false;
+    if (marks){ R.rect(key + 'rbg', bx, by, bs, bs, '#FFFFFF', { name: 'Result box', radius: bs*.08 });
+      if (wk && k.id === wk.id) rTick(R, key + 'tick', bx + bs/2, by + bs/2, bs*.8, Wp.color); else rCross(R, key + 'x', bx + bs/2, by + bs/2, bs*.78, P.color); }
+    if (k.mp){ const mh = bs*.62, mw = mh*1.45; rMPBadge(R, key + 'mp', bx + bs - mw, marks ? by - mh - 12*u : cardY - mh - 26*u, mh, P); }
+  });
+  // projection banner and headline
+  const col = Wp ? Wp.color : '#5B6170', btxt = Wp ? pText(Wp) : '#FFFFFF', yb = yB + 6*u;
+  R.rect('cpban', 0, yb, W, bannerH, col, { name: 'Projection banner' });
+  const decl = c.status === 'declared' || c.status === 'final';
+  const lab = decl ? 'DECLARED' : `${(Bd.org || 'RESULTS DESK').toUpperCase()} ${called ? 'PROJECTION' : ''}`.trim();
+  const word = Wp && called ? `${Wp.abbr} ${el.prevParty ? (el.prevParty === Wp.id ? 'RETAIN' : 'GAIN') : 'WIN'}` : c.statusText;
+  const ls = 24*u, ws = 38*u, gap = 26*u, lw = tw(lab, ls, 700, R.F), ww = tw(word, ws, 900, R.F), sx = W/2 - (lw + gap + ww)/2;
+  R.text('cpbl', lab, sx, yb + bannerH/2, ls, { name: 'Projection label', weight: 700, color: btxt });
+  R.text('cpbw', word, sx + lw + gap, yb + bannerH/2, ws, { name: 'Result', weight: 900, color: btxt });
+  const head = (S.cHeadline || '').trim() || (wk && called ? `${wk.cname || wk.name} ${decl ? 'wins' : 'projected to win'} ${el.name}` : c.status === 'counting' ? 'Counting continues' : '');
+  R.rect('cpsub', 0, yb + bannerH, W, subH, '#FFFFFF', { name: 'Headline strip', opacity: 96 });
+  if (head) R.text('cphead', head, W/2, yb + bannerH + subH/2, 26*u, { name: 'Headline', align: 'center', weight: 500, color: '#15171C', fitW: W - 120*u });
+  return c;
 }
 /* ---------- E. seat change ---------- */
 function buildChange(R){
@@ -8946,10 +9042,11 @@ const R_KINDS = {
   primary: ['Primary vote breakdown', buildPrimary], detail: ['Detailed electorate result', buildDetail], summary: ['Election summary', buildSummary],
   blocvote: ['Bloc vote with leaders', R => buildBlocLeaders(R, 'vote')], blocseats: ['Bloc seats with leaders', R => buildBlocLeaders(R, 'seats')],
   alloc: ['District seat allocation', buildAlloc], parl: ['Parliament projection', buildParl],
+  contest: ['Candidate contest: setup and projection', (R, page) => page ? buildContestProj(R) : buildContestSetup(R)],
 };
 const R_LISTNAMES = { cand: 'Party results', primary: 'Party vote breakdown', detail: 'Detailed district result' };
 const rKindName = k => (state.election && state.election.system === 'list' && R_LISTNAMES[k]) || (R_KINDS[k] || R_KINDS.cand)[0];
-function buildResultsLayers(kind){ const R = RB(kind); (R_KINDS[kind] || R_KINDS.cand)[1](R); return R.out; }
+function buildResultsLayers(kind, page = 0){ const R = RB(kind); R.page = page; (R_KINDS[kind] || R_KINDS.cand)[1](R, page); return R.out; }
 /* rebuild in place: keep moves (as offsets) and style edits the user made, unless the data behind that property changed */
 const R_CARRY = ['strokeDash','strokeOpacity','rot','size','color','font','weight','fill','fillOn','opacity','visible','locked','strokeW','stroke','strokeOn','radius','italic','track','tex','texOp','upper','text','w','h','a0','a1','ir','emWeight','align'];
 let rBuilding = false;
@@ -8959,7 +9056,11 @@ function rebuildResults(opts = {}){
   try {
     const own = rSyncOwnParties(ensureElection()); if (own.length){ toast(`${own.join(', ')} added to the results from your parties.`); setTimeout(() => renderResultsPanel(), 0); }
     const S = rStyle(); if (W !== S.w || H !== S.h){ tpl.w = W = S.w; tpl.h = H = S.h; sizeCanvas(); updateTplChrome && updateTplChrome(); }
-    const fresh = buildResultsLayers(tpl.rkind), old = new Map(state.layers.filter(l => l.rb).map(l => [l.id, l]));
+    const nPages = tpl.rpages || 1;
+    if (nPages > 1 && (!state.pages || state.pages.length !== nPages)){ state.pages = Array.from({ length: nPages }, (_, i) => (state.pages && state.pages[i]) || (i === (state.page || 0) ? state.layers : [])); }
+    for (let pg = 0; pg < nPages; pg++){
+    const cur = nPages > 1 ? state.pages[pg] : state.layers;
+    const fresh = buildResultsLayers(tpl.rkind, pg), old = new Map(cur.filter(l => l.rb).map(l => [l.id, l]));
     for (const L of fresh){
       const g0 = {}; for (const k of ['x', 'y', ...R_CARRY]) g0[k] = L[k];
       const o = old.get(L.id);
@@ -8972,9 +9073,11 @@ function rebuildResults(opts = {}){
       }
       L.g0 = g0; delete L.dk;
     }
-    const others = state.layers.filter(l => !l.rb);
-    state.layers.splice(0, state.layers.length, ...fresh, ...others);
-    if (state.pages) state.pages[state.page] = state.layers;
+    const others = cur.filter(l => !l.rb);
+    cur.splice(0, cur.length, ...fresh, ...others);
+    }
+    if (nPages > 1){ state.page = Math.min(state.page || 0, nPages - 1); state.layers = state.pages[state.page]; }
+    else if (state.pages) state.pages[state.page] = state.layers;
     selIds = selIds.filter(id => byId(id)); if (state.selected && !byId(state.selected)) state.selected = null;
   } finally { rBuilding = false; }
   if (!opts.quiet){ renderLayers(); render(); if (!opts.keepInspector) renderInspector(); }
@@ -9038,8 +9141,8 @@ function renderResultsPanel(){
       <div class="grid3">${rfield('A % (if no votes)', rin('el.tpp.aPct', el.tpp.aPct, { num: 1 }))}${rfield('A % last time', rin('el.tpp.prevAPct', el.tpp.prevAPct, { num: 1 }))}${rfield('Swing (manual)', rin('el.tpp.swing', el.tpp.swing, { num: 1, ph: c.tppSwingSrc === 'calc' ? c.tppSwingA.toFixed(2) : '' }))}</div>
       <p class="hint" data-rcalc="tpp">${esc(rTppText(c, F))}</p></section>` : ''}
     <section class="rsec"><h3>Checks</h3><div data-rcalc="warn">${rWarnHtml(c)}</div>
-      <div class="rrow"><button class="btn sm" data-ract="csv-import">Import Excel or CSV</button><button class="btn sm" data-ract="xlsx-export">Download as Excel</button><button class="btn sm" data-ract="csv-export">Export CSV</button><button class="btn sm" data-ract="csv-sample">CSV template</button></div>
-      <p class="hint">An Excel workbook can hold results by region (a row per party, or a column per party), a Nationwide sheet with each party’s vote, seats and leader, and a Settings sheet. A row named Total counts as the nationwide result. Download as Excel gives you the layout filled with these results.</p></section>`;
+      <div class="rrow"><button class="btn sm" data-ract="csv-import">Import Excel or CSV</button><button class="btn sm" data-ract="xlsx-export">Excel template</button><button class="btn sm" data-ract="csv-export">Export CSV</button><button class="btn sm" data-ract="csv-sample">CSV template</button></div>
+      <p class="hint"><b>Excel template</b> downloads these results as the DEGV workbook: a Party Key (colour, abbreviation, name, bloc), Demographics for each region, then this election and the previous one, with each party’s Votes, %, ±, Seats and ± per region, Turnout, and summaries with bloc seats. The %, ± and totals are Excel formulas. Fill it in and import it: parties, colours, blocs, regions, the previous election and the nationwide totals all come from the sheet. Other spreadsheets and CSV files also work.</p></section>`;
   }
   if (rTab === 'parties'){
     const own = ownParties();
@@ -9089,7 +9192,7 @@ function renderResultsPanel(){
     h += `<section class="rsec"><h3>${esc(rKindName(k))}</h3>
       ${rfield('Size', rsel('size', sizes, cur))}${cur === 'custom' ? `<div class="grid2">${rfield('Width px', rin('S.w', S.w, { num: 1 }))}${rfield('Height px', rin('S.h', S.h, { num: 1 }))}</div>` : ''}
       ${rfield('Font', `<select data-rk="S.font">${FONT_LIST.map(f => `<option ${f.f === S.font ? 'selected' : ''}>${esc(f.f)}</option>`).join('')}</select>`)}</section>`;
-    if (isBars || k === 'seats' || k === 'change') h += `<section class="rsec"><h3>Rows</h3><div class="grid2">${k === 'seats' ? rfield('Sort tiles by', rsel('S.tickOrder', [['seats','Most seats first'],['ideology','Left to right (party list order)'],['bloc','Bloc, then left to right']], S.tickOrder || 'seats')) : rfield('Order', rsel('S.order', [['votes','By vote share'],['party','By party order'],['manual','As entered']], S.order))}${rfield('Rows shown', rin('S.maxRows', S.maxRows, { num: 1 }))}</div>
+    if (isBars || k === 'seats' || k === 'change') h += `<section class="rsec"><h3>Rows</h3><div class="grid2">${k === 'seats' ? rck('S.tickGL', S.tickGL !== false, 'Gains and losses under the change') + rfield('Sort tiles by', rsel('S.tickOrder', [['seats','Most seats first'],['ideology','Left to right (party list order)'],['bloc','Bloc, then left to right']], S.tickOrder || 'seats')) : rfield('Order', rsel('S.order', [['votes','By vote share'],['party','By party order'],['manual','As entered']], S.order))}${rfield('Rows shown', rin('S.maxRows', S.maxRows, { num: 1 }))}</div>
       ${k === 'cand' ? `<div class="grid2">${rfield('Bar scale', rsel('S.scale', [['leader','Relative to leader'],['formal','Share of 100%'],['custom','Custom maximum']], S.scale))}${S.scale === 'custom' ? rfield('Maximum %', rin('S.scaleMax', S.scaleMax, { num: 1 })) : '<span></span>'}</div><p class="hint">${scaleTxt}</p>
       <div class="grid2">${rfield('Bar height (0 = fit)', rin('S.barH', S.barH, { num: 1 }))}${rfield('Row spacing', rin('S.gap', S.gap, { num: 1, ph: 'auto' }))}</div>
       <div class="grid2">${rfield('Corner radius', rin('S.radius', S.radius, { num: 1 }))}${rfield('Party label width', rin('S.labelW', S.labelW, { num: 1, ph: 'auto' }))}</div>
@@ -9105,6 +9208,20 @@ function renderResultsPanel(){
     if (k === 'parl') h += `<section class="rsec"><h3>Parliament projection</h3>${rfield('Title', rin('S.title', S.title, { ph: 'PARLIAMENT' }))}
       <div class="grid2">${rck('S.parlAhead', S.parlAhead !== false, 'Include seats ahead, not called')}${rck('S.parlAll', S.parlAll, 'Cards for parties with no seats')}</div>
       <p class="hint">Parties run left to right in the order of the Parties tab list. Seats ahead but not called are a lighter shade; seats nobody has yet are grey on the right.</p></section>`;
+    if (k === 'contest'){ const el = curEl(), c0 = elCalc(el, E), picks = contestPicks(E, el, c0, S), nC = S.cN === 3 ? 3 : 2;
+      h += `<section class="rsec"><h3>Candidate contest</h3>
+      <p class="hint">Two slides from the current ${E.system === 'list' ? 'district' : 'electorate'}: Setup (map and candidates) and Projection (candidates with the call). Switch slides with the tabs above the canvas; export both with “All slides”.</p>
+      ${rfield('Main candidates', `<div class="seg2"><button type="button" class="${nC === 2 ? 'on' : ''}" data-ract="cN" data-v="2"><b>2 candidates</b><small>Head to head</small></button><button type="button" class="${nC === 3 ? 'on' : ''}" data-ract="cN" data-v="3"><b>3 candidates</b><small>Three-way contest</small></button></div>`)}
+      ${picks.map((k, i) => `<div class="rrow">${rsel('cPick.' + i, c0.cands.map(x => [x.id, `${x.cname || x.name} · ${x.P.abbr}`]), k.id, 'Candidate ' + (i + 1))}<button class="btn sm" data-ract="c-photo" data-id="${k.id}">Photo…</button></div>`).join('')}
+      <p class="hint">Candidates start as the ${nC} with the most votes. Their names, parties and MP status come from the Results tab; click a name on the graphic to edit it.</p>
+      <h3 class="sub">Setup slide</h3>
+      <div class="grid2">${rck('S.cMap', S.cMap !== false, 'Map panel')}${rck('S.cMarginOn', S.cMarginOn !== false, 'Margin box')}</div>
+      <div class="grid2">${rfield('Margin %', rin('S.cMargin', S.cMargin, { ph: (contestMargin(E, el, c0, Object.assign({}, S, { cMargin: null })) || {}).txt || 'e.g. 3.5' }))}${rfield('Margin held by', rsel('S.cMarginParty', partyList(E, 'Held before by'), S.cMarginParty || ''))}</div>
+      <div class="rrow"><button class="btn sm" data-ract="c-map">Map image…</button></div>
+      <h3 class="sub">Projection slide</h3>
+      ${rck('S.cMarks', S.cMarks !== false, 'Tick for the winner, cross for the others (once called)')}
+      ${rfield('Headline under the banner', rin('S.cHeadline', S.cHeadline, { ph: 'Auto: “Name projected to win …”' }))}
+      <p class="hint">The banner reads GAIN when the winner’s party differs from “Held before by”, RETAIN when it’s the same. Set the result status to Projected or Declared to make the call.</p></section>`; }
     if (k === 'decl') h += `<section class="rsec"><h3>Party result</h3>${rfield('Layout', rsel('S.declLayout', [['party','Party: leader, seats, votes and share'],['candidate','Declared candidate (one electorate)']], S.declLayout || 'party'))}
       ${S.declLayout === 'candidate' ? '' : `<div class="grid2">${rfield('Results for', rsel('S.scope', [['national','Nationwide'],['district', E.system === 'list' ? 'This district' : 'This electorate']], S.scope || 'national'))}${rfield('Party', rsel('S.party', partyList(E, 'Auto (most seats)'), S.party || ''))}</div>
       ${rfield('Background', rsel('S.bgMode', [['lead','Party colour'],['brand','Accent colour'],['light','Light']], S.bgMode || 'lead'))}${rfield('Title', rin('S.title', S.title, { ph: 'PARTY RESULT' }))}
@@ -9167,6 +9284,7 @@ function rSet(path, raw, el0){
   let structural = false;
   if (p[0] === 'E'){ E[p[1]] = p[1] === 'year' ? rnum(v) : v; if (['tppOn', 'blocA', 'blocB'].includes(p[1])) structural = true; }
   else if (p[0] === 'cur'){ E.current = v; structural = true; }
+  else if (p[0] === 'cPick'){ const S0 = rStyle(); const arr = (S0.cPick || []).slice(); arr[+p[1]] = v; setStyle('cPick', arr); structural = true; }
   else if (p[0] === 'pr'){ const S0 = rStyle('decl'), d0 = partyResult(E, S0.scope || 'national', S0.party); if (!d0) return; const k = prKey(S0.scope, d0.P.id); E.prOv = E.prOv || {}; E.prOv[k] = Object.assign({}, E.prOv[k], { [p[1]]: rnum(String(raw).replace(/[,\s]/g, '').replace('−', '-')) }); structural = 'soft'; }
   else if (p[0] === 'own'){ E.autoOwn = !!v; structural = true; }
   else if (p[0] === 'L'){ E.list[p[1]] = p[1] === 'threshold' ? rnum(v) : v; }
@@ -9223,6 +9341,9 @@ function rAct(a, b){
     case 'own-add': { const pt = ownParties()[i]; if (!pt) return; const P = rAddOwn(E, pt); toast(`${P.name} added to the results.`); break; }
     case 'own-all': { const n = ownParties().filter(pt => !E.parties.some(p => p.own === ownKey(pt))).map(pt => rAddOwn(E, pt).name); toast(n.length ? `${n.join(', ')} added to the results.` : 'All your parties are already in the results.'); break; }
     case 'pr-reset': { const S0 = rStyle('decl'), d0 = partyResult(E, S0.scope || 'national', S0.party); if (d0 && E.prOv) delete E.prOv[prKey(S0.scope, d0.P.id)]; toast('Back to the calculated figures.'); break; }
+    case 'cN': setStyle('cN', +b.dataset.v); break;
+    case 'c-photo': { const id = b.dataset.id; uploadTarget = (state.page ? 'rb_cp' : 'rb_cs') + id + 'ph'; $('#file').click(); return; }
+    case 'c-map': { if (state.page){ setPage(0); } uploadTarget = 'rb_csmap'; $('#file').click(); return; }
     case 'p-photo': { const P = E.parties[i]; if (!P) return; if (tpl.rkind !== 'decl') switchTemplate('res_decl'); setStyle('party', P.id, 'decl'); setStyle('declLayout', 'party', 'decl'); rebuildResults(); renderResultsPanel();
       uploadTarget = 'rb_pr' + P.id + 'photo'; $('#file').click(); return; }
     case 'live': if (rLive) rLiveStop(); else rLiveStart(); renderResultsPanel(); return;
@@ -9232,7 +9353,7 @@ function rAct(a, b){
     case 'logo-up': uploadTarget = 'rb_logo'; $('#file').click(); return;
     case 'csv-import': $('#csvfile').click(); return;
     case 'csv-export': rDownload(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results.csv`, rCsvExport(E), 'text/csv'); return;
-    case 'xlsx-export': rDownloadBlob(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results.xlsx`, rWorkbook(E)); return;
+    case 'xlsx-export': rDownloadBlob(`${(E.name || 'election').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-results-template.xlsx`, rWorkbook(E)); return;
     case 'csv-sample': rDownload('degv-results-template.csv', rCsvSample(), 'text/csv'); return;
     case 'tpl-save': { const nm = ($('#rpanel [data-rk=tplname]') || {}).value || `${R_KINDS[tpl.rkind][0]} design`; const list = rSaved(); list.push({ id: rid('t'), name: nm.slice(0, 60), kind: tpl.rkind, style: rStyle(), branding: JSON.parse(JSON.stringify(E.branding)), fmt: Object.assign({}, E.fmt) }); rSaveList(list); toast(`Saved “${nm}”.`); break; }
     case 'tpl-apply': { const s = rSaved().find(x => x.id === b.dataset.id); if (!s) return; E.style[s.kind] = Object.assign({}, s.style); E.branding = Object.assign({}, E.branding, s.branding, { logo: E.branding.logo }); E.fmt = Object.assign({}, E.fmt, s.fmt); if (tpl.rkind !== s.kind){ switchTemplate('res_' + s.kind); return; } toast(`Using “${s.name}”.`); break; }
@@ -9290,6 +9411,7 @@ function rBindEdit(L){
     case 'cmp': { const v = rParse(t), c = elCalc(el, E); if (v == null) return; if (c.useTpp){ el.tpp.aVotes = el.tpp.bVotes = null; el.tpp.aPct = clamp(b.side === 'A' ? v : 100 - v, 0, 100); } else { if (L.g0) L.text = L.g0.text; render(); toast('Bloc shares are the sum of their parties. Change the candidates’ votes or %.'); return; } break; }
     case 'pname': { const P = E.parties.find(p => p.id === b.pid); if (P) P.name = t; break; }
     case 'pleader': { const P = E.parties.find(p => p.id === b.pid); if (P) P.leader = t; break; }
+    case 'cfirst': case 'clast': { if (!cand) break; const [f0, l0] = splitName(cand.name); cand.name = (b.t === 'cfirst' ? `${t} ${l0}` : `${f0} ${t}`).trim(); break; }
     case 'elname': el.name = t; break;
     case 'elregion': el.region = t; break;
     case 'blocname': { const B = E.blocs.find(x => x.id === b.bid); if (B) B.name = t; break; }
@@ -9297,7 +9419,7 @@ function rBindEdit(L){
     default: return;
   }
   rebuildResults({ keepInspector: true }); refreshResultsCalc(); rLiveSyncInputs();
-  if (['cname','pabbr','pname','pleader','elname','elregion','blocname','leader'].includes(b.t) && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#rpanel'))) renderResultsPanel();
+  if (['cname','cfirst','clast','pabbr','pname','pleader','elname','elregion','blocname','leader'].includes(b.t) && !(document.activeElement && document.activeElement.closest && document.activeElement.closest('#rpanel'))) renderResultsPanel();
 }
 /* saved designs */
 function rSaved(){ try { return JSON.parse(localStorage.getItem('degv-results-designs') || '[]'); } catch { return rSaved.mem || []; } }
@@ -9329,7 +9451,7 @@ function parseCsv(text){
   if (cell !== '' || row.length){ row.push(cell); out.push(row); }
   return out.filter(r => r.some(x => String(x).trim() !== ''));
 }
-function rCsvImport(text){ return rImportTable(parseCsv(text)); }
+function rCsvImport(text){ const rows = parseCsv(text), hi = rTemplateHeader(rows); return hi >= 0 ? rImportTemplate(ensureElection(), rows, hi) : rImportTable(rows); }
 /* one results table (CSV or a spreadsheet sheet): long (a row per party or candidate) or wide (a column per party) */
 function rImportTable(rows0, opts = {}){
   const E = ensureElection(), rows = rTableRows(E, rows0); if (rows.length < 2 && !rows.national) throw new UserError('That table has no data rows.');
@@ -9438,7 +9560,7 @@ function rApplySettings(E, rows){
   for (const r of rows){ const k = rNormHead(r[0]), v = String(r[1] ?? '').trim(); if (!k || v === '') continue; n++;
     if (['name','election','election_name','title'].includes(k)) E.name = v;
     else if (k === 'year') E.year = rnum(v);
-    else if (['region','country','state'].includes(k)) E.region = v;
+    else if (['region','country','state','country_or_region'].includes(k)) E.region = v;
     else if (['type','election_type','house','chamber'].includes(k)) E.type = v;
     else if (['system','voting_system','electoral_system'].includes(k)) E.system = /list|pr|propor|party/i.test(v) ? 'list' : 'fptp';
     else if (['total_seats','seats','seats_total','parliament_seats'].includes(k)) E.seats.total = rnum(v);
@@ -9452,6 +9574,8 @@ function rApplySettings(E, rows){
 }
 /* a whole workbook: results sheets, a nationwide sheet and a settings sheet, recognised by their headings or names */
 function rImportWorkbook(sheets){
+  if (dgIsWorkbook(sheets)) return dgImport(ensureElection(), sheets);
+  { const E = ensureElection(); for (const sh of sheets){ const hi = rTemplateHeader(sh.rows); if (hi >= 0) return rImportTemplate(E, sh.rows, hi); } }
   const E = ensureElection(), done = { results: 0, made: 0, electorates: 0, national: false, settings: 0, skipped: 0, sheets: [] };
   const kind = sh => { const rows = sh.rows.filter(r => r.some(x => String(x ?? '').trim() !== '')); if (!rows.length) return 'empty';
     const nm = rNormHead(sh.name), first = rows[0].map(rNormHead).map(h => R_ALIAS_MAP[h] || h);
@@ -9532,29 +9656,326 @@ function zipStore(files){
 function writeXlsx(sheets){
   const x = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const colL = i => { let s = ''; i++; while (i){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1)/26); } return s; };
-  const sheetXml = rows => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${rows[0].map((h, i) => `<col min="${i + 1}" max="${i + 1}" width="${Math.max(10, Math.min(28, String(h).length + 4))}" customWidth="1"/>`).join('')}</cols><sheetData>${rows.map((r, ri) => `<row r="${ri + 1}">${r.map((v, ci) => v === '' || v == null ? '' : typeof v === 'number' && isFinite(v) ? `<c r="${colL(ci)}${ri + 1}"${ri ? '' : ' s="1"'}><v>${v}</v></c>` : `<c r="${colL(ci)}${ri + 1}" t="inlineStr"${ri ? '' : ' s="1"'}><is><t>${x(v)}</t></is></c>`).join('')}</row>`).join('')}</sheetData></worksheet>`;
+  // a cell is a value, or { v, f (formula), s (style: 1 bold, 2 #,##0, 3 0.0, 4 bold #,##0, 5 bold 0.0) }
+  const cellXml = (v, ref, rowStyle) => { const o = v != null && typeof v === 'object' ? v : { v }, st = o.s ?? rowStyle, sa = st ? ` s="${st}"` : '';
+    if (o.f) return `<c r="${ref}"${sa}${typeof o.v === 'string' ? ' t="str"' : ''}><f>${x(o.f)}</f>${o.v != null && o.v !== '' ? `<v>${x(o.v)}</v>` : ''}</c>`;
+    if (o.v === '' || o.v == null) return st ? `<c r="${ref}"${sa}/>` : '';
+    return typeof o.v === 'number' && isFinite(o.v) ? `<c r="${ref}"${sa}><v>${o.v}</v></c>` : `<c r="${ref}" t="inlineStr"${sa}><is><t xml:space="preserve">${x(o.v)}</t></is></c>`; };
+  const sheetXml = sh => { const rows = sh.rows, fr = sh.freeze ?? 1, ncol = Math.max(...rows.map(r => r.length)), wd = i => (sh.widths && sh.widths[i]) || Math.max(10, Math.min(28, String((rows[fr - 1] || rows[0])[i] ?? '').length + 4));
+    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0">${fr ? `<pane ySplit="${fr}" xSplit="${sh.freezeCol || 0}" topLeftCell="${colL(sh.freezeCol || 0)}${fr + 1}" activePane="bottomRight" state="frozen"/>` : ''}</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>${Array.from({ length: ncol }, (_, i) => `<col min="${i + 1}" max="${i + 1}" width="${wd(i)}" customWidth="1"/>`).join('')}</cols><sheetData>${rows.map((r, ri) => `<row r="${ri + 1}">${r.map((v, ci) => cellXml(v, colL(ci) + (ri + 1), sh.boldRows ? (sh.boldRows.includes(ri) ? 1 : 0) : (ri ? 0 : 1))).join('')}</row>`).join('')}</sheetData></worksheet>`; };
   const files = [
     ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((s, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`],
     ['_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
     ['xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${x(s.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets></workbook>`],
     ['xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((s, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
-    ['xl/styles.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`],
-  ].concat(sheets.map((s, i) => [`xl/worksheets/sheet${i + 1}.xml`, sheetXml(s.rows)]));
+    ['xl/styles.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.0"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="3" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1" applyNumberFormat="1"/><xf numFmtId="164" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`],
+  ].concat(sheets.map((s, i) => [`xl/worksheets/sheet${i + 1}.xml`, sheetXml(s)]));
   return zipStore(files);
 }
-/* the current election as a workbook: results by region, nationwide totals, settings */
+/* the results template: one sheet, Calibri, no colour. Settings at the top; one row per region with a votes and a seats column per party;
+   a Total row adds the regions up (Excel formulas), and the nationwide result is worked out the same way on import */
+const TPL_FIRST = 10, TPL_LAST = 1009;      // region rows the Total formulas cover
+/* reading the template back: settings rows, then the region table; the nationwide result is the sum of the regions */
+const TPL_REGION_RE = /^(region|district|electorate|state|constituency|division|seat|area|municipality|ward)$/;
+function rTemplateHeader(rows){ return rows.findIndex(r => { if (!r || !TPL_REGION_RE.test(rNormHead(r[0]))) return false; const h = r.map(rNormHead);
+  return !h.includes('party') && h.some(x => /^.+_votes$/.test(x) && !/^(prev|previous|last|total|formal|informal)_|^votes_|_(counted|expected)_votes$/.test(x)); }); }
+function rImportTemplate(E, rows, hi){
+  const done = { results: 1, made: 0, electorates: 0, national: true, settings: 0, skipped: 0, removed: 0 };
+  const pairs = []; for (const r of rows.slice(0, hi)) if (r) for (let j = 0; j < r.length; j += 2) if (String(r[j] ?? '').trim() !== '') pairs.push([r[j], r[j + 1]]);   // label, value pairs across the top rows
+  done.settings = rApplySettings(E, pairs);
+  const list = E.system === 'list', raw = rows[hi].map(x => String(x ?? '').trim()), head = raw.map(rNormHead);
+  const find = re => head.findIndex((h, i) => i > 0 && re.test(h));
+  const cState = find(/^(state|province|region_name|state_or_territory)$/), cSeatsIn = find(/^(seats_in_(region|district|electorate|state|area)|district_seats|seats_available|magnitude)$/);
+  const cBc = find(/^booths_counted$/), cBt = find(/^booths_total$/), cVc = find(/^votes_counted$/), cVe = find(/^votes_expected$/), cSt = find(/^(result_status|status)$/), cHeld = find(/^held_by$/);
+  // party columns: "<party> votes" and "<party> seats"
+  const pcol = new Map();
+  raw.forEach((h, i) => { const m = /^(.*?)[\s_-]*(votes?|seats?)$/i.exec(h); if (!m || i === 0 || i === cSeatsIn) return; const nm = m[1].trim(); if (!nm || /^(booths?|total|seats_in)/i.test(nm)) return;
+    let P = E.parties.find(p => p.name.toLowerCase() === nm.toLowerCase() || p.abbr.toLowerCase() === nm.toLowerCase());
+    if (!P){ P = { id: rid('p'), abbr: ownAbbr(E, nm), name: nm, color: ['#8A3FB0','#C2185B','#00838F','#F07818','#6E7179'][E.parties.length % 5], color2: '', text: '', order: E.parties.length + 1 }; E.parties.push(P); }
+    const e = pcol.get(P.id) || { P }; if (/^vote/i.test(m[2])) e.v = i; else e.s = i; pcol.set(P.id, e); });
+  if (!pcol.size) throw new UserError('No party columns found. Each party needs a “<party> votes” column (and optionally “<party> seats”).');
+  const num = v => rNumCell(v), seen = new Set(), prevPct = {}, prevSeats = {};
+  for (const r of rows.slice(hi + 1)){
+    if (!r || !r.some(x => String(x ?? '').trim() !== '')) continue;
+    const key = rNormHead(r[0]); if (!key) continue;
+    if (/^(total|national|nationwide|all_regions|grand_total|vote_pct|vote_pct_worked_out)/.test(key)) continue;   // worked out from the regions
+    if (/^(last_election_pct|last_election_vote|previous_pct|last_time_pct|prev_pct)/.test(key)){ for (const [pid, e] of pcol) if (e.v != null && num(r[e.v]) != null) prevPct[pid] = num(r[e.v]); continue; }
+    if (/^(last_election_seats|previous_seats|last_time_seats|prev_seats)/.test(key)){ for (const [pid, e] of pcol) if (e.s != null && num(r[e.s]) != null) prevSeats[pid] = num(r[e.s]); continue; }
+    // a region
+    const name = String(r[0]).trim();
+    let el = E.electorates.find(e => e.name.toLowerCase() === name.toLowerCase());
+    if (!el){ el = { id: rid('e'), name, region: '', countType: 'bloc', metric: 'booths', unitLabel: 'booths', boothsCounted: null, boothsTotal: null, votesCounted: null, votesExpected: null, enrolled: null, informal: null, denom: 'formal', denomCustom: null, status: 'counting', statusText: '', winner: '', prevParty: '', updated: '', candidates: [], tpp: { a: '', b: '', aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null } }; E.electorates.push(el); }
+    seen.add(el.id); done.electorates++;
+    if (cState >= 0 && String(r[cState] ?? '').trim()) el.region = String(r[cState]).trim();
+    for (const [c, f] of [[cBc, 'boothsCounted'], [cBt, 'boothsTotal'], [cVc, 'votesCounted'], [cVe, 'votesExpected']]) if (c >= 0 && num(r[c]) != null) el[f] = num(r[c]);
+    if (cSt >= 0 && EL_STATUS.some(s0 => s0[0] === String(r[cSt]).trim().toLowerCase())) el.status = String(r[cSt]).trim().toLowerCase();
+    if (cHeld >= 0 && String(r[cHeld] ?? '').trim()){ const HP = E.parties.find(p => p.abbr.toUpperCase() === String(r[cHeld]).trim().toUpperCase() || p.name.toLowerCase() === String(r[cHeld]).trim().toLowerCase()); if (HP) el.prevParty = HP.id; }
+    let seatSum = 0, seatAny = false; const won = [];
+    for (const [pid, e] of pcol){ const v = e.v != null ? num(r[e.v]) : null, st = e.s != null ? num(r[e.s]) : null;
+      if (v == null && !st) continue;      // nothing for this party in this region
+      let k = el.candidates.find(x => x.party === pid);
+      if (!k){ k = { id: rid('c'), name: list ? '' : e.P.name, party: pid, mp: false, votes: null, pct: null, prevPct: null, swing: null, status: '' }; el.candidates.push(k); }
+      if (v != null){ k.votes = v; k.pct = null; }
+      k.seatsFixed = st; if (st != null){ seatAny = true; seatSum += st; if (st > 0) won.push(pid); }
+      done.made++; }
+    const sIn = cSeatsIn >= 0 ? num(r[cSeatsIn]) : null;
+    if (list){ if (sIn != null) el.seatsAvail = sIn; else if (seatAny) el.seatsAvail = seatSum; }
+    else if (seatAny && seatSum === 1 && won.length === 1){ el.winner = won[0]; if (!['declared', 'final'].includes(el.status)) el.status = 'declared'; }
+  }
+  // the file is the full set of results: regions not in it are removed
+  if (seen.size){ const before = E.electorates.length; E.electorates = E.electorates.filter(e => seen.has(e.id)); done.removed = before - E.electorates.length; if (!seen.has(E.current)) E.current = E.electorates[0].id; }
+  // nationwide: votes and shares are the sum of the regions
+  const vt = new Map(); let all = 0;
+  for (const el of E.electorates) for (const k of el.candidates){ const v = rnum(k.votes); if (v == null) continue; vt.set(k.party, (vt.get(k.party) || 0) + v); all += v; }
+  for (const P of E.parties){ const m = Object.assign({}, E.national[P.id] || {}); if (all > 0){ m.votes = vt.get(P.id) || 0; m.pct = +((vt.get(P.id) || 0)/all*100).toFixed(2); }
+    if (prevPct[P.id] != null) m.prevPct = prevPct[P.id]; E.national[P.id] = m; }
+  // seats: the sum of the regions' seat columns, when the file has them
+  const sTot = new Map(); let sAny = false;
+  for (const el of E.electorates) for (const k of el.candidates) if (rnum(k.seatsFixed) != null){ sAny = true; sTot.set(k.party, (sTot.get(k.party) || 0) + rnum(k.seatsFixed)); }
+  if (sAny || Object.keys(prevSeats).length){
+    E.seats.rows = E.parties.filter(P => sTot.has(P.id) || prevSeats[P.id] != null).map(P => ({ party: P.id, declared: sTot.get(P.id) || 0, projected: 0, leading: 0, prev: prevSeats[P.id] ?? 0, gains: null, losses: null }));
+    if (sAny) E.seats.source = 'manual'; }
+  return done;
+}
+/* =====================================================================
+   DEGV results workbook: Party Key, Demographics, and an election block per year
+   (party groups of Votes · % · ± · Seats · ±, then Turnout), with summaries.
+   ===================================================================== */
+const xtxt = v => String(v ?? '').trim(), xnorm = v => xtxt(v).toLowerCase().replace(/\s+/g, ' ');
+const xhex = v => { if (v == null || v === '') return null; let t = typeof v === 'number' ? String(Math.round(v)) : xtxt(v).replace(/^#/, ''); if (/^\d+$/.test(t)) t = t.padStart(6, '0'); return /^[0-9a-f]{6}$/i.test(t) ? '#' + t.toUpperCase() : null; };
+/* find the election blocks in a sheet: a title like "2026 … Election", then a row of party names, then Votes/Seats */
+function dgFindBlocks(rows){
+  const out = [];
+  rows.forEach((r, ri) => (r || []).forEach((v, ci) => {
+    const t = xtxt(v), m = /\b(1[89]\d\d|2\d\d\d)\b/.exec(t); if (!m || !/election|results?\b|vote|poll/i.test(t) || /summary|demograph/i.test(t)) return;
+    for (let h = ri + 1; h <= ri + 3 && h < rows.length; h++){
+      const hr = rows[h] || [], ec = hr.findIndex((x, i) => i >= ci - 1 && /^(electorate|district|region|state|constituency|division|seat|ward)$/i.test(xtxt(x))); if (ec < 0) continue;
+      const sub = rows[h + 1] || []; if (!sub.some(x => /^votes?$/i.test(xtxt(x)))) continue;
+      out.push({ year: +m[1], title: t.replace(m[1], '').replace(/\s+/g, ' ').trim(), titleRow: ri, head: h, ec }); return;
+    } }));
+  return out;
+}
+/* parse one block into regions → party → { votes, seats }, plus turnout */
+function dgParseBlock(rows, B){
+  const hr = rows[B.head] || [], sub = rows[B.head + 1] || [], groups = [];
+  const starts = []; hr.forEach((v, i) => { if (i > B.ec && xtxt(v)) starts.push(i); });
+  starts.forEach((c, k) => { const end = k + 1 < starts.length ? starts[k + 1] - 1 : Math.max(c + 6, sub.length - 1), name = xtxt(hr[c]);
+    const col = re => { for (let i = c; i <= end; i++) if (re.test(xtxt(sub[i]))) return i; return -1; };
+    if (/^turnout$/i.test(name)) groups.push({ turnout: true, formal: col(/^formal$/i), informal: col(/^informal$/i), total: col(/^total$/i) });
+    else groups.push({ name, votes: col(/^votes?$/i), seats: col(/^seats?$/i) }); });
+  const regions = [];
+  for (let r = B.head + 2; r < rows.length; r++){
+    const row = rows[r] || [], nm = xtxt(row[B.ec]);
+    if (!nm || /^total/i.test(nm)) break;
+    const reg = { name: nm, parties: [], informal: null, formal: null };
+    for (const g of groups){
+      if (g.turnout){ reg.informal = g.informal >= 0 ? rNumCell(row[g.informal]) : null; reg.formal = g.formal >= 0 ? rNumCell(row[g.formal]) : null; continue; }
+      const v = g.votes >= 0 ? rNumCell(row[g.votes]) : null, st = g.seats >= 0 ? rNumCell(row[g.seats]) : null;
+      if (v != null || st != null) reg.parties.push({ name: g.name, votes: v, seats: st }); }
+    regions.push(reg);
+  }
+  return { year: B.year, title: B.title, parties: groups.filter(g => !g.turnout).map(g => g.name), regions };
+}
+/* Party Key: Colour · Abr · Party Name · Bloc */
+function dgPartyKey(rows){
+  for (let ri = 0; ri < rows.length; ri++){ const r = rows[ri] || [];
+    const cN = r.findIndex(x => /^party( name)?$/i.test(xtxt(x)) && /name/i.test(xtxt(x))), cA = r.findIndex(x => /^(abr|abbr|abbrev|abbreviation|code|short( name)?)$/i.test(xtxt(x)));
+    if (cN < 0 || cA < 0) continue;
+    const cC = r.findIndex(x => /^colou?r$/i.test(xtxt(x))), cB = r.findIndex(x => /^(bloc|coalition|bloc name)$/i.test(xtxt(x)));
+    const list = [];
+    for (let k = ri + 1; k < rows.length; k++){ const q = rows[k] || [], name = xtxt(q[cN]), abbr = xtxt(q[cA]); if (!name && !abbr) break;
+      list.push({ name: name || abbr, abbr: abbr || name.slice(0, 4).toUpperCase(), color: cC >= 0 ? xhex(q[cC]) : null, bloc: cB >= 0 ? xtxt(q[cB]) : '' }); }
+    return list;
+  }
+  return [];
+}
+/* Demographics (year): State · Electorate · Population · Enrolled · Seats */
+function dgDemographics(rows){
+  const out = [];
+  rows.forEach((r, ri) => { const cE = (r || []).findIndex(x => /^electorate|^district|^region$/i.test(xtxt(x)));
+    if (cE < 0 || !(r || []).some(x => /^(enrolled|population|enrolment|electors)$/i.test(xtxt(x)))) return;
+    const col = re => r.findIndex(x => re.test(xtxt(x))), cS = col(/^state|^province/i), cP = col(/^population$/i), cN = col(/^(enrolled|enrolment|electors)$/i), cK = col(/^seats$/i);
+    let year = null; for (let k = ri - 1; k >= Math.max(0, ri - 3); k--) for (const v of rows[k] || []){ const m = /demograph.*\b(\d{4})\b|\b(\d{4})\b.*demograph/i.exec(xtxt(v)); if (m){ year = +(m[1] || m[2]); break; } }
+    const map = new Map();
+    for (let k = ri + 1; k < rows.length; k++){ const q = rows[k] || [], nm = xtxt(q[cE]); if (!nm || /^total/i.test(nm)) break;
+      map.set(nm.toLowerCase(), { state: cS >= 0 ? xtxt(q[cS]) : '', population: cP >= 0 ? rNumCell(q[cP]) : null, enrolled: cN >= 0 ? rNumCell(q[cN]) : null, seats: cK >= 0 ? rNumCell(q[cK]) : null }); }
+    out.push({ year, map }); });
+  return out;
+}
+function dgIsWorkbook(sheets){ return sheets.some(sh => dgFindBlocks(sh.rows).length > 0); }
+/* bring a DEGV results workbook into the election: parties, blocs, regions, previous election and national totals */
+function dgImport(E, sheets){
+  const sh = sheets.find(x => dgFindBlocks(x.rows).length) || sheets[0], rows = sh.rows;
+  const blocks = dgFindBlocks(rows).map(B => dgParseBlock(rows, B)).sort((a, b) => b.year - a.year);
+  const cur = blocks[0], prev = blocks[1] || null, key = dgPartyKey(rows), demo = dgDemographics(rows);
+  const demoFor = y => (demo.find(d => d.year === y) || demo.find(d => d.year == null) || demo[0] || { map: new Map() }).map;
+  const dCur = demoFor(cur.year), dPrev = prev ? demoFor(prev.year) : new Map();
+  // parties: the key's order is left to right; party columns not in the key are added after it
+  const names = key.map(k => k.name); for (const n of cur.parties.concat(prev ? prev.parties : [])) if (!names.some(x => x.toLowerCase() === n.toLowerCase()) && !key.some(k => k.abbr.toLowerCase() === n.toLowerCase())) names.push(n);
+  const old = E.parties, parties = names.map((nm, i) => { const k = key.find(x => x.name === nm) || { name: nm, abbr: ownAbbr({ parties: [] }, nm), color: null, bloc: '' };
+    const was = old.find(p => p.name.toLowerCase() === nm.toLowerCase() || p.abbr.toLowerCase() === k.abbr.toLowerCase());
+    return Object.assign(was || { id: rid('p'), color2: '', text: '', leader: '' }, { name: nm, abbr: k.abbr.slice(0, 6), color: k.color || (was && was.color) || ['#8A3FB0','#C2185B','#00838F','#F07818','#6E7179','#4FA82A'][i % 6], order: i + 1, _bloc: k.bloc }); });
+  E.parties = parties;
+  const pFor = nm => parties.find(p => p.name.toLowerCase() === nm.toLowerCase() || p.abbr.toLowerCase() === nm.toLowerCase());
+  // blocs from the key, in order of first appearance
+  const bnames = [...new Set(parties.map(p => p._bloc).filter(Boolean))];
+  if (bnames.length){ const oldB = E.blocs || [];
+    E.blocs = bnames.map(bn => { const ps = parties.filter(p => p._bloc === bn), was = oldB.find(b => b.name.toLowerCase() === bn.toLowerCase());
+      return Object.assign(was || { id: rid('b'), leader: '', leaderParty: '' }, { name: bn, short: bn.toUpperCase().slice(0, 12), color: ps[0].color, parties: ps.map(p => p.id), leaderParty: was && ps.some(p => p.id === was.leaderParty) ? was.leaderParty : ps[0].id }); });
+    E.blocA = E.blocs[0].id; E.blocB = (E.blocs[1] || E.blocs[0]).id; }
+  parties.forEach(p => delete p._bloc);
+  // regions
+  const oldEl = E.electorates, prevBy = new Map((prev ? prev.regions : []).map(r => [r.name.toLowerCase(), r]));
+  const multi = cur.regions.some(r => r.parties.reduce((t, x) => t + (x.seats || 0), 0) > 1) || [...dCur.values()].some(d => (d.seats || 0) > 1);
+  E.system = multi ? 'list' : 'fptp';
+  E.electorates = cur.regions.map(r => {
+    const d = dCur.get(r.name.toLowerCase()) || {}, pr = prevBy.get(r.name.toLowerCase()), dp = dPrev.get(r.name.toLowerCase()) || {};
+    const was = oldEl.find(e => e.name.toLowerCase() === r.name.toLowerCase());
+    const el = Object.assign(was || { id: rid('e'), countType: 'bloc', metric: 'booths', unitLabel: 'booths', boothsCounted: null, boothsTotal: null, votesExpected: null, denom: 'formal', denomCustom: null, statusText: '', winner: '', updated: '', tpp: { a: '', b: '', aVotes: null, bVotes: null, aPct: null, prevAPct: null, swing: null } },
+      { name: r.name, region: d.state || (was && was.region) || '', enrolled: d.enrolled ?? null, population: d.population ?? null, informal: r.informal, prevEnrolled: dp.enrolled ?? null, prevPopulation: dp.population ?? null, prevInformal: pr ? pr.informal : null });
+    const prevFormal = pr ? pr.parties.reduce((t, x) => t + (x.votes || 0), 0) : 0;
+    const cands = [];
+    for (const x of r.parties){ const P = pFor(x.name); if (!P) continue; const k0 = was && was.candidates.find(k => k.party === P.id), px = pr && pr.parties.find(y => pFor(y.name) === P);
+      cands.push(Object.assign(k0 || { id: rid('c'), name: multi ? '' : P.name, mp: false, swing: null, status: '' },
+        { party: P.id, votes: x.votes, pct: null, seatsFixed: x.seats, prevVotes: px ? px.votes : null, prevPct: px && prevFormal ? +(px.votes/prevFormal*100).toFixed(3) : null, prevSeats: px ? px.seats : null })); }
+    // parties that stood last time only keep their previous figures
+    if (pr) for (const y of pr.parties){ const P = pFor(y.name); if (!P || cands.some(k => k.party === P.id)) continue; cands.push({ id: rid('c'), name: multi ? '' : P.name, party: P.id, mp: false, votes: null, pct: null, seatsFixed: null, prevVotes: y.votes, prevPct: prevFormal ? +(y.votes/prevFormal*100).toFixed(3) : null, prevSeats: y.seats, swing: null, status: '' }); }
+    el.candidates = cands;
+    const formal = r.parties.reduce((t, x) => t + (x.votes || 0), 0);
+    el.votesCounted = formal + (r.informal || 0) || null;
+    el.seatsAvail = d.seats ?? (r.parties.reduce((t, x) => t + (x.seats || 0), 0) || null);
+    const seatsKnown = r.parties.some(x => x.seats != null);
+    el.status = seatsKnown ? 'declared' : 'counting';
+    if (seatsKnown && el.votesCounted){ el.votesExpected = el.votesCounted; el.metric = 'votesPct'; }   // final results: fully counted
+    if (!multi && seatsKnown){ const w = r.parties.find(x => x.seats > 0); el.winner = w ? (pFor(w.name) || {}).id || '' : ''; const pw = pr && pr.parties.find(x => x.seats > 0); el.prevParty = pw ? (pFor(pw.name) || {}).id || '' : ''; }
+    return el; });
+  E.current = E.electorates.length ? (E.electorates.find(e => e.id === E.current) || E.electorates[0]).id : E.current;
+  // the election: name and year from the block title, seats from the regions; nationwide figures come from the regions
+  if (cur.title) E.name = cur.title; E.year = cur.year; E.prevYear = prev ? prev.year : null;
+  const total = E.electorates.reduce((t, e) => t + (rnum(e.seatsAvail) || 0), 0);
+  if (total){ E.seats.total = total; E.seats.majority = Math.floor(total/2) + 1; }
+  E.seats.rows = []; E.seats.source = 'electorates';
+  if (multi) E.list.threshold = E.list.threshold ?? 0;
+  E.national = {};
+  const sumBy = (blk, f) => { const m = new Map(); let all = 0; for (const r of blk.regions) for (const x of r.parties){ const P = pFor(x.name); if (!P || x[f] == null) continue; m.set(P.id, (m.get(P.id) || 0) + x[f]); if (f === 'votes') all += x[f]; } return { m, all }; };
+  const cv = sumBy(cur, 'votes'), pv = prev ? sumBy(prev, 'votes') : null;
+  for (const P of parties){ const v = cv.m.get(P.id), q = pv && pv.m.get(P.id);
+    E.national[P.id] = { votes: v ?? null, pct: v != null && cv.all ? +(v/cv.all*100).toFixed(3) : null, prevVotes: q ?? null, prevPct: q != null && pv.all ? +(q/pv.all*100).toFixed(3) : null }; }
+  return { results: 1, made: E.electorates.reduce((t, e) => t + e.candidates.length, 0), electorates: E.electorates.length, national: true, settings: 0, skipped: 0, degv: true, parties: parties.length, prevYear: E.prevYear };
+}
+/* ---------- writing the DEGV results workbook ---------- */
+function richXlsx(sh){
+  const x = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const colL = i => { let s = ''; while (i > 0){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1)/26); } return s; };
+  const fonts = [], fills = ['<fill><patternFill patternType="none"/></fill>', '<fill><patternFill patternType="gray125"/></fill>'], borders = ['<border><left/><right/><top/><bottom/><diagonal/></border>'], fmts = [], xfs = [], xfKey = new Map();
+  const idx = (arr, k) => { let i = arr.indexOf(k); if (i < 0){ arr.push(k); i = arr.length - 1; } return i; };
+  const fontI = (b, sz) => idx(fonts, `<font>${b ? '<b/>' : ''}<sz val="${sz || 11}"/><name val="Calibri"/><family val="2"/></font>`); fontI(false, 11);
+  const fillI = h => h ? idx(fills, `<fill><patternFill patternType="solid"><fgColor rgb="FF${h}"/><bgColor indexed="64"/></patternFill></fill>`) : 0;
+  const side = (n, st) => st ? `<${n} style="${st}"><color auto="1"/></${n}>` : `<${n}/>`;
+  const bordI = b => b ? idx(borders, `<border>${side('left', b.l)}${side('right', b.r)}${side('top', b.t)}${side('bottom', b.b)}<diagonal/></border>`) : 0;
+  const BUILT = { 'General': 0, '0': 1, '0.00': 2, '#,##0': 3, '0%': 9, '0.00%': 10 };
+  const fmtI = f => f == null ? 0 : BUILT[f] ?? 164 + idx(fmts, f);
+  const xfI = st => { st = st || {}; const k = JSON.stringify(st); if (xfKey.has(k)) return xfKey.get(k);
+    const f = fontI(st.b, st.sz), fl = fillI(st.fill), bd = bordI(st.bd), nf = fmtI(st.fmt), al = st.h || st.v;
+    xfs.push(`<xf numFmtId="${nf}" fontId="${f}" fillId="${fl}" borderId="${bd}" xfId="0"${f ? ' applyFont="1"' : ''}${fl ? ' applyFill="1"' : ''}${bd ? ' applyBorder="1"' : ''}${nf ? ' applyNumberFormat="1"' : ''}${al ? ` applyAlignment="1"><alignment${st.h ? ` horizontal="${st.h}"` : ''} vertical="center"/></xf>` : '/>'}`);
+    xfKey.set(k, xfs.length - 1); return xfs.length - 1; };
+  xfI({});
+  const rowsXml = [...sh.cells.keys()].map(k => k.split(',').map(Number)).sort((a, b) => a[0] - b[0] || a[1] - b[1]).reduce((acc, [r, c]) => { (acc[r] = acc[r] || []).push(c); return acc; }, {});
+  const cellXml = (r, c) => { const o = sh.cells.get(r + ',' + c), ref = colL(c) + r, sa = ` s="${xfI(o.st)}"`;
+    if (o.f) return `<c r="${ref}"${sa}><f>${x(o.f)}</f></c>`;
+    if (o.v == null || o.v === '') return `<c r="${ref}"${sa}/>`;
+    return typeof o.v === 'number' && isFinite(o.v) ? `<c r="${ref}"${sa}><v>${o.v}</v></c>` : `<c r="${ref}" t="inlineStr"${sa}><is><t xml:space="preserve">${x(o.v)}</t></is></c>`; };
+  const sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" zoomScale="${sh.zoom || 100}"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>${Object.entries(sh.widths || {}).sort((a, b) => a[0] - b[0]).map(([c, w]) => `<col min="${c}" max="${c}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${Object.keys(rowsXml).sort((a, b) => a - b).map(r => `<row r="${r}">${rowsXml[r].map(c => cellXml(+r, c)).join('')}</row>`).join('')}</sheetData>${sh.merges.length ? `<mergeCells count="${sh.merges.length}">${sh.merges.map(([r1, c1, r2, c2]) => `<mergeCell ref="${colL(c1)}${r1}:${colL(c2)}${r2}"/>`).join('')}</mergeCells>` : ''}</worksheet>`;
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">${fmts.length ? `<numFmts count="${fmts.length}">${fmts.map((f, i) => `<numFmt numFmtId="${164 + i}" formatCode="${x(f)}"/>`).join('')}</numFmts>` : ''}<fonts count="${fonts.length}">${fonts.join('')}</fonts><fills count="${fills.length}">${fills.join('')}</fills><borders count="${borders.length}">${borders.join('')}</borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="${xfs.length}">${xfs.join('')}</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+  return zipStore([
+    ['[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`],
+    ['_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+    ['xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${x(sh.name)}" sheetId="1" r:id="rId1"/></sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`],
+    ['xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+    ['xl/styles.xml', styles], ['xl/worksheets/sheet1.xml', sheetXml]]);
+}
+/* the election as a DEGV results workbook, laid out like the DEGV template */
 function rWorkbook(E){
-  const nat = nationalCalc(E), sc = seatCalc(E), list = E.system === 'list';
-  const res = [['region', 'state', ...(list ? [] : ['candidate']), 'party', 'party_name', 'votes', 'prev_pct', ...(list ? ['district_seats', 'prev_seats'] : ['mp']), 'booths_counted', 'booths_total', 'votes_counted', 'votes_expected', 'result_status']];
-  for (const el of E.electorates) el.candidates.forEach((k, i) => { const P = partyOf(E, k.party);
-    res.push([el.name, el.region || '', ...(list ? [] : [k.name]), P.abbr, P.name, rnum(k.votes) ?? '', rnum(k.prevPct) ?? '', ...(list ? [i ? '' : (rnum(el.seatsAvail) ?? ''), rnum(k.prevSeats) ?? ''] : [k.mp ? 'yes' : '']),
-      i ? '' : rnum(el.boothsCounted) ?? '', i ? '' : rnum(el.boothsTotal) ?? '', i ? '' : rnum(el.votesCounted) ?? '', i ? '' : rnum(el.votesExpected) ?? '', i ? '' : el.status]); });
-  const natRows = [['party', 'party_name', 'colour', 'leader', 'vote_pct', 'prev_pct', 'votes', 'prev_votes', 'seats_declared', 'seats_projected', 'seats_ahead', 'seats_last_time']];
-  for (const P of E.parties){ const n = nat[P.id] || {}, m = E.national[P.id] || {}, r = sc.list.find(x => x.P.id === P.id) || {};
-    natRows.push([P.abbr, P.name, P.color, P.leader || partyLeader(E, P), n.pct != null ? +n.pct.toFixed(2) : '', n.prev ?? '', m.votes ?? '', m.prevVotes ?? '', r.declared ?? 0, r.projected ?? 0, r.leading ?? 0, r.prev ?? 0]); }
-  const set = [['setting', 'value'], ['name', E.name], ['year', E.year ?? ''], ['region', E.region || ''], ['type', E.type || ''], ['system', list ? 'party lists' : 'candidates'], ['total_seats', E.seats.total ?? ''], ['majority', E.seats.majority ?? ''],
-    ['method', listMethodName(E.list.method)], ['threshold', E.list.threshold ?? ''], ['threshold_scope', E.list.scope === 'district' ? 'district' : 'nationwide'], ['status', E.status || 'counting']];
-  return writeXlsx([{ name: 'Results by region', rows: res }, { name: 'Nationwide', rows: natRows }, { name: 'Settings', rows: set }]);
+  const P = E.parties, nP = P.length, els = E.electorates, nR = Math.max(1, els.length), list = E.system === 'list';
+  const cells = new Map(), merges = [], widths = {};
+  const colL = i => { let s = ''; while (i > 0){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1)/26); } return s; };
+  const A = (r, c) => colL(c) + r;
+  const put = (r, c, v, st) => { const o = cells.get(r + ',' + c) || {}; if (v != null && typeof v === 'object' && v.f) o.f = v.f; else o.v = v; o.st = Object.assign({}, o.st, st); cells.set(r + ',' + c, o); };
+  const sty = (r, c, st) => { const o = cells.get(r + ',' + c) || {}; o.st = Object.assign({}, o.st, st, st.bd ? { bd: Object.assign({}, (o.st || {}).bd, st.bd) } : {}); cells.set(r + ',' + c, o); };
+  const box = (r1, c1, r2, c2, w = 'medium') => { for (let c = c1; c <= c2; c++){ sty(r1, c, { bd: { t: w } }); sty(r2, c, { bd: { b: w } }); } for (let r = r1; r <= r2; r++){ sty(r, c1, { bd: { l: w } }); sty(r, c2, { bd: { r: w } }); } };
+  const merge = (r1, c1, r2, c2) => { if (r1 !== r2 || c1 !== c2) merges.push([r1, c1, r2, c2]); };
+  const H = { h: 'center', b: true }, CEN = { h: 'center' }, NUM = { h: 'center', sz: 10, fmt: '#,##0' }, PCT = { h: 'center', sz: 10, fmt: '0.00%' }, DPC = { h: 'center', sz: 10, fmt: '+0.00%;-0.00%;0.00%' }, SEAT = { h: 'center', sz: 10 }, DST = { h: 'center', sz: 10, fmt: '+0;-0;0' };
+  const vSum = (el, pid, f) => { const ks = el.candidates.filter(k => k.party === pid && rnum(k[f]) != null); return ks.length ? ks.reduce((t, k) => t + rnum(k[f]), 0) : null; };
+  const seatsOf = (el, pid, prev) => { if (prev) return vSum(el, pid, 'prevSeats'); const fx = vSum(el, pid, 'seatsFixed'); if (fx != null) return fx;
+    const c = elCalc(el, E); if (list){ const a = (c.alloc || []).find(z => z.pid === pid); return c.seatsAvail != null ? (a ? a.seats : 0) : null; }
+    return c.status === 'declared' || c.status === 'final' ? (c.winner && c.winner.id === pid ? 1 : 0) : null; };
+  const yr = E.year || '', pyr = E.prevYear || (E.year ? E.year - 4 : ''), nm = E.name || 'General Election';
+  // column plan: B–E key, G–K demographics, M electorate, then a 5-column group per party (gap between), then turnout
+  const cKey = 2, cDem = 7, cEl = 13, gStart = i => 15 + i*6, cTurn = 15 + nP*6, cLast = cTurn + 3;
+  [[2, 9], [3, 6], [4, 17], [5, 15]].forEach(([c, w]) => widths[c] = w); widths[6] = 0.9;
+  [[7, 18], [8, 16], [9, 13], [10, 13], [11, 8]].forEach(([c, w]) => widths[c] = w); widths[12] = 0.9; widths[13] = 16; widths[14] = 0.9;
+  for (let i = 0; i < nP; i++){ const g = gStart(i); widths[g] = 10; widths[g + 1] = 8; widths[g + 2] = 8; widths[g + 3] = 7; widths[g + 4] = 6; widths[g + 5] = 0.9; }
+  widths[cTurn] = 11; widths[cTurn + 1] = 9; widths[cTurn + 2] = 11; widths[cTurn + 3] = 8;
+  // Party Key
+  put(2, cKey, 'Party Key', H); merge(2, cKey, 2, cKey + 3);
+  ['Colour', 'Abr', 'Party Name', 'Bloc'].forEach((t, k) => put(3, cKey + k, t, CEN));
+  P.forEach((p, i) => { const r = 4 + i, hex = (p.color || '#888888').replace('#', '').toUpperCase(), bl = (E.blocs || []).find(b => b.parties.includes(p.id));
+    put(r, cKey, hex, { h: 'center', fill: hex, b: false }); put(r, cKey + 1, p.abbr, CEN); put(r, cKey + 2, p.name, CEN); put(r, cKey + 3, bl ? bl.name : '', CEN); });
+  box(2, cKey, 3 + nP, cKey + 3); box(2, cKey, 2, cKey + 3);
+  // one election block (current or previous), with its demographics beside it
+  const block = (top, year, prev) => {
+    const r0 = top + 3, rT = r0 + nR;          // first region row, total row
+    put(top, cDem, `Demographics (${year})`, H); merge(top, cDem, top, cDem + 4);
+    ['State', 'Electorate', 'Population', 'Enrolled', 'Seats'].forEach((t, k) => put(top + 2, cDem + k, t, CEN));
+    put(top, cEl, `${year} ${nm}`.trim(), H); merge(top, cEl, top, cLast);
+    put(top + 1, cEl, 'Electorate', CEN); merge(top + 1, cEl, top + 2, cEl);
+    P.forEach((p, i) => { const g = gStart(i); put(top + 1, g, p.name, CEN); merge(top + 1, g, top + 1, g + 4); ['Votes', '%', '±', 'Seats', '±'].forEach((t, k) => put(top + 2, g + k, t, CEN)); });
+    put(top + 1, cTurn, 'Turnout', CEN); merge(top + 1, cTurn, top + 1, cTurn + 3); ['Formal', 'Informal', 'Total', '%'].forEach((t, k) => put(top + 2, cTurn + k, t, CEN));
+    els.forEach((el, j) => { const r = r0 + j;
+      put(r, cDem, el.region || '', {}); put(r, cDem + 1, el.name, {}); put(r, cDem + 2, rnum(prev ? el.prevPopulation : el.population), { fmt: '#,##0' }); put(r, cDem + 3, rnum(prev ? el.prevEnrolled : el.enrolled), { fmt: '#,##0' });
+      put(r, cDem + 4, list ? rnum(el.seatsAvail) : 1, CEN);
+      put(r, cEl, el.name, {});
+      P.forEach((p, i) => { const g = gStart(i), v = vSum(el, p.id, prev ? 'prevVotes' : 'votes'), st = seatsOf(el, p.id, prev);
+        put(r, g, v, NUM); put(r, g + 1, { f: `IF($${colL(cTurn)}${r}=0,"",${A(r, g)}/$${colL(cTurn)}${r})` }, PCT);
+        put(r, g + 3, st, SEAT);
+        if (!prev){ const pr = r + (nR + 6); put(r, g + 2, { f: `IF(OR(${A(r, g + 1)}="",${A(pr, g + 1)}=""),"",${A(r, g + 1)}-${A(pr, g + 1)})` }, DPC); put(r, g + 4, { f: `IF(OR(${A(r, g + 3)}="",${A(pr, g + 3)}=""),"",${A(r, g + 3)}-${A(pr, g + 3)})` }, DST); }
+        else { sty(r, g + 2, DPC); sty(r, g + 4, DST); } });
+      put(r, cTurn, { f: P.map((_, i) => A(r, gStart(i))).join('+').replace(/^/, 'SUM(').replace(/$/, ')').replace(/\+/g, ',') }, NUM);
+      put(r, cTurn + 1, rnum(prev ? el.prevInformal : el.informal), NUM); put(r, cTurn + 2, { f: `${A(r, cTurn)}+${A(r, cTurn + 1)}` }, NUM);
+      put(r, cTurn + 3, { f: `IF(N(${A(r, cDem + 3)})=0,"",${A(r, cTurn + 2)}/${A(r, cDem + 3)})` }, PCT); });
+    // totals
+    put(rT, cDem + 1, 'Total', { h: 'right', b: true });
+    [2, 3, 4].forEach(k => put(rT, cDem + k, { f: `SUM(${A(r0, cDem + k)}:${A(rT - 1, cDem + k)})` }, { fmt: k === 4 ? 'General' : '#,##0', h: k === 4 ? 'center' : undefined, b: true }));
+    put(rT, cEl, 'Total', { h: 'right', b: true });
+    P.forEach((p, i) => { const g = gStart(i);
+      put(rT, g, { f: `SUM(${A(r0, g)}:${A(rT - 1, g)})` }, Object.assign({}, NUM, { b: true })); put(rT, g + 1, { f: `IF($${colL(cTurn)}${rT}=0,"",${A(rT, g)}/$${colL(cTurn)}${rT})` }, Object.assign({}, PCT, { b: true }));
+      put(rT, g + 3, { f: `SUM(${A(r0, g + 3)}:${A(rT - 1, g + 3)})` }, Object.assign({}, SEAT, { b: true }));
+      if (!prev){ const pr = rT + (nR + 6); put(rT, g + 2, { f: `IF(OR(${A(rT, g + 1)}="",${A(pr, g + 1)}=""),"",${A(rT, g + 1)}-${A(pr, g + 1)})` }, Object.assign({}, DPC, { b: true })); put(rT, g + 4, { f: `${A(rT, g + 3)}-${A(pr, g + 3)}` }, Object.assign({}, DST, { b: true })); } });
+    [0, 1, 2].forEach(k => put(rT, cTurn + k, { f: `SUM(${A(r0, cTurn + k)}:${A(rT - 1, cTurn + k)})` }, Object.assign({}, NUM, { b: true })));
+    put(rT, cTurn + 3, { f: `IF(N(${A(rT, cDem + 3)})=0,"",${A(rT, cTurn + 2)}/${A(rT, cDem + 3)})` }, Object.assign({}, PCT, { b: true }));
+    for (let c = cEl; c <= cLast; c++) sty(rT, c, { bd: { t: 'medium' } }); for (let c = cDem; c <= cDem + 4; c++) sty(rT, c, { bd: { t: 'medium' } });
+    box(top, cEl, rT, cLast); box(top, cEl, top, cLast); box(top, cDem, rT, cDem + 4); box(top, cDem, top, cDem + 4);
+    return rT;
+  };
+  const top1 = 2, rT1 = block(top1, yr, false), top2 = rT1 + 3, rT2 = block(top2, pyr, true);
+  // summaries: previous then current; votes, share and seats per party, seats per bloc
+  const summary = (top, year, rT) => {
+    put(top, cEl, `${year} Summary`, H); merge(top, cEl, top, cEl + 6);
+    ['Party', 'Votes', '%', 'Seats', 'Bloc'].forEach((t, k) => put(top + 1, [cEl, cEl + 2, cEl + 3, cEl + 5, cEl + 6][k], t, CEN));
+    const rS = top + 2, rTot = rS + nP;
+    P.forEach((p, i) => { const r = rS + i, g = gStart(i);
+      put(r, cEl, p.name, { h: 'right' }); put(r, cEl + 2, { f: A(rT, g) }, NUM); put(r, cEl + 3, { f: `IF(${A(rTot, cEl + 2)}=0,"",${A(r, cEl + 2)}/${A(rTot, cEl + 2)})` }, PCT); put(r, cEl + 5, { f: A(rT, g + 3) }, SEAT); });
+    // bloc seats: one merged cell per run of parties in the same bloc
+    let i = 0; while (i < nP){ const bl = (E.blocs || []).find(b => b.parties.includes(P[i].id)); let j = i; while (j + 1 < nP && bl && bl.parties.includes(P[j + 1].id)) j++;
+      put(rS + i, cEl + 6, { f: `SUM(${A(rS + i, cEl + 5)}:${A(rS + j, cEl + 5)})` }, Object.assign({}, SEAT, { b: true })); merge(rS + i, cEl + 6, rS + j, cEl + 6); i = j + 1; }
+    put(rTot, cEl, 'Total', { h: 'right', b: true }); put(rTot, cEl + 2, { f: `SUM(${A(rS, cEl + 2)}:${A(rTot - 1, cEl + 2)})` }, Object.assign({}, NUM, { b: true })); put(rTot, cEl + 3, { f: `IF(${A(rTot, cEl + 2)}=0,"",1)` }, Object.assign({}, PCT, { b: true }));
+    put(rTot, cEl + 5, { f: `SUM(${A(rS, cEl + 5)}:${A(rTot - 1, cEl + 5)})` }, Object.assign({}, SEAT, { b: true }));
+    for (let c = cEl; c <= cEl + 6; c++) sty(rTot, c, { bd: { t: 'medium' } });
+    box(top, cEl, rTot, cEl + 6); box(top, cEl, top, cEl + 6);
+    return rTot;
+  };
+  const s1 = summary(rT2 + 3, pyr, rT2); summary(s1 + 3, yr, rT1);
+  return richXlsx({ name: 'Results', cells, merges, widths });
 }
 async function rImportFile(f){
   const isX = /\.(xlsx|xlsm)$/i.test(f.name) || /spreadsheetml/.test(f.type);
